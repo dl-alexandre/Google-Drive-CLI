@@ -72,10 +72,49 @@ jobs:
           # Windows ARM64
           GOOS=windows GOARCH=arm64 go build -ldflags="${LDFLAGS}" -o dist/gdrive-windows-arm64.exe ./cmd/gdrive
 
+      - name: Create Arch Linux PKGBUILD
+        env:
+          VERSION: ${{ steps.version.outputs.VERSION }}
+        run: |
+          cat > dist/PKGBUILD << 'PKGBUILD_EOF'
+          # Maintainer: dl-alexandre <your-email@example.com>
+          pkgname=gdrive-bin
+          pkgver=${VERSION}
+          pkgrel=1
+          pkgdesc="Google Drive CLI with full read/write support"
+          arch=('x86_64' 'aarch64')
+          url="https://github.com/dl-alexandre/Google-Drive-CLI"
+          license=('MIT')
+          provides=('gdrive')
+          conflicts=('gdrive')
+
+          source_x86_64=("${url}/releases/download/${pkgver}/gdrive-linux-amd64")
+          source_aarch64=("${url}/releases/download/${pkgver}/gdrive-linux-arm64")
+
+          sha256sums_x86_64=('SKIP')
+          sha256sums_aarch64=('SKIP')
+
+          package() {
+            cd "${srcdir}"
+            install -Dm755 gdrive-linux-* "${pkgdir}/usr/bin/gdrive"
+          }
+          PKGBUILD_EOF
+
+          # Replace version placeholder
+          sed -i "s/\${VERSION}/${VERSION}/g" dist/PKGBUILD
+
+          # Add actual checksums
+          AMD64_SHA=$(shasum -a 256 dist/gdrive-linux-amd64 | awk '{print $1}')
+          ARM64_SHA=$(shasum -a 256 dist/gdrive-linux-arm64 | awk '{print $1}')
+          sed -i "s/sha256sums_x86_64=('SKIP')/sha256sums_x86_64=('${AMD64_SHA}')/" dist/PKGBUILD
+          sed -i "s/sha256sums_aarch64=('SKIP')/sha256sums_aarch64=('${ARM64_SHA}')/" dist/PKGBUILD
+
+          cat dist/PKGBUILD
+
       - name: Generate checksums
         run: |
           cd dist
-          shasum -a 256 * > checksums.txt
+          shasum -a 256 gdrive-* PKGBUILD > checksums.txt
           cat checksums.txt
 
       - name: Create GitHub Release
@@ -88,6 +127,7 @@ jobs:
             dist/gdrive-linux-arm64
             dist/gdrive-windows-amd64.exe
             dist/gdrive-windows-arm64.exe
+            dist/PKGBUILD
             dist/checksums.txt
           generate_release_notes: true
         env:
