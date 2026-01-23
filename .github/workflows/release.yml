@@ -1,0 +1,196 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '[0-9]*.[0-9]*.[0-9]*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Release
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Get version
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Import Code Signing Certificate
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          echo "$APPLE_CERTIFICATE" | base64 --decode > certificate.p12
+          security create-keychain -p temp_password build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p temp_password build.keychain
+          security import certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k temp_password build.keychain
+          rm certificate.p12
+
+      - name: Build binaries
+        env:
+          VERSION: ${{ steps.version.outputs.VERSION }}
+          COMMIT: ${{ github.sha }}
+          DATE: ${{ github.event.head_commit.timestamp }}
+        run: |
+          mkdir -p dist
+
+          LDFLAGS="-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.date=${DATE}"
+
+          # macOS ARM64
+          GOOS=darwin GOARCH=arm64 go build -ldflags="${LDFLAGS}" -o dist/gdrive-darwin-arm64 ./cmd/gdrive
+          codesign --sign - --timestamp --options runtime dist/gdrive-darwin-arm64
+
+          # macOS AMD64
+          GOOS=darwin GOARCH=amd64 go build -ldflags="${LDFLAGS}" -o dist/gdrive-darwin-amd64 ./cmd/gdrive
+          codesign --sign - --timestamp --options runtime dist/gdrive-darwin-amd64
+
+          # Linux AMD64
+          GOOS=linux GOARCH=amd64 go build -ldflags="${LDFLAGS}" -o dist/gdrive-linux-amd64 ./cmd/gdrive
+
+          # Linux ARM64
+          GOOS=linux GOARCH=arm64 go build -ldflags="${LDFLAGS}" -o dist/gdrive-linux-arm64 ./cmd/gdrive
+
+          # Windows AMD64
+          GOOS=windows GOARCH=amd64 go build -ldflags="${LDFLAGS}" -o dist/gdrive-windows-amd64.exe ./cmd/gdrive
+
+          # Windows ARM64
+          GOOS=windows GOARCH=arm64 go build -ldflags="${LDFLAGS}" -o dist/gdrive-windows-arm64.exe ./cmd/gdrive
+
+      - name: Create Arch Linux PKGBUILD
+        env:
+          VERSION: ${{ steps.version.outputs.VERSION }}
+        run: |
+          cat > dist/PKGBUILD << 'PKGBUILD_EOF'
+          # Maintainer: dl-alexandre <your-email@example.com>
+          pkgname=gdrive-bin
+          pkgver=${VERSION}
+          pkgrel=1
+          pkgdesc="Google Drive CLI with full read/write support"
+          arch=('x86_64' 'aarch64')
+          url="https://github.com/dl-alexandre/Google-Drive-CLI"
+          license=('MIT')
+          provides=('gdrive')
+          conflicts=('gdrive')
+
+          source_x86_64=("${url}/releases/download/${pkgver}/gdrive-linux-amd64")
+          source_aarch64=("${url}/releases/download/${pkgver}/gdrive-linux-arm64")
+
+          sha256sums_x86_64=('SKIP')
+          sha256sums_aarch64=('SKIP')
+
+          package() {
+            cd "${srcdir}"
+            install -Dm755 gdrive-linux-* "${pkgdir}/usr/bin/gdrive"
+          }
+          PKGBUILD_EOF
+
+          # Replace version placeholder
+          sed -i "s/\${VERSION}/${VERSION}/g" dist/PKGBUILD
+
+          # Add actual checksums
+          AMD64_SHA=$(shasum -a 256 dist/gdrive-linux-amd64 | awk '{print $1}')
+          ARM64_SHA=$(shasum -a 256 dist/gdrive-linux-arm64 | awk '{print $1}')
+          sed -i "s/sha256sums_x86_64=('SKIP')/sha256sums_x86_64=('${AMD64_SHA}')/" dist/PKGBUILD
+          sed -i "s/sha256sums_aarch64=('SKIP')/sha256sums_aarch64=('${ARM64_SHA}')/" dist/PKGBUILD
+
+          cat dist/PKGBUILD
+
+      - name: Generate checksums
+        run: |
+          cd dist
+          shasum -a 256 gdrive-* PKGBUILD > checksums.txt
+          cat checksums.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/gdrive-darwin-arm64
+            dist/gdrive-darwin-amd64
+            dist/gdrive-linux-amd64
+            dist/gdrive-linux-arm64
+            dist/gdrive-windows-amd64.exe
+            dist/gdrive-windows-arm64.exe
+            dist/PKGBUILD
+            dist/checksums.txt
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Homebrew Tap
+        env:
+          TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.VERSION }}
+        run: |
+          # Get SHA256 of the darwin-arm64 binary
+          SHA256=$(shasum -a 256 dist/gdrive-darwin-arm64 | awk '{print $1}')
+
+          # Clone the tap repository
+          git clone https://x-access-token:${TAP_GITHUB_TOKEN}@github.com/dl-alexandre/tap.git tap-repo
+          cd tap-repo
+
+          # Update the formula
+          cat > Formula/gdrive.rb << EOF
+          class Gdrive < Formula
+            desc "Google Drive CLI with full read/write support"
+            homepage "https://github.com/dl-alexandre/Google-Drive-CLI"
+            version "${VERSION}"
+            license "MIT"
+
+            on_macos do
+              if Hardware::CPU.arm?
+                url "https://github.com/dl-alexandre/Google-Drive-CLI/releases/download/${VERSION}/gdrive-darwin-arm64"
+                sha256 "${SHA256}"
+              end
+              if Hardware::CPU.intel?
+                url "https://github.com/dl-alexandre/Google-Drive-CLI/releases/download/${VERSION}/gdrive-darwin-amd64"
+                sha256 "$(shasum -a 256 ../dist/gdrive-darwin-amd64 | awk '{print $1}')"
+              end
+            end
+
+            on_linux do
+              if Hardware::CPU.arm?
+                url "https://github.com/dl-alexandre/Google-Drive-CLI/releases/download/${VERSION}/gdrive-linux-arm64"
+                sha256 "$(shasum -a 256 ../dist/gdrive-linux-arm64 | awk '{print $1}')"
+              end
+              if Hardware::CPU.intel?
+                url "https://github.com/dl-alexandre/Google-Drive-CLI/releases/download/${VERSION}/gdrive-linux-amd64"
+                sha256 "$(shasum -a 256 ../dist/gdrive-linux-amd64 | awk '{print $1}')"
+              end
+            end
+
+            def install
+              bin.install "gdrive-darwin-arm64" => "gdrive" if OS.mac? && Hardware::CPU.arm?
+              bin.install "gdrive-darwin-amd64" => "gdrive" if OS.mac? && Hardware::CPU.intel?
+              bin.install "gdrive-linux-arm64" => "gdrive" if OS.linux? && Hardware::CPU.arm?
+              bin.install "gdrive-linux-amd64" => "gdrive" if OS.linux? && Hardware::CPU.intel?
+            end
+
+            test do
+              system "#{bin}/gdrive", "version"
+            end
+          end
+          EOF
+
+          # Commit and push the changes
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/gdrive.rb
+          git commit -m "Update gdrive to ${VERSION}"
+          git push
