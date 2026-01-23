@@ -26,7 +26,7 @@ A **fast**, **lightweight**, and **AI-agent friendly** CLI for Google Drive. Man
 
 ```bash
 # Install to ~/.local/bin (ensure it's on your PATH)
-curl -fsSL https://raw.githubusercontent.com/dl-alexandre/Google-Drive-CLI/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/dl-alexandre/Google-Drive-CLI/master/install.sh | bash
 ```
 
 ### Download Binary

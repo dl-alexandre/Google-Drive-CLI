@@ -2,7 +2,7 @@
 set -e
 
 # Google Drive CLI Installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/dl-alexandre/Google-Drive-CLI/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/dl-alexandre/Google-Drive-CLI/master/install.sh | bash
 
 VERSION="${GDRIVE_VERSION:-latest}"
 INSTALL_DIR="${GDRIVE_INSTALL_DIR:-$HOME/.local/bin}"
