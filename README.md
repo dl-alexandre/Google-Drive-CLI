@@ -29,6 +29,13 @@ A **fast**, **lightweight**, and **AI-agent friendly** CLI for Google Drive. Man
 curl -fsSL https://raw.githubusercontent.com/dl-alexandre/Google-Drive-CLI/master/install.sh | bash
 ```
 
+### Homebrew (Tap)
+
+```bash
+brew tap dl-alexandre/tap
+brew install gdrive
+```
+
 ### Download Binary
 
 Download the latest release from the [releases page](https://github.com/dl-alexandre/Google-Drive-CLI/releases).
