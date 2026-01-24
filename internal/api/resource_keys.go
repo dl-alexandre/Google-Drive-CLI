@@ -47,7 +47,9 @@ func (m *ResourceKeyManager) AddKey(fileID, resourceKey, source string) {
 		Timestamp:   timeNow().Unix(),
 		Source:      source,
 	}
-	m.save()
+	if err := m.save(); err != nil {
+		return
+	}
 }
 
 // GetKey retrieves a resource key from the cache
@@ -124,7 +126,9 @@ func (m *ResourceKeyManager) Invalidate(fileID string) {
 	defer m.mu.Unlock()
 
 	delete(m.cache, fileID)
-	m.save()
+	if err := m.save(); err != nil {
+		return
+	}
 }
 
 // Clear removes all cached resource keys
@@ -133,7 +137,9 @@ func (m *ResourceKeyManager) Clear() {
 	defer m.mu.Unlock()
 
 	m.cache = make(map[string]resourceKeyEntry)
-	m.save()
+	if err := m.save(); err != nil {
+		return
+	}
 }
 
 // UpdateFromAPIResponse updates cache from file metadata

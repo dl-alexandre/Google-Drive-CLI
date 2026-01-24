@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/dl-alexandre/gdrive/internal/types"
 	"golang.org/x/oauth2/google"
@@ -28,6 +29,18 @@ type ServiceAccountKey struct {
 
 // LoadServiceAccount loads credentials from service account key file
 func (m *Manager) LoadServiceAccount(ctx context.Context, keyFilePath string, scopes []string, impersonateUser string) (*types.Credentials, error) {
+	if keyFilePath == "" {
+		return nil, fmt.Errorf("service account key file required")
+	}
+	if _, err := os.Stat(keyFilePath); err != nil {
+		return nil, fmt.Errorf("service account key file not found: %s", keyFilePath)
+	}
+	if len(scopes) == 0 {
+		return nil, fmt.Errorf("at least one scope required")
+	}
+	if impersonateUser != "" && !strings.Contains(impersonateUser, "@") {
+		return nil, fmt.Errorf("impersonate user must be an email address")
+	}
 	keyData, err := os.ReadFile(keyFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read service account key: %w", err)
@@ -37,6 +50,15 @@ func (m *Manager) LoadServiceAccount(ctx context.Context, keyFilePath string, sc
 	var saKey ServiceAccountKey
 	if err := json.Unmarshal(keyData, &saKey); err != nil {
 		return nil, fmt.Errorf("failed to parse service account key: %w", err)
+	}
+	if saKey.Type != "service_account" {
+		return nil, fmt.Errorf("invalid service account key type: %s", saKey.Type)
+	}
+	if saKey.ClientEmail == "" {
+		return nil, fmt.Errorf("missing client_email in service account key")
+	}
+	if saKey.PrivateKey == "" {
+		return nil, fmt.Errorf("missing private_key in service account key")
 	}
 
 	var config *google.Credentials

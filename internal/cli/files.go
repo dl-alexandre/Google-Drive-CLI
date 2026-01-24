@@ -170,11 +170,11 @@ func init() {
 
 	// Move flags
 	filesMoveCmd.Flags().StringVar(&filesParentID, "parent", "", "New parent folder ID")
-	filesMoveCmd.MarkFlagRequired("parent")
+	_ = filesMoveCmd.MarkFlagRequired("parent")
 
 	// Revision flags
 	filesRevisionsDownloadCmd.Flags().StringVar(&filesRevisionOutput, "output", "", "Output path for revision download")
-	filesRevisionsDownloadCmd.MarkFlagRequired("output")
+	_ = filesRevisionsDownloadCmd.MarkFlagRequired("output")
 
 	filesRevisionsCmd.AddCommand(filesRevisionsDownloadCmd)
 	filesRevisionsCmd.AddCommand(filesRevisionsRestoreCmd)

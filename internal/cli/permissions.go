@@ -89,12 +89,12 @@ func init() {
 	permCreateCmd.Flags().StringVar(&permEmailMessage, "message", "", "Custom email message")
 	permCreateCmd.Flags().BoolVar(&permTransferOwnership, "transfer-ownership", false, "Transfer ownership (requires owner role)")
 	permCreateCmd.Flags().BoolVar(&permAllowFileDiscovery, "allow-discovery", false, "Allow file discovery (for anyone type)")
-	permCreateCmd.MarkFlagRequired("type")
-	permCreateCmd.MarkFlagRequired("role")
+	_ = permCreateCmd.MarkFlagRequired("type")
+	_ = permCreateCmd.MarkFlagRequired("role")
 
 	// Update flags
 	permUpdateCmd.Flags().StringVar(&permRole, "role", "", "New permission role")
-	permUpdateCmd.MarkFlagRequired("role")
+	_ = permUpdateCmd.MarkFlagRequired("role")
 
 	// Create link flags
 	permCreateLinkCmd.Flags().StringVar(&permRole, "role", "reader", "Permission role (reader, commenter, writer)")

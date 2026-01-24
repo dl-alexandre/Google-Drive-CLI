@@ -612,19 +612,6 @@ func escapeQueryString(s string) string {
 	return s
 }
 
-func sortMatches(matches []*types.DriveFile) []*types.DriveFile {
-	// Simple sort: prefer non-shortcut, then by name, then by ID
-	// This provides deterministic ordering
-	for i := 0; i < len(matches)-1; i++ {
-		for j := i + 1; j < len(matches); j++ {
-			if shouldSwap(matches[i], matches[j]) {
-				matches[i], matches[j] = matches[j], matches[i]
-			}
-		}
-	}
-	return matches
-}
-
 // sortMatchesWithDomainPreference sorts matches with domain preference
 // Priority: My Drive > Shared Drives > shared-with-me
 func (r *PathResolver) sortMatchesWithDomainPreference(matches []*types.DriveFile, currentDomain SearchDomain) []*types.DriveFile {
@@ -699,19 +686,3 @@ func (r *PathResolver) getDomainPriority(domain SearchDomain) int {
 	}
 }
 
-func shouldSwap(a, b *types.DriveFile) bool {
-	// Prefer non-shortcut
-	aIsShortcut := a.MimeType == utils.MimeTypeShortcut
-	bIsShortcut := b.MimeType == utils.MimeTypeShortcut
-	if aIsShortcut != bIsShortcut {
-		return aIsShortcut
-	}
-
-	// Then by name
-	if a.Name != b.Name {
-		return a.Name > b.Name
-	}
-
-	// Then by ID for stability
-	return a.ID > b.ID
-}

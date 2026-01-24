@@ -1,0 +1,10 @@
+[
+  {
+    "updateSpreadsheetProperties": {
+      "properties": {
+        "title": "Updated Title"
+      },
+      "fields": "title"
+    }
+  }
+]

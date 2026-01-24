@@ -76,7 +76,12 @@ func (w *OutputWriter) writeJSON(output types.CLIOutput) error {
 }
 
 func (w *OutputWriter) writeTable(data interface{}) error {
-	// Handle different data types for table output
+	if renderable, ok := data.(types.TableRenderable); ok {
+		return w.renderTable(renderable.AsTableRenderer())
+	}
+	if renderer, ok := data.(types.TableRenderer); ok {
+		return w.renderTable(renderer)
+	}
 	switch v := data.(type) {
 	case []*types.DriveFile:
 		return w.writeFileTable(v)
@@ -95,6 +100,29 @@ func (w *OutputWriter) writeTable(data interface{}) error {
 			Errors:        []types.CLIError{},
 		})
 	}
+}
+
+func (w *OutputWriter) renderTable(renderer types.TableRenderer) error {
+	rows := renderer.Rows()
+	if len(rows) == 0 {
+		if !w.quiet {
+			fmt.Fprintln(os.Stdout, renderer.EmptyMessage())
+		}
+		return nil
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader(renderer.Headers())
+	table.SetBorder(false)
+	table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+
+	for _, row := range rows {
+		table.Append(row)
+	}
+
+	table.Render()
+	return nil
 }
 
 func (w *OutputWriter) writeFileTable(files []*types.DriveFile) error {

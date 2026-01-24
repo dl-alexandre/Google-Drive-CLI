@@ -8,20 +8,6 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-// Mock client for testing
-type mockClient struct {
-	service        *drive.Service
-	resourceKeyMgr *api.ResourceKeyManager
-}
-
-func (m *mockClient) Service() *drive.Service {
-	return m.service
-}
-
-func (m *mockClient) ResourceKeys() *api.ResourceKeyManager {
-	return m.resourceKeyMgr
-}
-
 func TestManager_Creation(t *testing.T) {
 	// Test that manager can be created
 	client := &api.Client{}

@@ -17,6 +17,45 @@ const (
 	ScopeReadonly         = "https://www.googleapis.com/auth/drive.readonly"
 	ScopeMetadataReadonly = "https://www.googleapis.com/auth/drive.metadata.readonly"
 	ScopeAppdata          = "https://www.googleapis.com/auth/drive.appdata"
+	ScopeSheets           = "https://www.googleapis.com/auth/spreadsheets"
+	ScopeSheetsReadonly   = "https://www.googleapis.com/auth/spreadsheets.readonly"
+	ScopeDocs             = "https://www.googleapis.com/auth/documents"
+	ScopeDocsReadonly     = "https://www.googleapis.com/auth/documents.readonly"
+	ScopeSlides           = "https://www.googleapis.com/auth/presentations"
+	ScopeSlidesReadonly   = "https://www.googleapis.com/auth/presentations.readonly"
+	ScopeAdminDirectoryUser       = "https://www.googleapis.com/auth/admin.directory.user"
+	ScopeAdminDirectoryUserReadonly = "https://www.googleapis.com/auth/admin.directory.user.readonly"
+	ScopeAdminDirectoryGroup      = "https://www.googleapis.com/auth/admin.directory.group"
+	ScopeAdminDirectoryGroupReadonly = "https://www.googleapis.com/auth/admin.directory.group.readonly"
+)
+
+var (
+	ScopesWorkspaceBasic = []string{
+		ScopeFile,
+		ScopeReadonly,
+		ScopeMetadataReadonly,
+		ScopeSheetsReadonly,
+		ScopeDocsReadonly,
+		ScopeSlidesReadonly,
+	}
+	ScopesWorkspaceFull = []string{
+		ScopeFull,
+		ScopeSheets,
+		ScopeDocs,
+		ScopeSlides,
+	}
+	ScopesAdmin = []string{
+		ScopeAdminDirectoryUser,
+		ScopeAdminDirectoryGroup,
+	}
+	ScopesWorkspaceWithAdmin = []string{
+		ScopeFull,
+		ScopeSheets,
+		ScopeDocs,
+		ScopeSlides,
+		ScopeAdminDirectoryUser,
+		ScopeAdminDirectoryGroup,
+	}
 )
 
 // Drive API base URLs

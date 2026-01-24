@@ -4,7 +4,6 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -12,8 +11,6 @@ import (
 	"os"
 	"path/filepath"
 
-
-	"golang.org/x/crypto/pbkdf2"
 )
 
 // StorageBackend defines the interface for credential storage
@@ -234,11 +231,6 @@ func getOrCreateEncryptionKey(baseDir string) ([]byte, error) {
 	}
 
 	return key, nil
-}
-
-// deriveKey derives an encryption key from a password (for future use)
-func deriveKey(password, salt []byte) []byte {
-	return pbkdf2.Key(password, salt, 100000, 32, sha256.New)
 }
 
 // ListProfiles lists all stored credential profiles

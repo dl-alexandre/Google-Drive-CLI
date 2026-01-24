@@ -39,11 +39,6 @@ var configResetCmd = &cobra.Command{
 	RunE:  runConfigReset,
 }
 
-var (
-	configKey   string
-	configValue string
-)
-
 func init() {
 	rootCmd.AddCommand(configCmd)
 

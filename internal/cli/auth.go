@@ -7,8 +7,10 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"time"
 
 	"github.com/dl-alexandre/gdrive/internal/auth"
+	"github.com/dl-alexandre/gdrive/internal/types"
 	"github.com/dl-alexandre/gdrive/internal/utils"
 	"github.com/spf13/cobra"
 )
@@ -31,6 +33,13 @@ var authLogoutCmd = &cobra.Command{
 	Short: "Remove stored credentials",
 	Long:  "Delete stored credentials for the current or specified profile",
 	RunE:  runAuthLogout,
+}
+
+var authServiceAccountCmd = &cobra.Command{
+	Use:   "service-account",
+	Short: "Authenticate with a service account",
+	Long:  "Load service account credentials from a JSON key file",
+	RunE:  runAuthServiceAccount,
 }
 
 var authStatusCmd = &cobra.Command{
@@ -58,20 +67,33 @@ var (
 	authScopes    []string
 	authNoBrowser bool
 	authWide      bool
+	authPreset    string
+	authKeyFile   string
+	authImpersonateUser string
 	clientID      string
 	clientSecret  string
 )
 
 func init() {
-	authLoginCmd.Flags().StringSliceVar(&authScopes, "scopes", []string{utils.ScopeFile}, "OAuth scopes to request")
+	authLoginCmd.Flags().StringSliceVar(&authScopes, "scopes", []string{}, "OAuth scopes to request")
 	authLoginCmd.Flags().BoolVar(&authNoBrowser, "no-browser", false, "Use device code flow (limited scopes)")
 	authLoginCmd.Flags().BoolVar(&authWide, "wide", false, "Request full Drive access scope")
+	authLoginCmd.Flags().StringVar(&authPreset, "preset", "", "Scope preset: workspace-basic, workspace-full, admin, workspace-with-admin")
 	authLoginCmd.Flags().StringVar(&clientID, "client-id", "", "OAuth client ID")
 	authLoginCmd.Flags().StringVar(&clientSecret, "client-secret", "", "OAuth client secret")
 	authDeviceCmd.Flags().BoolVar(&authWide, "wide", false, "Request full Drive access scope")
+	authDeviceCmd.Flags().StringVar(&authPreset, "preset", "", "Scope preset: workspace-basic, workspace-full, admin, workspace-with-admin")
+	authServiceAccountCmd.Flags().StringVar(&authKeyFile, "key-file", "", "Path to service account JSON key file (required)")
+	authServiceAccountCmd.Flags().StringVar(&authImpersonateUser, "impersonate-user", "", "User email to impersonate (required for Admin SDK scopes)")
+	authServiceAccountCmd.Flags().StringSliceVar(&authScopes, "scopes", []string{}, "OAuth scopes to request")
+	authServiceAccountCmd.Flags().BoolVar(&authWide, "wide", false, "Request full Drive access scope")
+	authServiceAccountCmd.Flags().StringVar(&authPreset, "preset", "", "Scope preset: workspace-basic, workspace-full, admin, workspace-with-admin")
+	_ = authServiceAccountCmd.MarkFlagRequired("key-file")
 
 	authCmd.AddCommand(authLoginCmd)
 	authCmd.AddCommand(authDeviceCmd)
+	authCmd.AddCommand(authServiceAccountCmd)
+	authCmd.AddCommand(authLogoutCmd)
 	authCmd.AddCommand(authStatusCmd)
 	authCmd.AddCommand(authProfilesCmd)
 	rootCmd.AddCommand(authCmd)
@@ -97,16 +119,20 @@ func runAuthLogin(cmd *cobra.Command, args []string) error {
 		out.Log("%s", warning)
 	}
 
-	scopes := authScopes
-	if authWide {
-		scopes = []string{utils.ScopeFull}
-		out.Log("Using full Drive scope (%s)", utils.ScopeFull)
+	scopes, err := resolveAuthScopes(out)
+	if err != nil {
+		return err
 	}
-
 	mgr.SetOAuthConfig(clientID, clientSecret, scopes)
 
 	ctx := context.Background()
-	creds, err := mgr.Authenticate(ctx, flags.Profile, openBrowser)
+	var creds *types.Credentials
+	if authNoBrowser {
+		out.Log("Using device code authentication flow...")
+		creds, err = mgr.AuthenticateWithDeviceCode(ctx, flags.Profile)
+	} else {
+		creds, err = mgr.Authenticate(ctx, flags.Profile, openBrowser)
+	}
 
 	if err != nil {
 		return out.WriteError("auth.login", utils.NewCLIError(utils.ErrCodeAuthRequired, err.Error()).Build())
@@ -141,10 +167,9 @@ func runAuthDevice(cmd *cobra.Command, args []string) error {
 		out.Log("%s", warning)
 	}
 
-	scopes := authScopes
-	if authWide {
-		scopes = []string{utils.ScopeFull}
-		out.Log("Using full Drive scope (%s)", utils.ScopeFull)
+	scopes, err := resolveAuthScopes(out)
+	if err != nil {
+		return err
 	}
 
 	mgr.SetOAuthConfig(clientID, clientSecret, scopes)
@@ -206,13 +231,22 @@ func runAuthStatus(cmd *cobra.Command, args []string) error {
 		})
 	}
 
+	expired := time.Now().After(creds.ExpiryDate)
+	authenticated := true
+	if expired && (creds.Type == types.AuthTypeServiceAccount || creds.Type == types.AuthTypeImpersonated) {
+		authenticated = false
+	}
+
 	return out.WriteSuccess("auth.status", map[string]interface{}{
 		"profile":        flags.Profile,
-		"authenticated":  true,
+		"authenticated":  authenticated,
 		"scopes":         creds.Scopes,
 		"expiry":         creds.ExpiryDate.Format("2006-01-02T15:04:05Z07:00"),
 		"type":           creds.Type,
 		"needsRefresh":   mgr.NeedsRefresh(creds),
+		"expired":        expired,
+		"serviceAccount": creds.ServiceAccountEmail,
+		"impersonated":   creds.ImpersonatedUser,
 		"storageBackend": mgr.GetStorageBackend(),
 	})
 }
@@ -223,10 +257,6 @@ func getConfigDir() string {
 	}
 	home, _ := os.UserHomeDir()
 	return filepath.Join(home, ".config", "gdrive")
-}
-
-func runAuthList(cmd *cobra.Command, args []string) error {
-	return runAuthProfiles(cmd, args)
 }
 
 func runAuthProfiles(cmd *cobra.Command, args []string) error {
@@ -269,6 +299,108 @@ func runAuthProfiles(cmd *cobra.Command, args []string) error {
 		"count":          len(profiles),
 		"storageBackend": mgr.GetStorageBackend(),
 	})
+}
+
+func runAuthServiceAccount(cmd *cobra.Command, args []string) error {
+	flags := GetGlobalFlags()
+	out := NewOutputWriter(flags.OutputFormat, flags.Quiet, flags.Verbose)
+
+	if authKeyFile == "" {
+		return fmt.Errorf("service account key file required via --key-file")
+	}
+
+	scopes, err := resolveAuthScopes(out)
+	if err != nil {
+		return err
+	}
+	if err := validateAdminScopesRequireImpersonation(scopes, authImpersonateUser); err != nil {
+		return out.WriteError("auth.service-account", utils.NewCLIError(utils.ErrCodeAuthRequired, err.Error()).Build())
+	}
+
+	configDir := getConfigDir()
+	mgr := auth.NewManager(configDir)
+
+	creds, err := mgr.LoadServiceAccount(context.Background(), authKeyFile, scopes, authImpersonateUser)
+	if err != nil {
+		return out.WriteError("auth.service-account", utils.NewCLIError(utils.ErrCodeAuthRequired, err.Error()).Build())
+	}
+
+	if err := mgr.SaveCredentials(flags.Profile, creds); err != nil {
+		return out.WriteError("auth.service-account", utils.NewCLIError(utils.ErrCodeUnknown, err.Error()).Build())
+	}
+
+	out.Log("Service account loaded")
+	return out.WriteSuccess("auth.service-account", map[string]interface{}{
+		"profile":        flags.Profile,
+		"scopes":         creds.Scopes,
+		"type":           creds.Type,
+		"serviceAccount": creds.ServiceAccountEmail,
+		"impersonated":   creds.ImpersonatedUser,
+		"storageBackend": mgr.GetStorageBackend(),
+	})
+}
+
+func resolveAuthScopes(out *OutputWriter) ([]string, error) {
+	if authPreset != "" {
+		scopes, err := scopesForPreset(authPreset)
+		if err != nil {
+			return nil, err
+		}
+		out.Log("Using scope preset: %s", authPreset)
+		return scopes, nil
+	}
+	if authWide {
+		out.Log("Using full Drive scope (%s)", utils.ScopeFull)
+		return []string{utils.ScopeFull}, nil
+	}
+	if len(authScopes) == 0 {
+		out.Log("Using default scope preset: workspace-basic")
+		return utils.ScopesWorkspaceBasic, nil
+	}
+	return authScopes, nil
+}
+
+func scopesForPreset(preset string) ([]string, error) {
+	switch preset {
+	case "workspace-basic":
+		return utils.ScopesWorkspaceBasic, nil
+	case "workspace-full":
+		return utils.ScopesWorkspaceFull, nil
+	case "admin":
+		return utils.ScopesAdmin, nil
+	case "workspace-with-admin":
+		return utils.ScopesWorkspaceWithAdmin, nil
+	default:
+		return nil, fmt.Errorf("unknown preset: %s", preset)
+	}
+}
+
+func validateAdminScopesRequireImpersonation(scopes []string, impersonateUser string) error {
+	adminScopes := []string{
+		utils.ScopeAdminDirectoryUser,
+		utils.ScopeAdminDirectoryUserReadonly,
+		utils.ScopeAdminDirectoryGroup,
+		utils.ScopeAdminDirectoryGroupReadonly,
+	}
+
+	hasAdminScope := false
+	for _, scope := range scopes {
+		for _, adminScope := range adminScopes {
+			if scope == adminScope {
+				hasAdminScope = true
+				break
+			}
+		}
+		if hasAdminScope {
+			break
+		}
+	}
+
+	if hasAdminScope && impersonateUser == "" {
+		return fmt.Errorf("Admin SDK scopes require --impersonate-user")
+	}
+
+	return nil
 }
 
 func openBrowser(url string) error {

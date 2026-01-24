@@ -13,6 +13,10 @@ import (
 	"github.com/zalando/go-keyring"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
+	"google.golang.org/api/admin/directory/v1"
+	"google.golang.org/api/docs/v1"
+	"google.golang.org/api/sheets/v4"
+	"google.golang.org/api/slides/v1"
 )
 
 const (
@@ -183,6 +187,9 @@ func (m *Manager) NeedsRefresh(creds *types.Credentials) bool {
 
 // RefreshCredentials refreshes OAuth2 tokens
 func (m *Manager) RefreshCredentials(ctx context.Context, creds *types.Credentials) (*types.Credentials, error) {
+	if creds.Type != types.AuthTypeOAuth {
+		return nil, fmt.Errorf("refresh only supported for OAuth credentials")
+	}
 	if m.oauthConfig == nil {
 		return nil, fmt.Errorf("OAuth config not set")
 	}
@@ -216,6 +223,14 @@ func (m *Manager) GetValidCredentials(ctx context.Context, profile string) (*typ
 			"No credentials found. Run 'gdrive auth login' first.").Build())
 	}
 
+	if creds.Type == types.AuthTypeServiceAccount || creds.Type == types.AuthTypeImpersonated {
+		if time.Now().After(creds.ExpiryDate) {
+			return nil, utils.NewAppError(utils.NewCLIError(utils.ErrCodeAuthExpired,
+				"Service account token expired. Run 'gdrive auth service-account' to re-authenticate.").Build())
+		}
+		return creds, nil
+	}
+
 	if m.NeedsRefresh(creds) {
 		newCreds, err := m.RefreshCredentials(ctx, creds)
 		if err != nil {
@@ -237,6 +252,12 @@ func (m *Manager) GetHTTPClient(ctx context.Context, creds *types.Credentials) *
 		AccessToken:  creds.AccessToken,
 		RefreshToken: creds.RefreshToken,
 		Expiry:       creds.ExpiryDate,
+	}
+	if m.oauthConfig == nil {
+		return oauth2.NewClient(ctx, oauth2.StaticTokenSource(token))
+	}
+	if creds.Type != types.AuthTypeOAuth {
+		return oauth2.NewClient(ctx, oauth2.StaticTokenSource(token))
 	}
 	return m.oauthConfig.Client(ctx, token)
 }
@@ -267,7 +288,7 @@ func (m *Manager) ValidateScopes(creds *types.Credentials, required []string) er
 	for _, req := range required {
 		if !scopeSet[req] {
 			return utils.NewAppError(utils.NewCLIError(utils.ErrCodeScopeInsufficient,
-				fmt.Sprintf("Missing required scope: %s. Re-authenticate with 'gdrive auth login --wide' or 'gdrive auth login --scopes %s'", req, req)).Build())
+				fmt.Sprintf("Missing required scope: %s. Re-authenticate with 'gdrive auth login --preset workspace-full' or 'gdrive auth login --scopes %s'", req, req)).Build())
 		}
 	}
 	return nil
@@ -320,5 +341,50 @@ func (m *Manager) GetScopesForCommand(command string) []string {
 // ValidateScopesForCommand validates that credentials have the required scopes for a command
 func (m *Manager) ValidateScopesForCommand(creds *types.Credentials, command string) error {
 	required := m.GetScopesForCommand(command)
+	return m.ValidateScopes(creds, required)
+}
+
+func (m *Manager) GetServiceFactory() *ServiceFactory {
+	return NewServiceFactory(m)
+}
+
+func (m *Manager) GetSheetsService(ctx context.Context, creds *types.Credentials) (*sheets.Service, error) {
+	return m.GetServiceFactory().CreateSheetsService(ctx, creds)
+}
+
+func (m *Manager) GetDocsService(ctx context.Context, creds *types.Credentials) (*docs.Service, error) {
+	return m.GetServiceFactory().CreateDocsService(ctx, creds)
+}
+
+func (m *Manager) GetSlidesService(ctx context.Context, creds *types.Credentials) (*slides.Service, error) {
+	return m.GetServiceFactory().CreateSlidesService(ctx, creds)
+}
+
+func (m *Manager) GetAdminService(ctx context.Context, creds *types.Credentials) (*admin.Service, error) {
+	return m.GetServiceFactory().CreateAdminService(ctx, creds)
+}
+
+func RequiredScopesForService(svcType ServiceType) []string {
+	switch svcType {
+	case ServiceDrive:
+		return []string{utils.ScopeFile}
+	case ServiceSheets:
+		return []string{utils.ScopeSheets}
+	case ServiceDocs:
+		return []string{utils.ScopeDocs}
+	case ServiceSlides:
+		return []string{utils.ScopeSlides}
+	case ServiceAdminDir:
+		return []string{utils.ScopeAdminDirectoryUser, utils.ScopeAdminDirectoryGroup}
+	default:
+		return nil
+	}
+}
+
+func (m *Manager) ValidateServiceScopes(creds *types.Credentials, svcType ServiceType) error {
+	required := RequiredScopesForService(svcType)
+	if len(required) == 0 {
+		return nil
+	}
 	return m.ValidateScopes(creds, required)
 }

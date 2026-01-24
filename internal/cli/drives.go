@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"time"
 
 	"github.com/dl-alexandre/gdrive/internal/api"
 	"github.com/dl-alexandre/gdrive/internal/auth"
@@ -157,12 +156,4 @@ func handleError(writer *OutputWriter, command string, err error) error {
 		return writer.WriteError(command, appErr.CLIError)
 	}
 	return writer.WriteError(command, utils.NewCLIError(utils.ErrCodeUnknown, err.Error()).Build())
-}
-
-// getCacheTTL returns the cache TTL duration based on flags
-func getCacheTTL(flags types.GlobalFlags) time.Duration {
-	if flags.NoCache {
-		return 0
-	}
-	return time.Duration(flags.CacheTTL) * time.Second
 }

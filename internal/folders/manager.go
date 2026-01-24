@@ -175,10 +175,6 @@ func (m *Manager) DeleteWithSafety(ctx context.Context, reqCtx *types.RequestCon
 	return err
 }
 
-func (m *Manager) deleteContents(ctx context.Context, reqCtx *types.RequestContext, folderID string) error {
-	return m.deleteContentsWithSafety(ctx, reqCtx, folderID, safety.Default(), nil)
-}
-
 func (m *Manager) deleteContentsWithSafety(ctx context.Context, reqCtx *types.RequestContext, folderID string, opts safety.SafetyOptions, recorder safety.DryRunRecorder) error {
 	pageToken := ""
 	for {

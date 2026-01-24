@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/dl-alexandre/gdrive/internal/types"
+	"github.com/dl-alexandre/gdrive/internal/utils"
 )
 
 func TestManager_NeedsRefresh(t *testing.T) {
@@ -65,5 +66,72 @@ func TestManager_ValidateScopes(t *testing.T) {
 	err = mgr.ValidateScopes(creds, []string{"https://www.googleapis.com/auth/drive"})
 	if err == nil {
 		t.Error("ValidateScopes should fail for missing scope")
+	}
+}
+
+func TestRequiredScopesForService(t *testing.T) {
+	tests := []struct {
+		name     string
+		svcType  ServiceType
+		wantLen  int
+		contains []string
+	}{
+		{
+			"Drive",
+			ServiceDrive,
+			1,
+			[]string{utils.ScopeFile},
+		},
+		{
+			"Sheets",
+			ServiceSheets,
+			1,
+			[]string{utils.ScopeSheets},
+		},
+		{
+			"Docs",
+			ServiceDocs,
+			1,
+			[]string{utils.ScopeDocs},
+		},
+		{
+			"Slides",
+			ServiceSlides,
+			1,
+			[]string{utils.ScopeSlides},
+		},
+		{
+			"Admin",
+			ServiceAdminDir,
+			2,
+			[]string{utils.ScopeAdminDirectoryUser, utils.ScopeAdminDirectoryGroup},
+		},
+		{
+			"Unknown",
+			ServiceType("unknown"),
+			0,
+			[]string{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := RequiredScopesForService(tt.svcType)
+			if len(got) != tt.wantLen {
+				t.Fatalf("expected %d scopes, got %d", tt.wantLen, len(got))
+			}
+			for _, wantScope := range tt.contains {
+				found := false
+				for _, scope := range got {
+					if scope == wantScope {
+						found = true
+						break
+					}
+				}
+				if !found {
+					t.Fatalf("missing scope %q", wantScope)
+				}
+			}
+		})
 	}
 }

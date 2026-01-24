@@ -132,6 +132,13 @@ func (f *OutputFormatter) writeTable(data interface{}) error {
 		fmt.Fprintln(f.errorWriter)
 	}
 
+	if renderable, ok := data.(types.TableRenderable); ok {
+		return f.renderTable(renderable.AsTableRenderer())
+	}
+	if renderer, ok := data.(types.TableRenderer); ok {
+		return f.renderTable(renderer)
+	}
+
 	switch v := data.(type) {
 	case []*types.DriveFile:
 		return f.writeFileTable(v)
@@ -166,6 +173,35 @@ func (f *OutputFormatter) writeTable(data interface{}) error {
 			Errors:        []types.CLIError{},
 		})
 	}
+}
+
+func (f *OutputFormatter) renderTable(renderer types.TableRenderer) error {
+	rows := renderer.Rows()
+	if len(rows) == 0 {
+		if !f.quiet {
+			fmt.Fprintln(f.writer, renderer.EmptyMessage())
+		}
+		return nil
+	}
+
+	table := tablewriter.NewWriter(f.writer)
+	table.SetHeader(renderer.Headers())
+	table.SetBorder(false)
+	table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetCenterSeparator("")
+	table.SetColumnSeparator("")
+	table.SetRowSeparator("")
+	table.SetHeaderLine(false)
+	table.SetTablePadding("\t")
+	table.SetNoWhiteSpace(true)
+
+	for _, row := range rows {
+		table.Append(row)
+	}
+
+	table.Render()
+	return nil
 }
 
 // writeFileTable writes file data as a table
