@@ -3,6 +3,7 @@ package logging
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 )
 
@@ -129,10 +130,17 @@ func TestNewLogger_NoOp(t *testing.T) {
 }
 
 func TestNewLogger_InvalidPath(t *testing.T) {
+	var invalidPath string
+	if runtime.GOOS == "windows" {
+		invalidPath = `Z:\nonexistent\path\that\does\not\exist\test.log`
+	} else {
+		invalidPath = "/invalid/path/that/does/not/exist/test.log"
+	}
+
 	config := LogConfig{
 		Level:         INFO,
 		EnableConsole: false,
-		OutputFile:    "/invalid/path/that/does/not/exist/test.log",
+		OutputFile:    invalidPath,
 	}
 
 	_, err := NewLogger(config)

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 
@@ -196,13 +197,17 @@ func TestConfigDurationGetters(t *testing.T) {
 }
 
 func TestConfigSaveAndLoad(t *testing.T) {
-	// Create a temporary directory for testing
 	tempDir := t.TempDir()
 
-	// Override the config path for testing
 	originalHome := os.Getenv("HOME")
 	os.Setenv("HOME", tempDir)
 	defer os.Setenv("HOME", originalHome)
+
+	if runtime.GOOS == "windows" {
+		originalUserProfile := os.Getenv("USERPROFILE")
+		os.Setenv("USERPROFILE", tempDir)
+		defer os.Setenv("USERPROFILE", originalUserProfile)
+	}
 
 	// Create a config with custom values
 	cfg := &Config{
