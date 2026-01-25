@@ -93,7 +93,7 @@ func (e *Engine) Plan(ctx context.Context, cfg index.SyncConfig, opts Options, r
 		return Plan{}, err
 	}
 
-	remoteEntries := make(map[string]scanner.RemoteEntry)
+	var remoteEntries map[string]scanner.RemoteEntry
 	changeToken := cfg.LastChangeToken
 
 	if opts.UseChanges && changeToken != "" {
