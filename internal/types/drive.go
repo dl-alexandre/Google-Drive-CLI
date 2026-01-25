@@ -6,6 +6,7 @@ type DriveFile struct {
 	Name           string            `json:"name"`
 	MimeType       string            `json:"mimeType"`
 	Size           int64             `json:"size,omitempty"`
+	MD5Checksum    string            `json:"md5Checksum,omitempty"`
 	CreatedTime    string            `json:"createdTime,omitempty"`
 	ModifiedTime   string            `json:"modifiedTime,omitempty"`
 	Parents        []string          `json:"parents,omitempty"`

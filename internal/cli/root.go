@@ -12,12 +12,12 @@ import (
 	"github.com/dl-alexandre/gdrv/internal/resolver"
 	"github.com/dl-alexandre/gdrv/internal/types"
 	"github.com/dl-alexandre/gdrv/internal/utils"
+	"github.com/dl-alexandre/gdrv/pkg/version"
 	"github.com/spf13/cobra"
 )
 
 var (
 	globalFlags types.GlobalFlags
-	version     = "1.0.0"
 	logger      logging.Logger
 )
 
@@ -28,7 +28,7 @@ var rootCmd = &cobra.Command{
 It supports file operations, folder management, permissions, and more.
 
 All commands support JSON output for automation and scripting.`,
-	Version: version,
+	Version: version.Version,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		if err := validateGlobalFlags(); err != nil {
 			return err
@@ -66,7 +66,7 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version number",
 	Long:  "Print the version number of gdrv",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(version)
+		fmt.Println(version.Version)
 	},
 }
 

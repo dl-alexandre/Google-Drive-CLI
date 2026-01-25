@@ -263,22 +263,24 @@ func (c *Config) GetRequestTimeout() time.Duration {
 
 // GetConfigPath returns the path to the config file
 func GetConfigPath() (string, error) {
-	homeDir, err := os.UserHomeDir()
+	configDir, err := GetConfigDir()
 	if err != nil {
-		return "", fmt.Errorf("failed to get user home directory: %w", err)
+		return "", err
 	}
-
-	return filepath.Join(homeDir, ConfigDirName, ConfigFileName), nil
+	return filepath.Join(configDir, ConfigFileName), nil
 }
 
 // GetConfigDir returns the path to the config directory
 func GetConfigDir() (string, error) {
+	if dir := os.Getenv(EnvPrefix + "CONFIG_DIR"); dir != "" {
+		return dir, nil
+	}
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("failed to get user home directory: %w", err)
 	}
 
-	return filepath.Join(homeDir, ConfigDirName), nil
+	return filepath.Join(homeDir, ".config", "gdrv"), nil
 }
 
 // parseBool parses a boolean value from a string
@@ -306,6 +308,7 @@ func GetFieldMask(preset FieldMaskPreset, includeExportLinks bool) string {
 			"name",
 			"mimeType",
 			"size",
+			"md5Checksum",
 			"createdTime",
 			"modifiedTime",
 			"parents",
@@ -322,6 +325,7 @@ func GetFieldMask(preset FieldMaskPreset, includeExportLinks bool) string {
 			"name",
 			"mimeType",
 			"size",
+			"md5Checksum",
 			"createdTime",
 			"modifiedTime",
 			"modifiedByMe",

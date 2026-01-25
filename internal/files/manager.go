@@ -40,6 +40,12 @@ type UploadOptions struct {
 	PinRevision bool
 }
 
+type UpdateContentOptions struct {
+	Name     string
+	MimeType string
+	Fields   string
+}
+
 // DownloadOptions configures file download
 type DownloadOptions struct {
 	OutputPath   string
@@ -109,6 +115,44 @@ func (m *Manager) Upload(ctx context.Context, reqCtx *types.RequestContext, loca
 	}
 
 	// Update resource key cache
+	if result.ResourceKey != "" {
+		m.client.ResourceKeys().UpdateFromAPIResponse(result.Id, result.ResourceKey)
+	}
+
+	return convertDriveFile(result), nil
+}
+
+func (m *Manager) UpdateContent(ctx context.Context, reqCtx *types.RequestContext, fileID string, localPath string, opts UpdateContentOptions) (*types.DriveFile, error) {
+	reqCtx.InvolvedFileIDs = append(reqCtx.InvolvedFileIDs, fileID)
+
+	file, err := os.Open(localPath)
+	if err != nil {
+		return nil, utils.NewAppError(utils.NewCLIError(utils.ErrCodeInvalidArgument,
+			fmt.Sprintf("Failed to open file: %s", err)).Build())
+	}
+	defer file.Close()
+
+	metadata := &drive.File{}
+	if opts.Name != "" {
+		metadata.Name = opts.Name
+	}
+	if opts.MimeType != "" {
+		metadata.MimeType = opts.MimeType
+	}
+
+	call := m.client.Service().Files.Update(fileID, metadata).Media(file)
+	call = m.shaper.ShapeFilesUpdate(call, reqCtx)
+	if opts.Fields != "" {
+		call = call.Fields(googleapi.Field(opts.Fields))
+	}
+
+	result, err := api.ExecuteWithRetry(ctx, m.client, reqCtx, func() (*drive.File, error) {
+		return call.Do()
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	if result.ResourceKey != "" {
 		m.client.ResourceKeys().UpdateFromAPIResponse(result.Id, result.ResourceKey)
 	}
@@ -715,6 +759,7 @@ func convertDriveFile(f *drive.File) *types.DriveFile {
 		Name:           f.Name,
 		MimeType:       f.MimeType,
 		Size:           f.Size,
+		MD5Checksum:    f.Md5Checksum,
 		CreatedTime:    f.CreatedTime,
 		ModifiedTime:   f.ModifiedTime,
 		Parents:        f.Parents,

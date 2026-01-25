@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/dl-alexandre/gdrv/internal/auth"
+	"github.com/dl-alexandre/gdrv/internal/config"
 	"github.com/dl-alexandre/gdrv/internal/types"
 	"github.com/dl-alexandre/gdrv/internal/utils"
 	"github.com/spf13/cobra"
@@ -252,7 +253,8 @@ func runAuthStatus(cmd *cobra.Command, args []string) error {
 }
 
 func getConfigDir() string {
-	if dir := os.Getenv("GDRV_CONFIG_DIR"); dir != "" {
+	dir, err := config.GetConfigDir()
+	if err == nil {
 		return dir
 	}
 	home, _ := os.UserHomeDir()

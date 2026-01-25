@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/dl-alexandre/gdrv/pkg/version"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +24,7 @@ func runAbout(cmd *cobra.Command, args []string) error {
 	out := NewOutputWriter(flags.OutputFormat, flags.Quiet, flags.Verbose)
 
 	capabilities := map[string]interface{}{
-		"version": "1.0.0",
+		"version": version.Version,
 		"api": map[string]interface{}{
 			"supported_operations": []string{
 				"files.list", "files.get", "files.upload", "files.download", "files.delete",

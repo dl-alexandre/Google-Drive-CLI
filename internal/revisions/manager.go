@@ -300,6 +300,7 @@ func convertDriveFile(f *drive.File) *types.DriveFile {
 		Name:           f.Name,
 		MimeType:       f.MimeType,
 		Size:           f.Size,
+		MD5Checksum:    f.Md5Checksum,
 		CreatedTime:    f.CreatedTime,
 		ModifiedTime:   f.ModifiedTime,
 		Parents:        f.Parents,

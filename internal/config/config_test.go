@@ -224,7 +224,10 @@ func TestConfigSaveAndLoad(t *testing.T) {
 	}
 
 	// Ensure config directory exists
-	configDir := filepath.Join(tempDir, ConfigDirName)
+	configDir, err := GetConfigDir()
+	if err != nil {
+		t.Fatalf("Failed to get config dir: %v", err)
+	}
 	if err := os.MkdirAll(configDir, 0700); err != nil {
 		t.Fatalf("Failed to create config dir: %v", err)
 	}
