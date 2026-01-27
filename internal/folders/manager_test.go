@@ -764,8 +764,8 @@ func TestFolderParents_EdgeCases(t *testing.T) {
 
 			result := convertDriveFile(folder)
 
-			if tt.parents == nil {
-				if result.Parents != nil && len(result.Parents) != 0 {
+			if len(tt.parents) == 0 {
+				if len(result.Parents) != 0 {
 					t.Errorf("Expected nil or empty parents, got %v", result.Parents)
 				}
 			} else {
