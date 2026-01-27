@@ -106,7 +106,9 @@ func (w *OutputWriter) renderTable(renderer types.TableRenderer) error {
 	rows := renderer.Rows()
 	if len(rows) == 0 {
 		if !w.quiet {
-			fmt.Fprintln(os.Stdout, renderer.EmptyMessage())
+			if _, err := fmt.Fprintln(os.Stdout, renderer.EmptyMessage()); err != nil {
+				return err
+			}
 		}
 		return nil
 	}

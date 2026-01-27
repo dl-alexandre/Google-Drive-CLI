@@ -35,7 +35,11 @@ func TestNewLogger_ConsoleOnly(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewLogger() error = %v", err)
 	}
-	defer logger.Close()
+	t.Cleanup(func() {
+		if closeErr := logger.Close(); closeErr != nil {
+			t.Fatalf("Failed to close logger: %v", closeErr)
+		}
+	})
 
 	if logger == nil {
 		t.Fatal("Logger is nil")
@@ -62,7 +66,11 @@ func TestNewLogger_FileOnly(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewLogger() error = %v", err)
 	}
-	defer logger.Close()
+	t.Cleanup(func() {
+		if closeErr := logger.Close(); closeErr != nil {
+			t.Fatalf("Failed to close logger: %v", closeErr)
+		}
+	})
 
 	if logger == nil {
 		t.Fatal("Logger is nil")
@@ -94,7 +102,11 @@ func TestNewLogger_Both(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewLogger() error = %v", err)
 	}
-	defer logger.Close()
+	t.Cleanup(func() {
+		if closeErr := logger.Close(); closeErr != nil {
+			t.Fatalf("Failed to close logger: %v", closeErr)
+		}
+	})
 
 	if logger == nil {
 		t.Fatal("Logger is nil")
@@ -117,7 +129,11 @@ func TestNewLogger_NoOp(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewLogger() error = %v", err)
 	}
-	defer logger.Close()
+	t.Cleanup(func() {
+		if closeErr := logger.Close(); closeErr != nil {
+			t.Fatalf("Failed to close logger: %v", closeErr)
+		}
+	})
 
 	if logger == nil {
 		t.Fatal("Logger is nil")
@@ -164,7 +180,11 @@ func TestNewDebugLoggerWithTransport(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewDebugLoggerWithTransport() error = %v", err)
 	}
-	defer logger.Close()
+	t.Cleanup(func() {
+		if closeErr := logger.Close(); closeErr != nil {
+			t.Fatalf("Failed to close logger: %v", closeErr)
+		}
+	})
 
 	if logger == nil {
 		t.Fatal("Logger is nil")
@@ -186,7 +206,11 @@ func TestNewDebugLoggerWithTransport_NoDebug(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewDebugLoggerWithTransport() error = %v", err)
 	}
-	defer logger.Close()
+	t.Cleanup(func() {
+		if closeErr := logger.Close(); closeErr != nil {
+			t.Fatalf("Failed to close logger: %v", closeErr)
+		}
+	})
 
 	if logger == nil {
 		t.Fatal("Logger is nil")

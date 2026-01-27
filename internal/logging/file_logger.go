@@ -47,7 +47,9 @@ func NewFileLogger(config FileLoggerConfig) (*FileLogger, error) {
 	// Get current file size
 	info, err := file.Stat()
 	if err != nil {
-		file.Close()
+		if closeErr := file.Close(); closeErr != nil {
+			return nil, fmt.Errorf("failed to close log file after stat error: %w", closeErr)
+		}
 		return nil, fmt.Errorf("failed to stat log file: %w", err)
 	}
 

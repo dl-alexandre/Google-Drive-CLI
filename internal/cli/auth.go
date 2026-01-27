@@ -243,10 +243,7 @@ func runAuthStatus(cmd *cobra.Command, args []string) error {
 	}
 
 	expired := time.Now().After(creds.ExpiryDate)
-	authenticated := true
-	if expired && (creds.Type == types.AuthTypeServiceAccount || creds.Type == types.AuthTypeImpersonated) {
-		authenticated = false
-	}
+	authenticated := !expired || (creds.Type != types.AuthTypeServiceAccount && creds.Type != types.AuthTypeImpersonated)
 
 	return out.WriteSuccess("auth.status", map[string]interface{}{
 		"profile":        flags.Profile,
@@ -409,7 +406,7 @@ func validateAdminScopesRequireImpersonation(scopes []string, impersonateUser st
 	}
 
 	if hasAdminScope && impersonateUser == "" {
-		return fmt.Errorf("Admin SDK scopes require --impersonate-user")
+		return fmt.Errorf("admin SDK scopes require --impersonate-user")
 	}
 
 	return nil

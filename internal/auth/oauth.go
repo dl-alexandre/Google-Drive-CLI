@@ -89,7 +89,9 @@ func (f *OAuthFlow) handleCallback(w http.ResponseWriter, r *http.Request) {
 
 	f.codeChan <- code
 	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprintf(w, `<html><body><h1>Authentication successful!</h1><p>You can close this window.</p></body></html>`)
+	if _, err := fmt.Fprintf(w, `<html><body><h1>Authentication successful!</h1><p>You can close this window.</p></body></html>`); err != nil {
+		f.errChan <- err
+	}
 }
 
 // WaitForCode waits for the authorization code

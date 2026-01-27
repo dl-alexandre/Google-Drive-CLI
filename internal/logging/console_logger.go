@@ -158,7 +158,9 @@ func (l *ConsoleLogger) log(level LogLevel, msg string, fields ...Field) {
 	defer l.mu.Unlock()
 
 	formatted := l.formatMessage(level, msg, fields...)
-	fmt.Fprintln(l.writer, formatted)
+	if _, err := fmt.Fprintln(l.writer, formatted); err != nil {
+		return
+	}
 }
 
 // Debug logs a debug-level message

@@ -95,12 +95,16 @@ func ScanLocal(ctx context.Context, root string, matcher *exclude.Matcher, prev 
 	return entries, nil
 }
 
-func hashFile(path string) (string, error) {
+func hashFile(path string) (hash string, err error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return "", err
 	}
-	defer f.Close()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	h := md5.New()
 	if _, err := io.Copy(h, f); err != nil {

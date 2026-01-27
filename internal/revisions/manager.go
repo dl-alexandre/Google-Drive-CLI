@@ -121,7 +121,7 @@ type DownloadOptions struct {
 }
 
 // Download downloads a specific revision
-func (m *Manager) Download(ctx context.Context, reqCtx *types.RequestContext, fileID string, revisionID string, opts DownloadOptions) error {
+func (m *Manager) Download(ctx context.Context, reqCtx *types.RequestContext, fileID string, revisionID string, opts DownloadOptions) (err error) {
 	reqCtx.InvolvedFileIDs = append(reqCtx.InvolvedFileIDs, fileID)
 
 	// Get revision metadata first
@@ -155,7 +155,11 @@ func (m *Manager) Download(ctx context.Context, reqCtx *types.RequestContext, fi
 		return utils.NewAppError(utils.NewCLIError(utils.ErrCodeInvalidArgument,
 			fmt.Sprintf("Failed to create output file: %s", err)).Build())
 	}
-	defer outFile.Close()
+	defer func() {
+		if closeErr := outFile.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	// Download revision content
 	call := m.client.Service().Revisions.Get(fileID, revisionID)
@@ -175,7 +179,11 @@ func (m *Manager) Download(ctx context.Context, reqCtx *types.RequestContext, fi
 		return utils.NewAppError(utils.NewCLIError(utils.ErrCodeNetworkError,
 			fmt.Sprintf("Download failed: %s", err)).Build())
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	_, err = io.Copy(outFile, resp.Body)
 	return err
@@ -225,7 +233,7 @@ func (m *Manager) Update(ctx context.Context, reqCtx *types.RequestContext, file
 }
 
 // Restore restores a file to a specific revision
-func (m *Manager) Restore(ctx context.Context, reqCtx *types.RequestContext, fileID string, revisionID string) (*types.DriveFile, error) {
+func (m *Manager) Restore(ctx context.Context, reqCtx *types.RequestContext, fileID string, revisionID string) (file *types.DriveFile, err error) {
 	reqCtx.InvolvedFileIDs = append(reqCtx.InvolvedFileIDs, fileID)
 
 	// For blob files, we need to download the revision and upload as new head
@@ -251,8 +259,14 @@ func (m *Manager) Restore(ctx context.Context, reqCtx *types.RequestContext, fil
 			fmt.Sprintf("Failed to create temporary file: %s", err)).Build())
 	}
 	tmpPath := tmpFile.Name()
-	tmpFile.Close()
-	defer os.Remove(tmpPath)
+	if closeErr := tmpFile.Close(); closeErr != nil {
+		return nil, closeErr
+	}
+	defer func() {
+		if removeErr := os.Remove(tmpPath); removeErr != nil && err == nil {
+			err = removeErr
+		}
+	}()
 
 	// Download revision
 	err = m.Download(ctx, reqCtx, fileID, revisionID, DownloadOptions{
@@ -267,7 +281,11 @@ func (m *Manager) Restore(ctx context.Context, reqCtx *types.RequestContext, fil
 	if err != nil {
 		return nil, err
 	}
-	defer contentFile.Close()
+	defer func() {
+		if closeErr := contentFile.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	metadata := &drive.File{}
 	call := m.client.Service().Files.Update(fileID, metadata).Media(contentFile)

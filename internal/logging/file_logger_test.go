@@ -24,7 +24,11 @@ func TestFileLogger_Creation(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewFileLogger() error = %v", err)
 	}
-	defer logger.Close()
+	t.Cleanup(func() {
+		if closeErr := logger.Close(); closeErr != nil {
+			t.Fatalf("Failed to close logger: %v", closeErr)
+		}
+	})
 
 	// Verify file was created
 	if _, err := os.Stat(logPath); os.IsNotExist(err) {
@@ -47,6 +51,11 @@ func TestFileLogger_Logging(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewFileLogger() error = %v", err)
 	}
+	t.Cleanup(func() {
+		if closeErr := logger.Close(); closeErr != nil {
+			t.Fatalf("Failed to close logger: %v", closeErr)
+		}
+	})
 
 	// Log various levels
 	logger.Debug("debug message", F("key1", "value1"))
@@ -54,7 +63,9 @@ func TestFileLogger_Logging(t *testing.T) {
 	logger.Warn("warn message")
 	logger.Error("error message", F("key3", true))
 
-	logger.Close()
+	if err := logger.Close(); err != nil {
+		t.Fatalf("Failed to close logger: %v", err)
+	}
 
 	// Read log file
 	data, err := os.ReadFile(logPath)

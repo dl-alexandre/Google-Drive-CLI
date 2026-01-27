@@ -313,14 +313,18 @@ func (f *OutputFormatter) writeKeyValueTable(data map[string]interface{}) error 
 // Log writes a message to stderr unless quiet mode is enabled
 func (f *OutputFormatter) Log(format string, args ...interface{}) {
 	if !f.quiet {
-		fmt.Fprintf(f.errorWriter, format+"\n", args...)
+		if _, err := fmt.Fprintf(f.errorWriter, format+"\n", args...); err != nil {
+			return
+		}
 	}
 }
 
 // Verbose writes a message to stderr only in verbose mode
 func (f *OutputFormatter) Verbose(format string, args ...interface{}) {
 	if f.verbose {
-		fmt.Fprintf(f.errorWriter, "[VERBOSE] "+format+"\n", args...)
+		if _, err := fmt.Fprintf(f.errorWriter, "[VERBOSE] "+format+"\n", args...); err != nil {
+			return
+		}
 	}
 }
 
@@ -328,7 +332,9 @@ func (f *OutputFormatter) Verbose(format string, args ...interface{}) {
 func (f *OutputFormatter) Debug(format string, args ...interface{}) {
 	// Debug is treated as more verbose than verbose
 	if f.verbose {
-		fmt.Fprintf(f.errorWriter, "[DEBUG] "+format+"\n", args...)
+		if _, err := fmt.Fprintf(f.errorWriter, "[DEBUG] "+format+"\n", args...); err != nil {
+			return
+		}
 	}
 }
 

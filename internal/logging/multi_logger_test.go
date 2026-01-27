@@ -195,7 +195,9 @@ func TestMultiLogger_FileAndConsole(t *testing.T) {
 
 	multi.Info("test message", F("key", "value"))
 
-	multi.Close()
+	if err := multi.Close(); err != nil {
+		t.Fatalf("Failed to close multi logger: %v", err)
+	}
 
 	// Verify console output
 	consoleOutput := buf.String()
