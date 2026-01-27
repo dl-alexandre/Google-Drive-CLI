@@ -199,14 +199,10 @@ func TestConfigDurationGetters(t *testing.T) {
 func TestConfigSaveAndLoad(t *testing.T) {
 	tempDir := t.TempDir()
 
-	originalHome := os.Getenv("HOME")
-	os.Setenv("HOME", tempDir)
-	defer os.Setenv("HOME", originalHome)
+	t.Setenv("HOME", tempDir)
 
 	if runtime.GOOS == "windows" {
-		originalUserProfile := os.Getenv("USERPROFILE")
-		os.Setenv("USERPROFILE", tempDir)
-		defer os.Setenv("USERPROFILE", originalUserProfile)
+		t.Setenv("USERPROFILE", tempDir)
 	}
 
 	// Create a config with custom values
@@ -268,36 +264,14 @@ func TestConfigSaveAndLoad(t *testing.T) {
 }
 
 func TestLoadFromEnv(t *testing.T) {
-	// Save original environment
-	originalEnv := map[string]string{
-		"GDRV_DEFAULT_PROFILE":      os.Getenv("GDRV_DEFAULT_PROFILE"),
-		"GDRV_OUTPUT_FORMAT":        os.Getenv("GDRV_OUTPUT_FORMAT"),
-		"GDRV_DEFAULT_FIELDS":       os.Getenv("GDRV_DEFAULT_FIELDS"),
-		"GDRV_CACHE_TTL":            os.Getenv("GDRV_CACHE_TTL"),
-		"GDRV_INCLUDE_EXPORT_LINKS": os.Getenv("GDRV_INCLUDE_EXPORT_LINKS"),
-		"GDRV_MAX_RETRIES":          os.Getenv("GDRV_MAX_RETRIES"),
-		"GDRV_LOG_LEVEL":            os.Getenv("GDRV_LOG_LEVEL"),
-	}
-
-	// Restore environment after test
-	defer func() {
-		for key, value := range originalEnv {
-			if value == "" {
-				os.Unsetenv(key)
-			} else {
-				os.Setenv(key, value)
-			}
-		}
-	}()
-
 	// Set test environment variables
-	os.Setenv("GDRV_DEFAULT_PROFILE", "env-profile")
-	os.Setenv("GDRV_OUTPUT_FORMAT", "table")
-	os.Setenv("GDRV_DEFAULT_FIELDS", "full")
-	os.Setenv("GDRV_CACHE_TTL", "900")
-	os.Setenv("GDRV_INCLUDE_EXPORT_LINKS", "true")
-	os.Setenv("GDRV_MAX_RETRIES", "7")
-	os.Setenv("GDRV_LOG_LEVEL", "debug")
+	t.Setenv("GDRV_DEFAULT_PROFILE", "env-profile")
+	t.Setenv("GDRV_OUTPUT_FORMAT", "table")
+	t.Setenv("GDRV_DEFAULT_FIELDS", "full")
+	t.Setenv("GDRV_CACHE_TTL", "900")
+	t.Setenv("GDRV_INCLUDE_EXPORT_LINKS", "true")
+	t.Setenv("GDRV_MAX_RETRIES", "7")
+	t.Setenv("GDRV_LOG_LEVEL", "debug")
 
 	// Load config (which should apply env vars)
 	cfg := DefaultConfig()

@@ -127,9 +127,13 @@ func (f *OutputFormatter) writeTable(data interface{}) error {
 	// Display warnings if any (to stderr)
 	if len(f.warnings) > 0 && !f.quiet {
 		for _, warning := range f.warnings {
-			fmt.Fprintf(f.errorWriter, "Warning [%s]: %s\n", warning.Code, warning.Message)
+			if _, err := fmt.Fprintf(f.errorWriter, "Warning [%s]: %s\n", warning.Code, warning.Message); err != nil {
+				return err
+			}
 		}
-		fmt.Fprintln(f.errorWriter)
+		if _, err := fmt.Fprintln(f.errorWriter); err != nil {
+			return err
+		}
 	}
 
 	if renderable, ok := data.(types.TableRenderable); ok {
@@ -153,10 +157,14 @@ func (f *OutputFormatter) writeTable(data interface{}) error {
 			return err
 		}
 		if v.NextPageToken != "" {
-			fmt.Fprintf(f.errorWriter, "\nMore results available. Use --page-token %s to continue.\n", v.NextPageToken)
+			if _, err := fmt.Fprintf(f.errorWriter, "\nMore results available. Use --page-token %s to continue.\n", v.NextPageToken); err != nil {
+				return err
+			}
 		}
 		if v.IncompleteSearch {
-			fmt.Fprintln(f.errorWriter, "\nWarning: Search results may be incomplete.")
+			if _, err := fmt.Fprintln(f.errorWriter, "\nWarning: Search results may be incomplete."); err != nil {
+				return err
+			}
 		}
 		return nil
 	case map[string]interface{}:
@@ -179,7 +187,9 @@ func (f *OutputFormatter) renderTable(renderer types.TableRenderer) error {
 	rows := renderer.Rows()
 	if len(rows) == 0 {
 		if !f.quiet {
-			fmt.Fprintln(f.writer, renderer.EmptyMessage())
+			if _, err := fmt.Fprintln(f.writer, renderer.EmptyMessage()); err != nil {
+				return err
+			}
 		}
 		return nil
 	}
@@ -208,7 +218,9 @@ func (f *OutputFormatter) renderTable(renderer types.TableRenderer) error {
 func (f *OutputFormatter) writeFileTable(files []*types.DriveFile) error {
 	if len(files) == 0 {
 		if !f.quiet {
-			fmt.Fprintln(f.writer, "No files found.")
+			if _, err := fmt.Fprintln(f.writer, "No files found."); err != nil {
+				return err
+			}
 		}
 		return nil
 	}
@@ -248,7 +260,9 @@ func (f *OutputFormatter) writeFileTable(files []*types.DriveFile) error {
 func (f *OutputFormatter) writePermissionTable(perms []*types.Permission) error {
 	if len(perms) == 0 {
 		if !f.quiet {
-			fmt.Fprintln(f.writer, "No permissions found.")
+			if _, err := fmt.Fprintln(f.writer, "No permissions found."); err != nil {
+				return err
+			}
 		}
 		return nil
 	}

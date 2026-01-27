@@ -211,7 +211,11 @@ func runSyncWithMode(configID string, mode diff.Mode, command string, planOnly b
 	if err != nil {
 		return out.WriteError(command, utils.NewCLIError(utils.ErrCodeUnknown, err.Error()).Build())
 	}
-	defer engine.Close()
+	defer func() {
+		if closeErr := engine.Close(); closeErr != nil {
+			GetLogger().Warn("failed to close sync engine", logging.F("error", closeErr))
+		}
+	}()
 
 	opts := syncengine.Options{
 		Mode:        mode,
