@@ -966,3 +966,330 @@ func TestValidateCreateOptions(t *testing.T) {
 		})
 	}
 }
+
+// Test CreateOptions structure and defaults
+func TestCreateOptions_Struct(t *testing.T) {
+	opts := CreateOptions{
+		Type:                  "user",
+		Role:                  "reader",
+		EmailAddress:          "user@example.com",
+		Domain:                "",
+		SendNotificationEmail: true,
+		EmailMessage:          "Shared with you",
+		TransferOwnership:     false,
+		AllowFileDiscovery:    false,
+		UseDomainAdminAccess:  false,
+	}
+
+	if opts.Type != "user" {
+		t.Errorf("Type = %s, want user", opts.Type)
+	}
+	if opts.Role != "reader" {
+		t.Errorf("Role = %s, want reader", opts.Role)
+	}
+	if opts.EmailAddress != "user@example.com" {
+		t.Errorf("EmailAddress = %s, want user@example.com", opts.EmailAddress)
+	}
+	if !opts.SendNotificationEmail {
+		t.Error("SendNotificationEmail should be true")
+	}
+	if opts.EmailMessage != "Shared with you" {
+		t.Errorf("EmailMessage = %s, want 'Shared with you'", opts.EmailMessage)
+	}
+}
+
+// Test UpdateOptions structure
+func TestUpdateOptions_Struct(t *testing.T) {
+	opts := UpdateOptions{
+		Role:                 "writer",
+		UseDomainAdminAccess: true,
+	}
+
+	if opts.Role != "writer" {
+		t.Errorf("Role = %s, want writer", opts.Role)
+	}
+	if !opts.UseDomainAdminAccess {
+		t.Error("UseDomainAdminAccess should be true")
+	}
+}
+
+// Test DeleteOptions structure
+func TestDeleteOptions_Struct(t *testing.T) {
+	opts := DeleteOptions{
+		UseDomainAdminAccess: true,
+	}
+
+	if !opts.UseDomainAdminAccess {
+		t.Error("UseDomainAdminAccess should be true")
+	}
+}
+
+// Test ListOptions structure
+func TestListOptions_Struct(t *testing.T) {
+	opts := ListOptions{
+		UseDomainAdminAccess: true,
+		PageSize:             50,
+	}
+
+	if !opts.UseDomainAdminAccess {
+		t.Error("UseDomainAdminAccess should be true")
+	}
+	if opts.PageSize != 50 {
+		t.Errorf("PageSize = %d, want 50", opts.PageSize)
+	}
+}
+
+// Test default option values
+func TestDefaultOptionValues(t *testing.T) {
+	t.Run("CreateOptions defaults", func(t *testing.T) {
+		opts := CreateOptions{}
+		if opts.SendNotificationEmail {
+			t.Error("SendNotificationEmail should default to false")
+		}
+		if opts.TransferOwnership {
+			t.Error("TransferOwnership should default to false")
+		}
+		if opts.AllowFileDiscovery {
+			t.Error("AllowFileDiscovery should default to false")
+		}
+		if opts.UseDomainAdminAccess {
+			t.Error("UseDomainAdminAccess should default to false")
+		}
+	})
+
+	t.Run("UpdateOptions defaults", func(t *testing.T) {
+		opts := UpdateOptions{}
+		if opts.UseDomainAdminAccess {
+			t.Error("UseDomainAdminAccess should default to false")
+		}
+	})
+
+	t.Run("DeleteOptions defaults", func(t *testing.T) {
+		opts := DeleteOptions{}
+		if opts.UseDomainAdminAccess {
+			t.Error("UseDomainAdminAccess should default to false")
+		}
+	})
+
+	t.Run("ListOptions defaults", func(t *testing.T) {
+		opts := ListOptions{}
+		if opts.UseDomainAdminAccess {
+			t.Error("UseDomainAdminAccess should default to false")
+		}
+		if opts.PageSize != 0 {
+			t.Errorf("PageSize should default to 0, got %d", opts.PageSize)
+		}
+	})
+}
+
+// Test permission type combinations
+func TestPermissionTypeCombinations(t *testing.T) {
+	tests := []struct {
+		name  string
+		opts  CreateOptions
+		valid bool
+	}{
+		{"user + reader", CreateOptions{Type: "user", Role: "reader", EmailAddress: "a@b.com"}, true},
+		{"user + writer", CreateOptions{Type: "user", Role: "writer", EmailAddress: "a@b.com"}, true},
+		{"user + owner", CreateOptions{Type: "user", Role: "owner", EmailAddress: "a@b.com"}, true},
+		{"group + reader", CreateOptions{Type: "group", Role: "reader", EmailAddress: "group@b.com"}, true},
+		{"group + writer", CreateOptions{Type: "group", Role: "writer", EmailAddress: "group@b.com"}, true},
+		{"domain + reader", CreateOptions{Type: "domain", Role: "reader", Domain: "example.com"}, true},
+		{"domain + writer", CreateOptions{Type: "domain", Role: "writer", Domain: "example.com"}, true},
+		{"anyone + reader", CreateOptions{Type: "anyone", Role: "reader"}, true},
+		{"anyone + commenter", CreateOptions{Type: "anyone", Role: "commenter"}, true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateCreateOptions(tt.opts)
+			if tt.valid && err != nil {
+				t.Errorf("Expected valid, got error: %v", err)
+			}
+			if !tt.valid && err == nil {
+				t.Error("Expected error, got nil")
+			}
+		})
+	}
+}
+
+// Test convertPermission with various permission types
+func TestConvertPermission_AllTypes(t *testing.T) {
+	tests := []struct {
+		name  string
+		input *drive.Permission
+	}{
+		{
+			name: "user with all fields",
+			input: &drive.Permission{
+				Id:           "perm1",
+				Type:         "user",
+				Role:         "owner",
+				EmailAddress: "owner@example.com",
+				DisplayName:  "Owner Name",
+			},
+		},
+		{
+			name: "group permission",
+			input: &drive.Permission{
+				Id:           "perm2",
+				Type:         "group",
+				Role:         "writer",
+				EmailAddress: "group@example.com",
+				DisplayName:  "Group Name",
+			},
+		},
+		{
+			name: "domain permission",
+			input: &drive.Permission{
+				Id:     "perm3",
+				Type:   "domain",
+				Role:   "reader",
+				Domain: "example.com",
+			},
+		},
+		{
+			name: "anyone permission",
+			input: &drive.Permission{
+				Id:   "anyoneWithLink",
+				Type: "anyone",
+				Role: "reader",
+			},
+		},
+		{
+			name: "commenter role",
+			input: &drive.Permission{
+				Id:           "perm4",
+				Type:         "user",
+				Role:         "commenter",
+				EmailAddress: "commenter@example.com",
+			},
+		},
+		{
+			name: "organizer role (shared drive)",
+			input: &drive.Permission{
+				Id:           "perm5",
+				Type:         "user",
+				Role:         "organizer",
+				EmailAddress: "organizer@example.com",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := convertPermission(tt.input)
+
+			if result == nil {
+				t.Fatal("convertPermission returned nil")
+			}
+
+			if result.ID != tt.input.Id {
+				t.Errorf("ID = %s, want %s", result.ID, tt.input.Id)
+			}
+			if result.Type != tt.input.Type {
+				t.Errorf("Type = %s, want %s", result.Type, tt.input.Type)
+			}
+			if result.Role != tt.input.Role {
+				t.Errorf("Role = %s, want %s", result.Role, tt.input.Role)
+			}
+			if result.EmailAddress != tt.input.EmailAddress {
+				t.Errorf("EmailAddress = %s, want %s", result.EmailAddress, tt.input.EmailAddress)
+			}
+			if result.Domain != tt.input.Domain {
+				t.Errorf("Domain = %s, want %s", result.Domain, tt.input.Domain)
+			}
+			if result.DisplayName != tt.input.DisplayName {
+				t.Errorf("DisplayName = %s, want %s", result.DisplayName, tt.input.DisplayName)
+			}
+		})
+	}
+}
+
+// Test convertPermission with minimal fields
+func TestConvertPermission_MinimalFields(t *testing.T) {
+	input := &drive.Permission{
+		Id:   "minimal",
+		Type: "user",
+		Role: "reader",
+	}
+
+	result := convertPermission(input)
+
+	if result.ID != "minimal" {
+		t.Errorf("ID = %s, want minimal", result.ID)
+	}
+	if result.EmailAddress != "" {
+		t.Errorf("EmailAddress should be empty, got %s", result.EmailAddress)
+	}
+	if result.Domain != "" {
+		t.Errorf("Domain should be empty, got %s", result.Domain)
+	}
+	if result.DisplayName != "" {
+		t.Errorf("DisplayName should be empty, got %s", result.DisplayName)
+	}
+}
+
+// Test that Manager can be created
+func TestNewManager(t *testing.T) {
+	// We can't fully test without a real client, but we can test the structure
+	t.Run("manager creation", func(t *testing.T) {
+		// This would normally require a real API client
+		// manager := NewManager(client)
+		// Just test that the function signature is correct
+		_ = NewManager
+	})
+}
+
+// Test all permission roles
+func TestAllPermissionRoles(t *testing.T) {
+	roles := []string{"reader", "commenter", "writer", "organizer", "owner"}
+
+	for _, role := range roles {
+		t.Run(role, func(t *testing.T) {
+			opts := CreateOptions{
+				Type:         "user",
+				Role:         role,
+				EmailAddress: "user@example.com",
+			}
+
+			// For owner, need TransferOwnership
+			if role == "owner" {
+				opts.TransferOwnership = true
+			}
+
+			err := validateCreateOptions(opts)
+			if err != nil {
+				t.Errorf("Role %s should be valid, got error: %v", role, err)
+			}
+		})
+	}
+}
+
+// Test all permission types
+func TestAllPermissionTypes(t *testing.T) {
+	types := []struct {
+		permType string
+		setup    func(*CreateOptions)
+	}{
+		{"user", func(o *CreateOptions) { o.EmailAddress = "user@example.com" }},
+		{"group", func(o *CreateOptions) { o.EmailAddress = "group@example.com" }},
+		{"domain", func(o *CreateOptions) { o.Domain = "example.com" }},
+		{"anyone", func(o *CreateOptions) {}},
+	}
+
+	for _, tt := range types {
+		t.Run(tt.permType, func(t *testing.T) {
+			opts := CreateOptions{
+				Type: tt.permType,
+				Role: "reader",
+			}
+			tt.setup(&opts)
+
+			err := validateCreateOptions(opts)
+			if err != nil {
+				t.Errorf("Type %s should be valid, got error: %v", tt.permType, err)
+			}
+		})
+	}
+}
