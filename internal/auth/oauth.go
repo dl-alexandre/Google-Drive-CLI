@@ -31,7 +31,9 @@ func NewOAuthFlow(config *oauth2.Config) (*OAuthFlow, error) {
 
 	state, err := generateState()
 	if err != nil {
-		listener.Close()
+		if closeErr := listener.Close(); closeErr != nil {
+			return nil, fmt.Errorf("failed to close listener after state error: %w", closeErr)
+		}
 		return nil, fmt.Errorf("failed to generate state: %w", err)
 	}
 
@@ -63,7 +65,9 @@ func (f *OAuthFlow) StartCallbackServer(ctx context.Context) {
 
 	go func() {
 		<-ctx.Done()
-		server.Close()
+		if err := server.Close(); err != nil && err != http.ErrServerClosed {
+			f.errChan <- err
+		}
 	}()
 }
 
@@ -117,10 +121,13 @@ func (f *OAuthFlow) ExchangeCode(ctx context.Context, code string) (*types.Crede
 }
 
 // Close cleans up resources
-func (f *OAuthFlow) Close() {
+func (f *OAuthFlow) Close() error {
 	if f.listener != nil {
-		f.listener.Close()
+		if err := f.listener.Close(); err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 func generateState() (string, error) {
@@ -141,7 +148,11 @@ func (m *Manager) Authenticate(ctx context.Context, profile string, openBrowser 
 	if err != nil {
 		return nil, err
 	}
-	defer flow.Close()
+	defer func() {
+		if err := flow.Close(); err != nil {
+			fmt.Printf("Warning: failed to close OAuth listener: %v\n", err)
+		}
+	}()
 
 	authURL := flow.GetAuthURL()
 	fmt.Printf("Opening browser for authentication...\n")

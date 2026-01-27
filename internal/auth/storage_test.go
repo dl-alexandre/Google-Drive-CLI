@@ -12,7 +12,11 @@ func TestEncryptedFileStorage(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(tmpDir)
+	t.Cleanup(func() {
+		if err := os.RemoveAll(tmpDir); err != nil {
+			t.Fatalf("failed to remove temp dir: %v", err)
+		}
+	})
 
 	storage, err := NewEncryptedFileStorage(tmpDir)
 	if err != nil {
@@ -67,7 +71,11 @@ func TestPlainFileStorage(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(tmpDir)
+	t.Cleanup(func() {
+		if err := os.RemoveAll(tmpDir); err != nil {
+			t.Fatalf("failed to remove temp dir: %v", err)
+		}
+	})
 
 	storage := NewPlainFileStorage(tmpDir)
 	testData := []byte(`{"profile":"test","access_token":"test-token"}`)
@@ -100,7 +108,11 @@ func TestEncryptionRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(tmpDir)
+	t.Cleanup(func() {
+		if err := os.RemoveAll(tmpDir); err != nil {
+			t.Fatalf("failed to remove temp dir: %v", err)
+		}
+	})
 
 	storage, err := NewEncryptedFileStorage(tmpDir)
 	if err != nil {
@@ -138,7 +150,11 @@ func TestGetOrCreateEncryptionKey(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(tmpDir)
+	t.Cleanup(func() {
+		if err := os.RemoveAll(tmpDir); err != nil {
+			t.Fatalf("failed to remove temp dir: %v", err)
+		}
+	})
 
 	// First call should create a new key
 	key1, err := getOrCreateEncryptionKey(tmpDir)
@@ -166,7 +182,11 @@ func TestManagerListProfiles(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(tmpDir)
+	t.Cleanup(func() {
+		if err := os.RemoveAll(tmpDir); err != nil {
+			t.Fatalf("failed to remove temp dir: %v", err)
+		}
+	})
 
 	// Create manager with plain file storage for easier testing
 	mgr := NewManagerWithOptions(tmpDir, ManagerOptions{ForcePlainFile: true})

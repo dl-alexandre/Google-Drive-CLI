@@ -53,7 +53,7 @@ func NewDeviceCodeFlow(config *oauth2.Config) *DeviceCodeFlow {
 }
 
 // RequestDeviceCode requests a device code from Google
-func (f *DeviceCodeFlow) RequestDeviceCode(ctx context.Context) (*DeviceCodeResponse, error) {
+func (f *DeviceCodeFlow) RequestDeviceCode(ctx context.Context) (response *DeviceCodeResponse, err error) {
 	data := url.Values{}
 	data.Set("client_id", f.config.ClientID)
 	data.Set("scope", strings.Join(f.config.Scopes, " "))
@@ -69,7 +69,11 @@ func (f *DeviceCodeFlow) RequestDeviceCode(ctx context.Context) (*DeviceCodeResp
 	if err != nil {
 		return nil, fmt.Errorf("failed to request device code: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil && err == nil {
+			err = fmt.Errorf("failed to close device code response body: %w", closeErr)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
@@ -129,7 +133,7 @@ func (f *DeviceCodeFlow) PollForToken(ctx context.Context) (*types.Credentials, 
 }
 
 // pollOnce performs a single poll attempt
-func (f *DeviceCodeFlow) pollOnce(ctx context.Context, client *http.Client) (*types.Credentials, error) {
+func (f *DeviceCodeFlow) pollOnce(ctx context.Context, client *http.Client) (creds *types.Credentials, err error) {
 	data := url.Values{}
 	data.Set("client_id", f.config.ClientID)
 	data.Set("client_secret", f.config.ClientSecret)
@@ -146,7 +150,11 @@ func (f *DeviceCodeFlow) pollOnce(ctx context.Context, client *http.Client) (*ty
 	if err != nil {
 		return nil, fmt.Errorf("failed to poll for token: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil && err == nil {
+			err = fmt.Errorf("failed to close token response body: %w", closeErr)
+		}
+	}()
 
 	var tokenResp TokenResponse
 	if err := json.NewDecoder(resp.Body).Decode(&tokenResp); err != nil {

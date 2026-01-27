@@ -8,6 +8,7 @@ import (
 
 	"github.com/dl-alexandre/gdrv/internal/api"
 	"github.com/dl-alexandre/gdrv/internal/auth"
+	"github.com/dl-alexandre/gdrv/internal/logging"
 	"github.com/dl-alexandre/gdrv/internal/sync/conflict"
 	syncengine "github.com/dl-alexandre/gdrv/internal/sync"
 	"github.com/dl-alexandre/gdrv/internal/sync/diff"
@@ -145,7 +146,11 @@ func runSyncInit(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return out.WriteError("sync.init", utils.NewCLIError(utils.ErrCodeUnknown, err.Error()).Build())
 	}
-	defer db.Close()
+	defer func() {
+		if closeErr := db.Close(); closeErr != nil {
+			GetLogger().Warn("failed to close sync database", logging.F("error", closeErr))
+		}
+	}()
 
 	configID := syncConfigID
 	if configID == "" {
@@ -257,7 +262,11 @@ func runSyncList(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return out.WriteError("sync.list", utils.NewCLIError(utils.ErrCodeUnknown, err.Error()).Build())
 	}
-	defer db.Close()
+	defer func() {
+		if closeErr := db.Close(); closeErr != nil {
+			GetLogger().Warn("failed to close sync database", logging.F("error", closeErr))
+		}
+	}()
 
 	configs, err := db.ListConfigs(context.Background())
 	if err != nil {
@@ -276,7 +285,11 @@ func runSyncRemove(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return out.WriteError("sync.remove", utils.NewCLIError(utils.ErrCodeUnknown, err.Error()).Build())
 	}
-	defer db.Close()
+	defer func() {
+		if closeErr := db.Close(); closeErr != nil {
+			GetLogger().Warn("failed to close sync database", logging.F("error", closeErr))
+		}
+	}()
 
 	if err := db.DeleteEntries(context.Background(), args[0]); err != nil {
 		return out.WriteError("sync.remove", utils.NewCLIError(utils.ErrCodeUnknown, err.Error()).Build())
