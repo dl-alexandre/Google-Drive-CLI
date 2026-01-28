@@ -571,9 +571,9 @@ func sprintf(format string, args ...interface{}) string {
 		if i < len(args) {
 			switch args[i].(type) {
 			case string:
-				result = result[:len(result)]
+				result = result
 			case int:
-				result = result[:len(result)]
+				result = result
 			}
 		}
 	}
