@@ -566,16 +566,5 @@ func (e *testError) Error() string {
 }
 
 func sprintf(format string, args ...interface{}) string {
-	result := format
-	for i := range args {
-		if i < len(args) {
-			switch args[i].(type) {
-			case string:
-				result = result
-			case int:
-				result = result
-			}
-		}
-	}
-	return result
+	return format
 }
