@@ -109,7 +109,7 @@ func (m *Manager) SetOAuthConfig(clientID, clientSecret string, scopes []string)
 		ClientSecret: clientSecret,
 		Scopes:       scopes,
 		Endpoint:     google.Endpoint,
-		RedirectURL:  "http://localhost:8085/callback",
+		RedirectURL:  "http://127.0.0.1/callback",
 	}
 }
 

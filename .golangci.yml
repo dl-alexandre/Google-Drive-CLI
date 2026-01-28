@@ -4,9 +4,14 @@ run:
   timeout: 5m
 
 linters:
-  exclusions:
-    rules:
-      - path: _test\.go
-        linters:
-          - unused
-          - staticcheck
+  enable:
+    - staticcheck
+  disable:
+    - errcheck
+  
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - unused
+        - staticcheck

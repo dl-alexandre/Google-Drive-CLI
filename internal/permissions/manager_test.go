@@ -1293,3 +1293,212 @@ func TestAllPermissionTypes(t *testing.T) {
 		})
 	}
 }
+
+func TestIsInternalEmail(t *testing.T) {
+	tests := []struct {
+		name           string
+		email          string
+		internalDomain string
+		expected       bool
+	}{
+		{
+			name:           "internal email",
+			email:          "user@example.com",
+			internalDomain: "example.com",
+			expected:       true,
+		},
+		{
+			name:           "external email",
+			email:          "user@external.com",
+			internalDomain: "example.com",
+			expected:       false,
+		},
+		{
+			name:           "empty internal domain",
+			email:          "user@example.com",
+			internalDomain: "",
+			expected:       true,
+		},
+		{
+			name:           "empty email",
+			email:          "",
+			internalDomain: "example.com",
+			expected:       false,
+		},
+		{
+			name:           "case sensitive match",
+			email:          "user@example.com",
+			internalDomain: "example.com",
+			expected:       true,
+		},
+		{
+			name:           "subdomain not matching",
+			email:          "user@sub.example.com",
+			internalDomain: "example.com",
+			expected:       false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := isInternalEmail(tt.email, tt.internalDomain)
+			if result != tt.expected {
+				t.Errorf("isInternalEmail(%q, %q) = %v, want %v", tt.email, tt.internalDomain, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestExtractDomain(t *testing.T) {
+	tests := []struct {
+		name     string
+		email    string
+		expected string
+	}{
+		{
+			name:     "standard email",
+			email:    "user@example.com",
+			expected: "example.com",
+		},
+		{
+			name:     "email with subdomain",
+			email:    "user@mail.example.com",
+			expected: "mail.example.com",
+		},
+		{
+			name:     "email with plus addressing",
+			email:    "user+tag@example.com",
+			expected: "example.com",
+		},
+		{
+			name:     "no @ symbol",
+			email:    "notanemail",
+			expected: "",
+		},
+		{
+			name:     "empty email",
+			email:    "",
+			expected: "",
+		},
+		{
+			name:     "multiple @ symbols",
+			email:    "user@domain@example.com",
+			expected: "example.com",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := extractDomain(tt.email)
+			if result != tt.expected {
+				t.Errorf("extractDomain(%q) = %q, want %q", tt.email, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestAnalyzeFilePermissions(t *testing.T) {
+	tests := []struct {
+		name           string
+		file           *drive.File
+		perms          []*types.Permission
+		internalDomain string
+		validate       func(*types.FilePermissionInfo) error
+	}{
+		{
+			name: "file with public access",
+			file: &drive.File{
+				Id:   "file123",
+				Name: "public.txt",
+			},
+			perms: []*types.Permission{
+				{
+					Type: "anyone",
+					Role: "reader",
+				},
+			},
+			internalDomain: "example.com",
+			validate: func(info *types.FilePermissionInfo) error {
+				if info == nil {
+					return errorf("FilePermissionInfo should not be nil")
+				}
+				if !info.HasPublicAccess {
+					return errorf("HasPublicAccess should be true")
+				}
+				return nil
+			},
+		},
+		{
+			name: "file with internal access only",
+			file: &drive.File{
+				Id:   "file123",
+				Name: "internal.txt",
+			},
+			perms: []*types.Permission{
+				{
+					Type:         "user",
+					EmailAddress: "user@example.com",
+					Role:         "reader",
+				},
+			},
+			internalDomain: "example.com",
+			validate: func(info *types.FilePermissionInfo) error {
+				if info == nil {
+					return errorf("FilePermissionInfo should not be nil")
+				}
+				if info.HasPublicAccess {
+					return errorf("HasPublicAccess should be false")
+				}
+				if info.HasExternalAccess {
+					return errorf("HasExternalAccess should be false")
+				}
+				return nil
+			},
+		},
+		{
+			name: "file with external access",
+			file: &drive.File{
+				Id:   "file123",
+				Name: "external.txt",
+			},
+			perms: []*types.Permission{
+				{
+					Type:         "user",
+					EmailAddress: "user@external.com",
+					Role:         "reader",
+				},
+			},
+			internalDomain: "example.com",
+			validate: func(info *types.FilePermissionInfo) error {
+				if info == nil {
+					return errorf("FilePermissionInfo should not be nil")
+				}
+				if !info.HasExternalAccess {
+					return errorf("HasExternalAccess should be true")
+				}
+				return nil
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := analyzeFilePermissions(tt.file, tt.perms, tt.internalDomain)
+			if err := tt.validate(result); err != nil {
+				t.Error(err)
+			}
+		})
+	}
+}
+
+func errorf(msg string) error {
+	return &testError{msg: msg}
+}
+
+type testError struct {
+	msg string
+}
+
+func (e *testError) Error() string {
+	return e.msg
+}

@@ -22,6 +22,271 @@ A **fast**, **lightweight**, and **AI-agent friendly** CLI for Google Drive. Man
 - **Production Logging**: Structured logging with debug mode and trace correlation
 - **Cross-Platform**: Works on macOS, Linux, and Windows
 
+### Advanced APIs
+
+The following Google Drive APIs have been implemented to extend `gdrv` with advanced auditing, metadata management, and synchronization capabilities.
+
+#### Drive Activity API (v2)
+
+Monitor and audit file and folder activity across your Google Drive with detailed activity streams.
+
+**Use Cases:**
+- Audit trails for compliance and security monitoring
+- Track who accessed, modified, or shared files
+- Monitor file lifecycle events (creation, modification, deletion, permission changes)
+- Generate activity reports for specific files, folders, or time ranges
+- Detect suspicious or unauthorized access patterns
+
+**API Documentation:** [Drive Activity API v2](https://developers.google.com/drive/activity/v2)
+
+**Required OAuth Scopes:**
+- `https://www.googleapis.com/auth/drive.activity` - Full activity access
+- `https://www.googleapis.com/auth/drive.activity.readonly` - Read-only activity access
+
+**Example Commands:**
+
+```bash
+# Query recent activity for all accessible files
+gdrv activity query --json
+
+# Query activity for a specific file
+gdrv activity query --file-id 1abc123... --json
+
+# Query activity within a time range
+gdrv activity query --start-time "2026-01-01T00:00:00Z" --end-time "2026-01-31T23:59:59Z" --json
+
+# Query activity for a folder (including descendants)
+gdrv activity query --folder-id 0ABC123... --ancestor-name "folders/0ABC123..." --json
+
+# Filter by activity types (edit, comment, share, permission_change, etc.)
+gdrv activity query --action-types "edit,share,permission_change" --json
+
+# Get activity for a specific user
+gdrv activity query --user user@example.com --json
+
+# Paginate through activity results
+gdrv activity query --limit 100 --page-token "TOKEN" --json
+```
+
+**Command Flags:**
+- `--file-id`: Filter by specific file ID
+- `--folder-id`: Filter by folder ID (includes descendants)
+- `--ancestor-name`: Filter by ancestor folder (e.g., "folders/123")
+- `--start-time`: Start of time range (RFC3339 format)
+- `--end-time`: End of time range (RFC3339 format)
+- `--action-types`: Comma-separated action types (edit, comment, share, permission_change, move, delete, restore, etc.)
+- `--user`: Filter by user email
+- `--limit`: Maximum results per page
+- `--page-token`: Pagination token
+- `--json`: JSON output
+
+#### Drive Labels API (v2)
+
+Apply custom metadata taxonomy and structured labeling to files and folders for advanced organization and workflows.
+
+**Use Cases:**
+- Custom metadata classification systems (e.g., document types, project codes, retention policies)
+- Enterprise content management and governance
+- Automated workflows based on label values
+- Searchable structured metadata beyond file properties
+- Compliance and records management tagging
+
+**API Documentation:** [Drive Labels API v2](https://developers.google.com/drive/labels/overview)
+
+**Required OAuth Scopes:**
+- `https://www.googleapis.com/auth/drive.labels` - Full labels access
+- `https://www.googleapis.com/auth/drive.labels.readonly` - Read-only labels access
+- `https://www.googleapis.com/auth/drive.admin.labels` - Admin label management (requires Admin SDK)
+- `https://www.googleapis.com/auth/drive.admin.labels.readonly` - Read-only admin labels
+
+**Example Commands:**
+
+```bash
+# List available labels
+gdrv labels list --json
+
+# Get label schema
+gdrv labels get <label-id> --json
+
+# List labels applied to a file
+gdrv labels file list <file-id> --json
+
+# Apply a label to a file
+gdrv labels file apply <file-id> <label-id> --fields '{"field1":"value1","field2":"value2"}' --json
+
+# Update label fields on a file
+gdrv labels file update <file-id> <label-id> --fields '{"field1":"new_value"}' --json
+
+# Remove a label from a file
+gdrv labels file remove <file-id> <label-id>
+
+# Search files by label
+gdrv files list --query "labels/<label-id> exists" --json
+
+# Create a label (admin only)
+gdrv labels create "Document Type" --fields "Type:choice:Contract,Invoice,Report" --json
+
+# Publish a label (admin only)
+gdrv labels publish <label-id>
+
+# Disable a label (admin only)
+gdrv labels disable <label-id>
+```
+
+**Command Flags:**
+- `--fields`: JSON object of field values (key-value pairs)
+- `--label-id`: Label ID to apply/modify
+- `--view`: Label view mode (LABEL_VIEW_FULL, LABEL_VIEW_BASIC)
+- `--customer`: Customer ID for admin operations
+- `--json`: JSON output
+
+#### Drive Changes API (v3)
+
+Track changes to files and folders for real-time synchronization and automation.
+
+**Use Cases:**
+- Build synchronization tools (like Dropbox sync)
+- Real-time monitoring of Drive changes
+- Incremental backup systems
+- Webhook-triggered automation workflows
+- Change notification systems
+
+**API Documentation:** [Drive Changes API v3](https://developers.google.com/drive/api/v3/reference/changes)
+
+**Required OAuth Scopes:**
+- `https://www.googleapis.com/auth/drive` - Full Drive access (includes changes)
+- `https://www.googleapis.com/auth/drive.readonly` - Read-only changes access
+- `https://www.googleapis.com/auth/drive.file` - Changes for files created by the app
+
+**Example Commands:**
+
+```bash
+# Get the starting page token (start of change log)
+gdrv changes start-page-token --json
+
+# List changes since a page token
+gdrv changes list --page-token "12345" --json
+
+# List changes with auto-pagination
+gdrv changes list --page-token "12345" --paginate --json
+
+# List changes for a specific Shared Drive
+gdrv changes list --page-token "12345" --drive-id <drive-id> --json
+
+# Watch for changes (webhook setup)
+gdrv changes watch --page-token "12345" --webhook-url "https://example.com/webhook" --json
+
+# Stop watching for changes
+gdrv changes stop <channel-id> <resource-id>
+
+# List changes with specific fields
+gdrv changes list --page-token "12345" --fields "nextPageToken,newStartPageToken,changes(fileId,time,removed,file(name,mimeType))" --json
+
+# List changes including removed files
+gdrv changes list --page-token "12345" --include-removed true --json
+
+# List changes for specific change types
+gdrv changes list --page-token "12345" --restrict-to-my-drive false --json
+```
+
+**Command Flags:**
+- `--page-token`: Page token to list changes from (required for list)
+- `--drive-id`: Shared Drive ID to monitor
+- `--include-corpus-removals`: Include changes outside the target corpus
+- `--include-items-from-all-drives`: Include items from all drives
+- `--include-permissions-for-view`: Include permissions with published view
+- `--include-removed`: Include removed items
+- `--restrict-to-my-drive`: Restrict changes to My Drive only
+- `--supports-all-drives`: Support all drives (Shared Drives)
+- `--webhook-url`: Webhook URL for change notifications
+- `--expiration`: Webhook expiration time
+- `--limit`: Maximum results per page
+- `--paginate`: Auto-paginate through all changes
+- `--json`: JSON output
+
+#### Permissions Enhancements
+
+Enhanced permission auditing and access analysis tools built on top of the existing Drive Permissions API.
+
+**Use Cases:**
+- Security audits and compliance reporting
+- Detect oversharing and public access risks
+- Analyze permission inheritance and effective access
+- Bulk permission cleanup and remediation
+- Generate access reports for specific users or groups
+
+**Example Commands:**
+
+```bash
+# Audit all files with public access
+gdrv permissions audit public --json
+
+# Audit all files shared with external domains
+gdrv permissions audit external --json
+
+# Audit permissions for a specific user
+gdrv permissions audit user user@example.com --json
+
+# Find files with "anyone with link" access
+gdrv permissions audit anyone-with-link --json
+
+# Analyze permission inheritance for a folder
+gdrv permissions analyze <folder-id> --recursive --json
+
+# Generate permission report for a file/folder
+gdrv permissions report <file-id> --json
+
+# Bulk remove public access
+gdrv permissions bulk-remove public --folder-id <folder-id> --dry-run
+
+# Bulk change role (e.g., downgrade all "writer" to "reader")
+gdrv permissions bulk-update <folder-id> --from-role writer --to-role reader --dry-run
+
+# Find files accessible by a specific email
+gdrv permissions search --email user@example.com --json
+
+# List all files with "commenter" access
+gdrv permissions search --role commenter --json
+```
+
+**Command Flags:**
+- `--recursive`: Include descendants (for folders)
+- `--dry-run`: Preview changes without executing
+- `--from-role`: Source role for bulk operations
+- `--to-role`: Target role for bulk operations
+- `--email`: Filter by email address
+- `--role`: Filter by permission role
+- `--type`: Filter by permission type (user, group, domain, anyone)
+- `--json`: JSON output
+
+---
+
+**Implementation Status:** ✅ All APIs Fully Implemented
+
+All four advanced APIs have been successfully implemented and are ready for use. The implementation includes:
+
+- ✅ **Drive Activity API (v2)** - Query file and folder activity with comprehensive filtering
+- ✅ **Drive Labels API (v2)** - Manage labels and apply structured metadata to files
+- ✅ **Drive Changes API (v3)** - Track file changes for sync and automation workflows
+- ✅ **Permissions Enhancements** - Audit, analyze, and bulk-manage permissions
+
+**Available Scope Presets:**
+
+All new scope presets are now available for authentication:
+
+- `workspace-activity`: Workspace + Activity API (read-only)
+- `workspace-labels`: Workspace + Labels API
+- `workspace-sync`: Workspace + Changes API
+- `workspace-complete`: All Workspace APIs + Activity + Labels + Changes
+
+Use these presets with any authentication command:
+
+```bash
+gdrv auth login --preset workspace-activity
+gdrv auth login --preset workspace-complete
+gdrv auth service-account --key-file ./key.json --preset workspace-complete
+```
+
 ## Installation
 
 ### Install Script (Recommended)
@@ -58,8 +323,11 @@ go build -o gdrv ./cmd/gdrv
 
 ## Quick Start
 
-1. **Set OAuth credentials**:
+1. **(Optional) Configure a custom OAuth client**:
    ```bash
+   # By default, gdrv uses the bundled OAuth client.
+   # To use your own client, set GDRV_CLIENT_ID
+   # and GDRV_CLIENT_SECRET only if your client type requires it.
    export GDRV_CLIENT_ID="your-client-id"
    export GDRV_CLIENT_SECRET="your-client-secret"
    ```
@@ -183,10 +451,44 @@ gdrv files delete 1abc123... --permanent
 
 ## Authentication
 
-The CLI supports multiple authentication methods and scope presets. OAuth client credentials are required.
+The CLI supports multiple authentication methods and scope presets. OAuth uses Authorization Code + PKCE for installed/desktop apps (public client). Any bundled client secret is treated as public and not relied on for security.
 
-### Prerequisites
+### OAuth Client Sources and Precedence
 
+Credentials are resolved in this order:
+1. CLI flags (`--client-id`, `--client-secret`)
+2. Environment variables (`GDRV_CLIENT_ID`, `GDRV_CLIENT_SECRET`)
+3. Config file (`oauthClientId`, `oauthClientSecret`)
+4. Bundled OAuth client (release builds)
+
+No partial overrides: if any OAuth client variable is set, all required OAuth client fields must be set (client ID always; secret only if your client type requires it).
+
+**Config file path (defaults):**
+- macOS: `~/Library/Application Support/gdrv/config.json`
+- Linux: `~/.config/gdrv/config.json`
+- Windows: `%APPDATA%\\gdrv\\config.json`
+- Override with `GDRV_CONFIG_DIR`
+
+**Contributor/CI policy:** set `GDRV_REQUIRE_CUSTOM_OAUTH=1` to refuse bundled credentials.
+
+Bundled client credentials may rotate between releases. If you see `invalid_client` errors with the bundled client, upgrade or configure a custom client.
+
+### Shared OAuth Client Notes
+
+- The bundled client secret is public and not relied on for security (PKCE is used).
+- The shared client is hosted in a dedicated Google Cloud project with quota monitoring and a rotation plan.
+- If the shared client is disabled or rotated, the CLI will instruct you to upgrade or configure a custom client.
+
+### Token Storage
+
+- Preferred: system keyring (Keychain / Secret Service / Credential Manager).
+- Fallback: encrypted file storage at `.../credentials/<profile>.enc` with `0600` permissions and a local key file at `.../.keyfile`.
+- Plain file storage is development-only and must be explicitly forced.
+- `gdrv auth logout` removes local credentials only (does not revoke remote consent).
+
+### Custom OAuth Client Prerequisites
+
+If you want to use your own OAuth client:
 1. Create a project in Google Cloud Console
 2. Enable the Google Drive API
 3. Create OAuth 2.0 credentials (Desktop application)
@@ -194,7 +496,7 @@ The CLI supports multiple authentication methods and scope presets. OAuth client
 
 ```bash
 export GDRV_CLIENT_ID="your-client-id"
-export GDRV_CLIENT_SECRET="your-client-secret"
+export GDRV_CLIENT_SECRET="your-client-secret" # only if required by your client type
 
 gdrv auth login --client-id "your-client-id" --client-secret "your-client-secret"
 ```
@@ -203,7 +505,14 @@ gdrv auth login --client-id "your-client-id" --client-secret "your-client-secret
 ```bash
 gdrv auth login
 ```
-Opens a browser for authentication.
+Opens a browser for authentication using a loopback redirect on `127.0.0.1` with an ephemeral port.
+If the browser cannot be opened, gdrv will fall back to manual code entry.
+
+**Manual fallback (headless):**
+```bash
+gdrv auth login --no-browser
+```
+Prompts for a manual code paste after you approve access in a browser. This fallback is used for headless environments, browser launch failures, or loopback binding issues. You can force it with `--no-browser` or `GDRV_NO_BROWSER=1`.
 
 ### Device Code Flow (Headless)
 ```bash
@@ -221,18 +530,35 @@ Loads credentials from a service account JSON key file. Use `--impersonate-user`
 
 | Preset | Description | Use Case |
 |--------|-------------|----------|
-| `workspace-basic` | Read-only Drive, Sheets, Docs, Slides | Viewing and downloading |
-| `workspace-full` | Full Drive, Sheets, Docs, Slides | Editing and management |
-| `admin` | Admin Directory users and groups | User/group administration |
-| `workspace-with-admin` | Workspace full + Admin Directory | Full workspace + admin |
+| `workspace-basic` | Read-only Drive, Sheets, Docs, Slides, Labels | Viewing and downloading |
+| `workspace-full` | Full Drive, Sheets, Docs, Slides, Labels | Editing and management |
+| `admin` | Admin Directory users and groups, Admin Labels | User/group/label administration |
+| `workspace-with-admin` | Workspace full + Admin Directory + Admin Labels | Full workspace + admin |
+| `workspace-activity` | Workspace basic + Activity API | Read-only with activity auditing |
+| `workspace-labels` | Workspace full + Labels API | Full access with label management |
+| `workspace-sync` | Workspace full + Changes API | Full access with change tracking |
+| `workspace-complete` | All Workspace APIs + Activity + Labels + Changes | Complete API access |
+
+Use `workspace-basic` for least-privilege read-only access; use `workspace-full` only when write access is required. Use the specialized presets (`workspace-activity`, `workspace-labels`, `workspace-sync`, `workspace-complete`) when you need the advanced APIs.
 
 ```bash
+# Basic presets
 gdrv auth login --preset workspace-basic
 gdrv auth login --preset workspace-full
 gdrv auth login --preset admin
 gdrv auth login --preset workspace-with-admin
+
+# Advanced API presets
+gdrv auth login --preset workspace-activity
+gdrv auth login --preset workspace-labels
+gdrv auth login --preset workspace-sync
+gdrv auth login --preset workspace-complete
+
+# Device code flow
 gdrv auth device --preset workspace-basic
-gdrv auth service-account --key-file ./key.json --preset workspace-basic
+
+# Service account
+gdrv auth service-account --key-file ./key.json --preset workspace-complete
 ```
 
 ### Custom Scopes
@@ -243,20 +569,34 @@ gdrv auth service-account --key-file ./key.json --scopes "https://www.googleapis
 ```
 
 Available scopes:
-- `https://www.googleapis.com/auth/drive`
-- `https://www.googleapis.com/auth/drive.file`
-- `https://www.googleapis.com/auth/drive.readonly`
-- `https://www.googleapis.com/auth/drive.metadata.readonly`
-- `https://www.googleapis.com/auth/spreadsheets`
-- `https://www.googleapis.com/auth/spreadsheets.readonly`
-- `https://www.googleapis.com/auth/documents`
-- `https://www.googleapis.com/auth/documents.readonly`
-- `https://www.googleapis.com/auth/presentations`
-- `https://www.googleapis.com/auth/presentations.readonly`
-- `https://www.googleapis.com/auth/admin.directory.user`
-- `https://www.googleapis.com/auth/admin.directory.user.readonly`
-- `https://www.googleapis.com/auth/admin.directory.group`
-- `https://www.googleapis.com/auth/admin.directory.group.readonly`
+
+**Drive Scopes:**
+- `https://www.googleapis.com/auth/drive` - Full Drive access
+- `https://www.googleapis.com/auth/drive.file` - Per-file access
+- `https://www.googleapis.com/auth/drive.readonly` - Read-only Drive access
+- `https://www.googleapis.com/auth/drive.metadata.readonly` - Read-only metadata
+
+**Workspace Scopes:**
+- `https://www.googleapis.com/auth/spreadsheets` - Full Sheets access
+- `https://www.googleapis.com/auth/spreadsheets.readonly` - Read-only Sheets
+- `https://www.googleapis.com/auth/documents` - Full Docs access
+- `https://www.googleapis.com/auth/documents.readonly` - Read-only Docs
+- `https://www.googleapis.com/auth/presentations` - Full Slides access
+- `https://www.googleapis.com/auth/presentations.readonly` - Read-only Slides
+
+**Admin SDK Scopes:**
+- `https://www.googleapis.com/auth/admin.directory.user` - User management
+- `https://www.googleapis.com/auth/admin.directory.user.readonly` - Read-only users
+- `https://www.googleapis.com/auth/admin.directory.group` - Group management
+- `https://www.googleapis.com/auth/admin.directory.group.readonly` - Read-only groups
+
+**Advanced API Scopes:**
+- `https://www.googleapis.com/auth/drive.activity` - Full Activity API access
+- `https://www.googleapis.com/auth/drive.activity.readonly` - Read-only Activity
+- `https://www.googleapis.com/auth/drive.labels` - Full Labels access
+- `https://www.googleapis.com/auth/drive.labels.readonly` - Read-only Labels
+- `https://www.googleapis.com/auth/drive.admin.labels` - Admin label management
+- `https://www.googleapis.com/auth/drive.admin.labels.readonly` - Read-only admin labels
 
 ### Multiple Profiles
 ```bash
@@ -670,6 +1010,157 @@ gdrv admin groups create team@example.com "Engineering Team" \
 gdrv admin groups members add team@example.com john.doe@example.com --role MEMBER
 ```
 
+### Drive Activity API Operations
+
+Query and monitor file and folder activity across Google Drive with detailed activity streams.
+
+**Required OAuth Scopes:**
+- Read-only: `https://www.googleapis.com/auth/drive.activity.readonly`
+- Full access: `https://www.googleapis.com/auth/drive.activity`
+- Use preset: `workspace-activity` (read-only) or `workspace-complete`
+
+**API Documentation:** [Drive Activity API v2](https://developers.google.com/drive/activity/v2)
+
+```bash
+# Query recent activity for all accessible files
+gdrv activity query --json
+
+# Query activity for a specific file
+gdrv activity query --file-id 1abc123... --json
+
+# Query activity within a time range
+gdrv activity query --start-time "2026-01-01T00:00:00Z" --end-time "2026-01-31T23:59:59Z" --json
+
+# Query activity for a folder (including descendants)
+gdrv activity query --folder-id 0ABC123... --json
+
+# Filter by activity types
+gdrv activity query --action-types "edit,share,permission_change" --json
+
+# Get activity for a specific user
+gdrv activity query --user user@example.com --json
+
+# Paginate through activity results
+gdrv activity query --limit 100 --page-token "TOKEN" --json
+```
+
+### Drive Labels API Operations
+
+Manage Drive labels and apply structured metadata to files and folders.
+
+**Required OAuth Scopes:**
+- Read-only: `https://www.googleapis.com/auth/drive.labels.readonly`
+- Full access: `https://www.googleapis.com/auth/drive.labels`
+- Admin: `https://www.googleapis.com/auth/drive.admin.labels`
+- Use preset: `workspace-labels` or `workspace-complete`
+
+**API Documentation:** [Drive Labels API v2](https://developers.google.com/drive/labels/overview)
+
+```bash
+# List available labels
+gdrv labels list --json
+
+# Get label schema
+gdrv labels get <label-id> --json
+
+# List labels applied to a file
+gdrv labels file list <file-id> --json
+
+# Apply a label to a file
+gdrv labels file apply <file-id> <label-id> \
+  --fields '{"field1":"value1","field2":"value2"}' --json
+
+# Update label fields on a file
+gdrv labels file update <file-id> <label-id> \
+  --fields '{"field1":"new_value"}' --json
+
+# Remove a label from a file
+gdrv labels file remove <file-id> <label-id>
+
+# Create a label (admin only)
+gdrv labels create "Document Type" --json
+
+# Publish a label (admin only)
+gdrv labels publish <label-id>
+
+# Disable a label (admin only)
+gdrv labels disable <label-id>
+```
+
+### Drive Changes API Operations
+
+Track changes to files and folders for real-time synchronization and automation.
+
+**Required OAuth Scopes:**
+- Uses standard Drive scopes (no additional scopes needed)
+- Use preset: `workspace-sync` or `workspace-complete`
+
+**API Documentation:** [Drive Changes API v3](https://developers.google.com/drive/api/v3/reference/changes)
+
+```bash
+# Get the starting page token
+gdrv changes start-page-token --json
+
+# List changes since a page token
+gdrv changes list --page-token "12345" --json
+
+# List changes with auto-pagination
+gdrv changes list --page-token "12345" --paginate --json
+
+# List changes for a specific Shared Drive
+gdrv changes list --page-token "12345" --drive-id <drive-id> --json
+
+# Watch for changes (webhook setup)
+gdrv changes watch --page-token "12345" \
+  --webhook-url "https://example.com/webhook" --json
+
+# Stop watching for changes
+gdrv changes stop <channel-id> <resource-id>
+
+# List changes including removed files
+gdrv changes list --page-token "12345" --include-removed --json
+```
+
+### Permission Auditing and Analysis
+
+Enhanced permission auditing and access analysis tools for security and compliance.
+
+**Required OAuth Scopes:**
+- Uses standard Drive scopes (no additional scopes needed)
+
+```bash
+# Audit all files with public access
+gdrv permissions audit public --json
+
+# Audit all files shared with external domains
+gdrv permissions audit external --internal-domain example.com --json
+
+# Audit permissions for a specific user
+gdrv permissions audit user user@example.com --json
+
+# Find files with "anyone with link" access
+gdrv permissions audit anyone-with-link --json
+
+# Analyze permission inheritance for a folder
+gdrv permissions analyze <folder-id> --recursive --json
+
+# Generate permission report for a file/folder
+gdrv permissions report <file-id> --internal-domain example.com --json
+
+# Bulk remove public access (dry-run first)
+gdrv permissions bulk remove-public --folder-id <folder-id> --dry-run --json
+
+# Bulk change role (e.g., downgrade all "writer" to "reader")
+gdrv permissions bulk update-role --folder-id <folder-id> \
+  --from-role writer --to-role reader --dry-run --json
+
+# Find files accessible by a specific email
+gdrv permissions search --email user@example.com --json
+
+# List all files with "commenter" access
+gdrv permissions search --role commenter --json
+```
+
 ### Configuration
 ```bash
 gdrv config show                 # Show current config
@@ -677,9 +1168,19 @@ gdrv config set <key> <value>    # Set config value
 gdrv config reset                # Reset to defaults
 ```
 
+Config file defaults:
+- macOS: `~/Library/Application Support/gdrv/config.json`
+- Linux: `~/.config/gdrv/config.json`
+- Windows: `%APPDATA%\\gdrv\\config.json`
+- Override with `GDRV_CONFIG_DIR`
+
+OAuth client fields in config (optional):
+- `oauthClientId`
+- `oauthClientSecret` (only if required by your client type)
+
 ### Other
 ```bash
-gdrv auth login [--preset <preset>] [--wide] [--scopes <scopes>] [--client-id <id>] [--client-secret <secret>] [--profile <name>]
+gdrv auth login [--preset <preset>] [--wide] [--scopes <scopes>] [--no-browser] [--client-id <id>] [--client-secret <secret>] [--profile <name>]
 gdrv auth device [--preset <preset>] [--wide] [--client-id <id>] [--client-secret <secret>] [--profile <name>]
 gdrv auth service-account --key-file <file> [--preset <preset>] [--scopes <scopes>] [--impersonate-user <email>] [--profile <name>]
 gdrv auth status                 # Show auth status
@@ -736,27 +1237,30 @@ gdrv config set cache_ttl 300
 
 # OAuth credentials
 export GDRV_CLIENT_ID="your-client-id"
-export GDRV_CLIENT_SECRET="your-client-secret"
+export GDRV_CLIENT_SECRET="your-client-secret" # only if required by your client type
 
 # Environment variables
 export GDRV_PROFILE=work
 export GDRV_CONFIG_DIR=/path/to/config
+export GDRV_REQUIRE_CUSTOM_OAUTH=1
 ```
 
 ## Troubleshooting
 
 ### Authentication Issues
 
-**"OAuth client ID and secret required"**
+**"OAuth client credentials missing"**
 ```bash
+# Use bundled client (release builds) or set a custom client:
 export GDRV_CLIENT_ID="your-client-id"
-export GDRV_CLIENT_SECRET="your-client-secret"
+export GDRV_CLIENT_SECRET="your-client-secret" # only if required by your client type
 gdrv auth login
 ```
 
 **"Browser not opening"**
-Use device code flow:
+Use manual fallback or device code flow:
 ```bash
+gdrv auth login --no-browser
 gdrv auth device
 ```
 

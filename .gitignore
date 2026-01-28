@@ -1,6 +1,7 @@
 # Binary
 /gdrv
 cmd/gdrv/gdrv
+bin/
 
 # Environment
 .env

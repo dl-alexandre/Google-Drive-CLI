@@ -46,7 +46,7 @@ func (d *DB) GetConfig(ctx context.Context, id string) (*SyncConfig, error) {
 	return &cfg, nil
 }
 
-func (d *DB) ListConfigs(ctx context.Context) (configs []SyncConfig, err error) {
+func (d *DB) ListConfigs(ctx context.Context) ([]SyncConfig, error) {
 	rows, err := d.db.QueryContext(ctx, `
 		SELECT id, local_root, remote_root_id, exclude_patterns, conflict_policy, direction, last_sync_time, last_change_token
 		FROM sync_configs ORDER BY id
@@ -54,12 +54,9 @@ func (d *DB) ListConfigs(ctx context.Context) (configs []SyncConfig, err error) 
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		if closeErr := rows.Close(); closeErr != nil && err == nil {
-			err = closeErr
-		}
-	}()
+	defer rows.Close()
 
+	var configs []SyncConfig
 	for rows.Next() {
 		var cfg SyncConfig
 		var patterns string

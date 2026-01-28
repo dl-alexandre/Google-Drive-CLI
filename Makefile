@@ -2,6 +2,10 @@ VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev
 GIT_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_TIME ?= $(shell date -u '+%Y-%m-%dT%H:%M:%SZ')
 
+# Load bundled OAuth credentials from .env if present (for development builds)
+-include .env
+export
+
 GOCMD = go
 GOBUILD = $(GOCMD) build
 GOCLEAN = $(GOCMD) clean
@@ -11,9 +15,19 @@ GOMOD = $(GOCMD) mod
 BINARY_NAME = gdrv
 BINARY_DIR = bin
 
+# Inject OAuth credentials if available (from .env or environment)
+OAUTH_LDFLAGS =
+ifdef GDRV_CLIENT_ID
+	OAUTH_LDFLAGS += -X github.com/dl-alexandre/gdrv/internal/auth.BundledOAuthClientID=$(GDRV_CLIENT_ID)
+endif
+ifdef GDRV_CLIENT_SECRET
+	OAUTH_LDFLAGS += -X github.com/dl-alexandre/gdrv/internal/auth.BundledOAuthClientSecret=$(GDRV_CLIENT_SECRET)
+endif
+
 LDFLAGS = -ldflags "-X github.com/dl-alexandre/gdrv/pkg/version.Version=$(VERSION) \
 	-X github.com/dl-alexandre/gdrv/pkg/version.GitCommit=$(GIT_COMMIT) \
-	-X github.com/dl-alexandre/gdrv/pkg/version.BuildTime=$(BUILD_TIME)"
+	-X github.com/dl-alexandre/gdrv/pkg/version.BuildTime=$(BUILD_TIME) \
+	$(OAUTH_LDFLAGS)"
 
 PLATFORMS = linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64
 

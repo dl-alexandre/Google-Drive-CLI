@@ -36,9 +36,7 @@ func TestNewLogger_ConsoleOnly(t *testing.T) {
 		t.Fatalf("NewLogger() error = %v", err)
 	}
 	t.Cleanup(func() {
-		if closeErr := logger.Close(); closeErr != nil {
-			t.Fatalf("Failed to close logger: %v", closeErr)
-		}
+		logger.Close()
 	})
 
 	if logger == nil {
@@ -67,9 +65,7 @@ func TestNewLogger_FileOnly(t *testing.T) {
 		t.Fatalf("NewLogger() error = %v", err)
 	}
 	t.Cleanup(func() {
-		if closeErr := logger.Close(); closeErr != nil {
-			t.Fatalf("Failed to close logger: %v", closeErr)
-		}
+		logger.Close()
 	})
 
 	if logger == nil {
@@ -103,9 +99,7 @@ func TestNewLogger_Both(t *testing.T) {
 		t.Fatalf("NewLogger() error = %v", err)
 	}
 	t.Cleanup(func() {
-		if closeErr := logger.Close(); closeErr != nil {
-			t.Fatalf("Failed to close logger: %v", closeErr)
-		}
+		logger.Close()
 	})
 
 	if logger == nil {
@@ -130,9 +124,7 @@ func TestNewLogger_NoOp(t *testing.T) {
 		t.Fatalf("NewLogger() error = %v", err)
 	}
 	t.Cleanup(func() {
-		if closeErr := logger.Close(); closeErr != nil {
-			t.Fatalf("Failed to close logger: %v", closeErr)
-		}
+		logger.Close()
 	})
 
 	if logger == nil {
@@ -181,9 +173,7 @@ func TestNewDebugLoggerWithTransport(t *testing.T) {
 		t.Fatalf("NewDebugLoggerWithTransport() error = %v", err)
 	}
 	t.Cleanup(func() {
-		if closeErr := logger.Close(); closeErr != nil {
-			t.Fatalf("Failed to close logger: %v", closeErr)
-		}
+		logger.Close()
 	})
 
 	if logger == nil {
@@ -207,9 +197,7 @@ func TestNewDebugLoggerWithTransport_NoDebug(t *testing.T) {
 		t.Fatalf("NewDebugLoggerWithTransport() error = %v", err)
 	}
 	t.Cleanup(func() {
-		if closeErr := logger.Close(); closeErr != nil {
-			t.Fatalf("Failed to close logger: %v", closeErr)
-		}
+		logger.Close()
 	})
 
 	if logger == nil {

@@ -44,6 +44,9 @@ const (
 const (
 	ErrCodeAuthRequired             = "AUTH_REQUIRED"
 	ErrCodeAuthExpired              = "AUTH_EXPIRED"
+	ErrCodeAuthClientMissing        = "AUTH_CLIENT_MISSING"
+	ErrCodeAuthClientInvalid        = "AUTH_CLIENT_INVALID"
+	ErrCodeAuthClientPartial        = "AUTH_CLIENT_PARTIAL"
 	ErrCodeScopeInsufficient        = "SCOPE_INSUFFICIENT"
 	ErrCodeFileNotFound             = "FILE_NOT_FOUND"
 	ErrCodePermissionDenied         = "PERMISSION_DENIED"
@@ -115,6 +118,9 @@ func GetExitCode(errorCode string) int {
 	mapping := map[string]int{
 		ErrCodeAuthRequired:             ExitAuthRequired,
 		ErrCodeAuthExpired:              ExitAuthExpired,
+		ErrCodeAuthClientMissing:        ExitAuthRequired,
+		ErrCodeAuthClientInvalid:        ExitAuthRequired,
+		ErrCodeAuthClientPartial:        ExitAuthRequired,
 		ErrCodeScopeInsufficient:        ExitScopeInsufficient,
 		ErrCodeFileNotFound:             ExitFileNotFound,
 		ErrCodePermissionDenied:         ExitPermissionDenied,

@@ -121,7 +121,7 @@ func ClassifyOperationError(err error) string {
 }
 
 // DownloadFromURI downloads content from a URI
-func DownloadFromURI(ctx context.Context, client *http.Client, uri string, writer io.Writer) (err error) {
+func DownloadFromURI(ctx context.Context, client *http.Client, uri string, writer io.Writer) error {
 	req, err := http.NewRequestWithContext(ctx, "GET", uri, nil)
 	if err != nil {
 		return err
@@ -131,11 +131,7 @@ func DownloadFromURI(ctx context.Context, client *http.Client, uri string, write
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if closeErr := resp.Body.Close(); closeErr != nil && err == nil {
-			err = closeErr
-		}
-	}()
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("download failed with status %d", resp.StatusCode)

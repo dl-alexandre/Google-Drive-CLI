@@ -12,21 +12,27 @@ const RevisionKeepForeverLimit = 200
 
 // OAuth scopes
 const (
-	ScopeFull             = "https://www.googleapis.com/auth/drive"
-	ScopeFile             = "https://www.googleapis.com/auth/drive.file"
-	ScopeReadonly         = "https://www.googleapis.com/auth/drive.readonly"
-	ScopeMetadataReadonly = "https://www.googleapis.com/auth/drive.metadata.readonly"
-	ScopeAppdata          = "https://www.googleapis.com/auth/drive.appdata"
-	ScopeSheets           = "https://www.googleapis.com/auth/spreadsheets"
-	ScopeSheetsReadonly   = "https://www.googleapis.com/auth/spreadsheets.readonly"
-	ScopeDocs             = "https://www.googleapis.com/auth/documents"
-	ScopeDocsReadonly     = "https://www.googleapis.com/auth/documents.readonly"
-	ScopeSlides           = "https://www.googleapis.com/auth/presentations"
-	ScopeSlidesReadonly   = "https://www.googleapis.com/auth/presentations.readonly"
-	ScopeAdminDirectoryUser       = "https://www.googleapis.com/auth/admin.directory.user"
-	ScopeAdminDirectoryUserReadonly = "https://www.googleapis.com/auth/admin.directory.user.readonly"
-	ScopeAdminDirectoryGroup      = "https://www.googleapis.com/auth/admin.directory.group"
+	ScopeFull                        = "https://www.googleapis.com/auth/drive"
+	ScopeFile                        = "https://www.googleapis.com/auth/drive.file"
+	ScopeReadonly                    = "https://www.googleapis.com/auth/drive.readonly"
+	ScopeMetadataReadonly            = "https://www.googleapis.com/auth/drive.metadata.readonly"
+	ScopeAppdata                     = "https://www.googleapis.com/auth/drive.appdata"
+	ScopeSheets                      = "https://www.googleapis.com/auth/spreadsheets"
+	ScopeSheetsReadonly              = "https://www.googleapis.com/auth/spreadsheets.readonly"
+	ScopeDocs                        = "https://www.googleapis.com/auth/documents"
+	ScopeDocsReadonly                = "https://www.googleapis.com/auth/documents.readonly"
+	ScopeSlides                      = "https://www.googleapis.com/auth/presentations"
+	ScopeSlidesReadonly              = "https://www.googleapis.com/auth/presentations.readonly"
+	ScopeAdminDirectoryUser          = "https://www.googleapis.com/auth/admin.directory.user"
+	ScopeAdminDirectoryUserReadonly  = "https://www.googleapis.com/auth/admin.directory.user.readonly"
+	ScopeAdminDirectoryGroup         = "https://www.googleapis.com/auth/admin.directory.group"
 	ScopeAdminDirectoryGroupReadonly = "https://www.googleapis.com/auth/admin.directory.group.readonly"
+	ScopeLabels                      = "https://www.googleapis.com/auth/drive.labels"
+	ScopeLabelsReadonly              = "https://www.googleapis.com/auth/drive.labels.readonly"
+	ScopeAdminLabels                 = "https://www.googleapis.com/auth/drive.admin.labels"
+	ScopeAdminLabelsReadonly         = "https://www.googleapis.com/auth/drive.admin.labels.readonly"
+	ScopeActivity                    = "https://www.googleapis.com/auth/drive.activity"
+	ScopeActivityReadonly            = "https://www.googleapis.com/auth/drive.activity.readonly"
 )
 
 var (
@@ -37,16 +43,19 @@ var (
 		ScopeSheetsReadonly,
 		ScopeDocsReadonly,
 		ScopeSlidesReadonly,
+		ScopeLabelsReadonly,
 	}
 	ScopesWorkspaceFull = []string{
 		ScopeFull,
 		ScopeSheets,
 		ScopeDocs,
 		ScopeSlides,
+		ScopeLabels,
 	}
 	ScopesAdmin = []string{
 		ScopeAdminDirectoryUser,
 		ScopeAdminDirectoryGroup,
+		ScopeAdminLabels,
 	}
 	ScopesWorkspaceWithAdmin = []string{
 		ScopeFull,
@@ -55,6 +64,43 @@ var (
 		ScopeSlides,
 		ScopeAdminDirectoryUser,
 		ScopeAdminDirectoryGroup,
+		ScopeLabels,
+		ScopeAdminLabels,
+	}
+	// New presets for additional APIs
+	ScopesWorkspaceActivity = []string{
+		ScopeFile,
+		ScopeReadonly,
+		ScopeMetadataReadonly,
+		ScopeSheetsReadonly,
+		ScopeDocsReadonly,
+		ScopeSlidesReadonly,
+		ScopeLabelsReadonly,
+		ScopeActivityReadonly,
+	}
+	ScopesWorkspaceLabels = []string{
+		ScopeFull,
+		ScopeSheets,
+		ScopeDocs,
+		ScopeSlides,
+		ScopeLabels,
+	}
+	ScopesWorkspaceSync = []string{
+		ScopeFull,
+		ScopeSheets,
+		ScopeDocs,
+		ScopeSlides,
+		ScopeLabels,
+		// Changes API uses standard Drive scopes
+	}
+	ScopesWorkspaceComplete = []string{
+		ScopeFull,
+		ScopeSheets,
+		ScopeDocs,
+		ScopeSlides,
+		ScopeLabels,
+		ScopeActivity,
+		// Changes API uses standard Drive scopes
 	}
 )
 

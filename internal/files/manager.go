@@ -67,17 +67,13 @@ type ListOptions struct {
 }
 
 // Upload uploads a file to Drive
-func (m *Manager) Upload(ctx context.Context, reqCtx *types.RequestContext, localPath string, opts UploadOptions) (driveFile *types.DriveFile, err error) {
+func (m *Manager) Upload(ctx context.Context, reqCtx *types.RequestContext, localPath string, opts UploadOptions) (*types.DriveFile, error) {
 	file, err := os.Open(localPath)
 	if err != nil {
 		return nil, utils.NewAppError(utils.NewCLIError(utils.ErrCodeInvalidArgument,
 			fmt.Sprintf("Failed to open file: %s", err)).Build())
 	}
-	defer func() {
-		if closeErr := file.Close(); closeErr != nil && err == nil {
-			err = closeErr
-		}
-	}()
+	defer file.Close()
 
 	stat, err := file.Stat()
 	if err != nil {
@@ -126,7 +122,7 @@ func (m *Manager) Upload(ctx context.Context, reqCtx *types.RequestContext, loca
 	return convertDriveFile(result), nil
 }
 
-func (m *Manager) UpdateContent(ctx context.Context, reqCtx *types.RequestContext, fileID string, localPath string, opts UpdateContentOptions) (driveFile *types.DriveFile, err error) {
+func (m *Manager) UpdateContent(ctx context.Context, reqCtx *types.RequestContext, fileID string, localPath string, opts UpdateContentOptions) (*types.DriveFile, error) {
 	reqCtx.InvolvedFileIDs = append(reqCtx.InvolvedFileIDs, fileID)
 
 	file, err := os.Open(localPath)
@@ -134,11 +130,7 @@ func (m *Manager) UpdateContent(ctx context.Context, reqCtx *types.RequestContex
 		return nil, utils.NewAppError(utils.NewCLIError(utils.ErrCodeInvalidArgument,
 			fmt.Sprintf("Failed to open file: %s", err)).Build())
 	}
-	defer func() {
-		if closeErr := file.Close(); closeErr != nil && err == nil {
-			err = closeErr
-		}
-	}()
+	defer file.Close()
 
 	metadata := &drive.File{}
 	if opts.Name != "" {
@@ -214,7 +206,7 @@ func (m *Manager) resumableUpload(ctx context.Context, reqCtx *types.RequestCont
 }
 
 // Download downloads a file from Drive
-func (m *Manager) Download(ctx context.Context, reqCtx *types.RequestContext, fileID string, opts DownloadOptions) (err error) {
+func (m *Manager) Download(ctx context.Context, reqCtx *types.RequestContext, fileID string, opts DownloadOptions) error {
 	reqCtx.InvolvedFileIDs = append(reqCtx.InvolvedFileIDs, fileID)
 
 	// Get file metadata first with exportLinks included for Workspace files
@@ -246,11 +238,7 @@ func (m *Manager) Download(ctx context.Context, reqCtx *types.RequestContext, fi
 		return utils.NewAppError(utils.NewCLIError(utils.ErrCodeInvalidArgument,
 			fmt.Sprintf("Failed to create output file: %s", err)).Build())
 	}
-	defer func() {
-		if closeErr := outFile.Close(); closeErr != nil && err == nil {
-			err = closeErr
-		}
-	}()
+	defer outFile.Close()
 
 	// Check if it's a Workspace file that needs export
 	if utils.IsWorkspaceMimeType(file.MimeType) {
@@ -260,33 +248,23 @@ func (m *Manager) Download(ctx context.Context, reqCtx *types.RequestContext, fi
 	return m.downloadBlob(ctx, reqCtx, fileID, outFile)
 }
 
-func (m *Manager) downloadBlob(ctx context.Context, reqCtx *types.RequestContext, fileID string, writer io.Writer) (err error) {
+func (m *Manager) downloadBlob(ctx context.Context, reqCtx *types.RequestContext, fileID string, writer io.Writer) error {
 	call := m.client.Service().Files.Get(fileID)
 	call = m.shaper.ShapeFilesGet(call, reqCtx)
 
 	// Download content
 	httpResp, err := call.Download()
 	if err != nil {
-		if apiErr, ok := err.(*googleapi.Error); ok {
-			return utils.NewAppError(utils.NewCLIError(utils.ErrCodeNetworkError,
-				fmt.Sprintf("Download failed: %s", apiErr.Message)).
-				WithHTTPStatus(apiErr.Code).
-				Build())
-		}
 		return utils.NewAppError(utils.NewCLIError(utils.ErrCodeNetworkError,
 			fmt.Sprintf("Download failed: %s", err)).Build())
 	}
-	defer func() {
-		if closeErr := httpResp.Body.Close(); closeErr != nil && err == nil {
-			err = closeErr
-		}
-	}()
+	defer httpResp.Body.Close()
 
 	_, err = io.Copy(writer, httpResp.Body)
 	return err
 }
 
-func (m *Manager) exportFile(ctx context.Context, reqCtx *types.RequestContext, fileID string, file *types.DriveFile, opts DownloadOptions, writer io.Writer) (err error) {
+func (m *Manager) exportFile(ctx context.Context, reqCtx *types.RequestContext, fileID string, file *types.DriveFile, opts DownloadOptions, writer io.Writer) error {
 	mimeType := opts.MimeType
 	if mimeType == "" {
 		mimeType = "application/pdf" // Default export format
@@ -348,11 +326,7 @@ func (m *Manager) exportFile(ctx context.Context, reqCtx *types.RequestContext, 
 		return utils.NewAppError(utils.NewCLIError(utils.ErrCodeNetworkError,
 			fmt.Sprintf("Export failed: %s", err)).Build())
 	}
-	defer func() {
-		if closeErr := resp.Body.Close(); closeErr != nil && err == nil {
-			err = closeErr
-		}
-	}()
+	defer resp.Body.Close()
 
 	// Check if response indicates long-running operation
 	if resp.StatusCode == 202 {
@@ -371,7 +345,7 @@ func (m *Manager) exportFile(ctx context.Context, reqCtx *types.RequestContext, 
 	return err
 }
 
-func (m *Manager) pollAndDownloadOperation(ctx context.Context, reqCtx *types.RequestContext, resp *http.Response, opts DownloadOptions, writer io.Writer) (err error) {
+func (m *Manager) pollAndDownloadOperation(ctx context.Context, reqCtx *types.RequestContext, resp *http.Response, opts DownloadOptions, writer io.Writer) error {
 	// Get operation name from response header
 	operationName := resp.Header.Get("X-Goog-Upload-URL")
 	if operationName == "" {
@@ -428,11 +402,7 @@ func (m *Manager) pollAndDownloadOperation(ctx context.Context, reqCtx *types.Re
 		return utils.NewAppError(utils.NewCLIError(utils.ErrCodeNetworkError,
 			fmt.Sprintf("Download from operation URI failed: %s", err)).Build())
 	}
-	defer func() {
-		if closeErr := downloadResp.Body.Close(); closeErr != nil && err == nil {
-			err = closeErr
-		}
-	}()
+	defer downloadResp.Body.Close()
 
 	if downloadResp.StatusCode != http.StatusOK {
 		return utils.NewAppError(utils.NewCLIError(utils.ErrCodeNetworkError,
@@ -714,14 +684,14 @@ func (m *Manager) Trash(ctx context.Context, reqCtx *types.RequestContext, fileI
 func (m *Manager) ListTrashed(ctx context.Context, reqCtx *types.RequestContext, opts ListOptions) (*types.FileListResult, error) {
 	// Force include trashed files
 	opts.IncludeTrashed = true
-	
+
 	// Modify query to only show trashed files
 	if opts.Query != "" {
 		opts.Query = "trashed = true and (" + opts.Query + ")"
 	} else {
 		opts.Query = "trashed = true"
 	}
-	
+
 	return m.List(ctx, reqCtx, opts)
 }
 

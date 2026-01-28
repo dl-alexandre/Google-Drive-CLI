@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/dl-alexandre/gdrv/internal/auth"
@@ -72,31 +73,31 @@ var authDiagnoseCmd = &cobra.Command{
 }
 
 var (
-	authScopes    []string
-	authNoBrowser bool
-	authWide      bool
-	authPreset    string
-	authKeyFile   string
-	authImpersonateUser string
-	clientID      string
-	clientSecret  string
+	authScopes               []string
+	authNoBrowser            bool
+	authWide                 bool
+	authPreset               string
+	authKeyFile              string
+	authImpersonateUser      string
+	clientID                 string
+	clientSecret             string
 	authDiagnoseRefreshCheck bool
 )
 
 func init() {
 	authLoginCmd.Flags().StringSliceVar(&authScopes, "scopes", []string{}, "OAuth scopes to request")
-	authLoginCmd.Flags().BoolVar(&authNoBrowser, "no-browser", false, "Use device code flow (limited scopes)")
+	authLoginCmd.Flags().BoolVar(&authNoBrowser, "no-browser", false, "Do not open a browser; use manual code entry")
 	authLoginCmd.Flags().BoolVar(&authWide, "wide", false, "Request full Drive access scope")
-	authLoginCmd.Flags().StringVar(&authPreset, "preset", "", "Scope preset: workspace-basic, workspace-full, admin, workspace-with-admin")
+	authLoginCmd.Flags().StringVar(&authPreset, "preset", "", "Scope preset: workspace-basic, workspace-full, admin, workspace-with-admin, workspace-activity, workspace-labels, workspace-sync, workspace-complete")
 	authLoginCmd.Flags().StringVar(&clientID, "client-id", "", "OAuth client ID")
 	authLoginCmd.Flags().StringVar(&clientSecret, "client-secret", "", "OAuth client secret")
 	authDeviceCmd.Flags().BoolVar(&authWide, "wide", false, "Request full Drive access scope")
-	authDeviceCmd.Flags().StringVar(&authPreset, "preset", "", "Scope preset: workspace-basic, workspace-full, admin, workspace-with-admin")
+	authDeviceCmd.Flags().StringVar(&authPreset, "preset", "", "Scope preset: workspace-basic, workspace-full, admin, workspace-with-admin, workspace-activity, workspace-labels, workspace-sync, workspace-complete")
 	authServiceAccountCmd.Flags().StringVar(&authKeyFile, "key-file", "", "Path to service account JSON key file (required)")
 	authServiceAccountCmd.Flags().StringVar(&authImpersonateUser, "impersonate-user", "", "User email to impersonate (required for Admin SDK scopes)")
 	authServiceAccountCmd.Flags().StringSliceVar(&authScopes, "scopes", []string{}, "OAuth scopes to request")
 	authServiceAccountCmd.Flags().BoolVar(&authWide, "wide", false, "Request full Drive access scope")
-	authServiceAccountCmd.Flags().StringVar(&authPreset, "preset", "", "Scope preset: workspace-basic, workspace-full, admin, workspace-with-admin")
+	authServiceAccountCmd.Flags().StringVar(&authPreset, "preset", "", "Scope preset: workspace-basic, workspace-full, admin, workspace-with-admin, workspace-activity, workspace-labels, workspace-sync, workspace-complete")
 	_ = authServiceAccountCmd.MarkFlagRequired("key-file")
 	authDiagnoseCmd.Flags().BoolVar(&authDiagnoseRefreshCheck, "refresh-check", false, "Attempt a token refresh and report errors")
 
@@ -114,15 +115,18 @@ func runAuthLogin(cmd *cobra.Command, args []string) error {
 	flags := GetGlobalFlags()
 	out := NewOutputWriter(flags.OutputFormat, flags.Quiet, flags.Verbose)
 
-	if clientID == "" || clientSecret == "" {
-		clientID = os.Getenv("GDRV_CLIENT_ID")
-		clientSecret = os.Getenv("GDRV_CLIENT_SECRET")
-		if clientID == "" || clientSecret == "" {
-			return fmt.Errorf("OAuth client ID and secret required. Set via --client-id/--client-secret or GDRV_CLIENT_ID/GDRV_CLIENT_SECRET")
-		}
+	configDir := getConfigDir()
+	resolvedID, resolvedSecret, source, cliErr := resolveOAuthClient(cmd, configDir, false)
+	if cliErr != nil {
+		return out.WriteError("auth.login", cliErr.Build())
+	}
+	clientID = resolvedID
+	clientSecret = resolvedSecret
+
+	if source == oauthClientSourceBundled {
+		out.Log("Using bundled OAuth client credentials.")
 	}
 
-	configDir := getConfigDir()
 	mgr := auth.NewManager(configDir)
 
 	// Display storage warning if any
@@ -138,12 +142,9 @@ func runAuthLogin(cmd *cobra.Command, args []string) error {
 
 	ctx := context.Background()
 	var creds *types.Credentials
-	if authNoBrowser {
-		out.Log("Using device code authentication flow...")
-		creds, err = mgr.AuthenticateWithDeviceCode(ctx, flags.Profile)
-	} else {
-		creds, err = mgr.Authenticate(ctx, flags.Profile, openBrowser)
-	}
+	creds, err = mgr.Authenticate(ctx, flags.Profile, openBrowser, auth.OAuthAuthOptions{
+		NoBrowser: authNoBrowser,
+	})
 
 	if err != nil {
 		return out.WriteError("auth.login", utils.NewCLIError(utils.ErrCodeAuthRequired, err.Error()).Build())
@@ -162,15 +163,17 @@ func runAuthDevice(cmd *cobra.Command, args []string) error {
 	flags := GetGlobalFlags()
 	out := NewOutputWriter(flags.OutputFormat, flags.Quiet, flags.Verbose)
 
-	if clientID == "" || clientSecret == "" {
-		clientID = os.Getenv("GDRV_CLIENT_ID")
-		clientSecret = os.Getenv("GDRV_CLIENT_SECRET")
-		if clientID == "" || clientSecret == "" {
-			return fmt.Errorf("OAuth client ID and secret required. Set via --client-id/--client-secret or GDRV_CLIENT_ID/GDRV_CLIENT_SECRET")
-		}
+	configDir := getConfigDir()
+	resolvedID, resolvedSecret, source, cliErr := resolveOAuthClient(cmd, configDir, false)
+	if cliErr != nil {
+		return out.WriteError("auth.device", cliErr.Build())
+	}
+	clientID = resolvedID
+	clientSecret = resolvedSecret
+	if source == oauthClientSourceBundled {
+		out.Log("Using bundled OAuth client credentials.")
 	}
 
-	configDir := getConfigDir()
 	mgr := auth.NewManager(configDir)
 
 	// Display storage warning if any
@@ -379,6 +382,14 @@ func scopesForPreset(preset string) ([]string, error) {
 		return utils.ScopesAdmin, nil
 	case "workspace-with-admin":
 		return utils.ScopesWorkspaceWithAdmin, nil
+	case "workspace-activity":
+		return utils.ScopesWorkspaceActivity, nil
+	case "workspace-labels":
+		return utils.ScopesWorkspaceLabels, nil
+	case "workspace-sync":
+		return utils.ScopesWorkspaceSync, nil
+	case "workspace-complete":
+		return utils.ScopesWorkspaceComplete, nil
 	default:
 		return nil, fmt.Errorf("unknown preset: %s", preset)
 	}
@@ -419,11 +430,16 @@ func runAuthDiagnose(cmd *cobra.Command, args []string) error {
 	configDir := getConfigDir()
 	mgr := auth.NewManager(configDir)
 
-	if clientID == "" || clientSecret == "" {
-		clientID = os.Getenv("GDRV_CLIENT_ID")
-		clientSecret = os.Getenv("GDRV_CLIENT_SECRET")
+	resolvedID, resolvedSecret, source, cliErr := resolveOAuthClient(cmd, configDir, !authDiagnoseRefreshCheck)
+	if cliErr != nil {
+		return out.WriteError("auth.diagnose", cliErr.Build())
 	}
-	if clientID != "" && clientSecret != "" {
+	clientID = resolvedID
+	clientSecret = resolvedSecret
+	if source == oauthClientSourceBundled {
+		out.Log("Using bundled OAuth client credentials.")
+	}
+	if clientID != "" {
 		mgr.SetOAuthConfig(clientID, clientSecret, []string{})
 	}
 
@@ -443,23 +459,23 @@ func runAuthDiagnose(cmd *cobra.Command, args []string) error {
 	}
 
 	diagnostics := map[string]interface{}{
-		"profile":            flags.Profile,
-		"storageBackend":     mgr.GetStorageBackend(),
-		"tokenLocation":      location,
-		"clientIdHash":       clientHash,
-		"clientIdLast4":      clientFingerprint,
-		"scopes":             creds.Scopes,
-		"expiry":             creds.ExpiryDate.Format(time.RFC3339),
-		"refreshToken":       creds.RefreshToken != "",
-		"type":               creds.Type,
-		"serviceAccount":     creds.ServiceAccountEmail,
-		"impersonatedUser":   creds.ImpersonatedUser,
+		"profile":          flags.Profile,
+		"storageBackend":   mgr.GetStorageBackend(),
+		"tokenLocation":    location,
+		"clientIdHash":     clientHash,
+		"clientIdLast4":    clientFingerprint,
+		"scopes":           creds.Scopes,
+		"expiry":           creds.ExpiryDate.Format(time.RFC3339),
+		"refreshToken":     creds.RefreshToken != "",
+		"type":             creds.Type,
+		"serviceAccount":   creds.ServiceAccountEmail,
+		"impersonatedUser": creds.ImpersonatedUser,
 	}
 
 	if authDiagnoseRefreshCheck && creds.Type == types.AuthTypeOAuth {
 		if mgr.GetOAuthConfig() == nil {
-			return out.WriteError("auth.diagnose", utils.NewCLIError(utils.ErrCodeAuthRequired,
-				"OAuth client ID and secret required for refresh check. Set GDRV_CLIENT_ID/GDRV_CLIENT_SECRET or pass --client-id/--client-secret.").Build())
+			return out.WriteError("auth.diagnose", utils.NewCLIError(utils.ErrCodeAuthClientMissing,
+				"OAuth client credentials required for refresh check. Set GDRV_CLIENT_ID (and GDRV_CLIENT_SECRET if required) or pass --client-id/--client-secret.").Build())
 		}
 		_, refreshErr := mgr.RefreshCredentials(context.Background(), creds)
 		if refreshErr != nil {
@@ -497,4 +513,94 @@ func openBrowser(url string) error {
 		return fmt.Errorf("unsupported platform")
 	}
 	return cmd.Start()
+}
+
+type oauthClientSource string
+
+const (
+	oauthClientSourceFlags   oauthClientSource = "flags"
+	oauthClientSourceEnv     oauthClientSource = "env"
+	oauthClientSourceConfig  oauthClientSource = "config"
+	oauthClientSourceBundled oauthClientSource = "bundled"
+)
+
+func resolveOAuthClient(cmd *cobra.Command, configDir string, allowMissing bool) (string, string, oauthClientSource, *utils.CLIErrorBuilder) {
+	requireCustom := isTruthyEnv("GDRV_REQUIRE_CUSTOM_OAUTH")
+	requireSecret := false
+
+	flagIDSet := cmd.Flags().Changed("client-id")
+	flagSecretSet := cmd.Flags().Changed("client-secret")
+	if flagIDSet || flagSecretSet {
+		if clientID == "" || (requireSecret && clientSecret == "") {
+			return "", "", "", buildOAuthClientError(utils.ErrCodeAuthClientPartial, configDir,
+				"Partial OAuth client override not allowed. Set all required client fields via flags, or clear them to use the default/bundled client if available.")
+		}
+		return clientID, clientSecret, oauthClientSourceFlags, nil
+	}
+
+	envID := strings.TrimSpace(os.Getenv("GDRV_CLIENT_ID"))
+	envSecret := strings.TrimSpace(os.Getenv("GDRV_CLIENT_SECRET"))
+	if envID != "" || envSecret != "" {
+		if envID == "" || (requireSecret && envSecret == "") {
+			return "", "", "", buildOAuthClientError(utils.ErrCodeAuthClientPartial, configDir,
+				"Partial OAuth client override not allowed. Set all required client fields via environment variables, or clear them to use the default/bundled client if available.")
+		}
+		return envID, envSecret, oauthClientSourceEnv, nil
+	}
+
+	cfg, cfgErr := config.Load()
+	if cfgErr != nil {
+		return "", "", "", utils.NewCLIError(utils.ErrCodeInvalidArgument, fmt.Sprintf("Failed to load config: %v", cfgErr))
+	}
+	if cfg.OAuthClientID != "" || cfg.OAuthClientSecret != "" {
+		if cfg.OAuthClientID == "" || (requireSecret && cfg.OAuthClientSecret == "") {
+			return "", "", "", buildOAuthClientError(utils.ErrCodeAuthClientPartial, configDir,
+				"Partial OAuth client override not allowed. Set all required client fields in config, or remove them to use the default/bundled client if available.")
+		}
+		return cfg.OAuthClientID, cfg.OAuthClientSecret, oauthClientSourceConfig, nil
+	}
+
+	if requireCustom && !allowMissing {
+		return "", "", "", buildOAuthClientError(utils.ErrCodeAuthClientMissing, configDir,
+			"Custom OAuth client required. Set GDRV_CLIENT_ID (and GDRV_CLIENT_SECRET if required) or configure the client in the config file. Bundled credentials are disabled by GDRV_REQUIRE_CUSTOM_OAUTH.")
+	}
+
+	if bundledID, bundledSecret, ok := auth.GetBundledOAuthClient(); ok {
+		if requireCustom {
+			return "", "", "", buildOAuthClientError(utils.ErrCodeAuthClientMissing, configDir,
+				"Custom OAuth client required. Set GDRV_CLIENT_ID (and GDRV_CLIENT_SECRET if required) or configure the client in the config file. Bundled credentials are disabled by GDRV_REQUIRE_CUSTOM_OAUTH.")
+		}
+		return bundledID, bundledSecret, oauthClientSourceBundled, nil
+	}
+
+	if allowMissing {
+		return "", "", "", nil
+	}
+
+	return "", "", "", buildOAuthClientError(utils.ErrCodeAuthClientMissing, configDir,
+		"OAuth client credentials missing. Bundled credentials are not available in this build. Provide a custom client via environment variables or config.")
+}
+
+func buildOAuthClientError(code, configDir, message string) *utils.CLIErrorBuilder {
+	configPath, err := config.GetConfigPath()
+	if err != nil {
+		configPath = filepath.Join(configDir, config.ConfigFileName)
+	}
+	tokenHint := filepath.Join(configDir, "credentials")
+
+	fullMessage := fmt.Sprintf(
+		"%s\nConfig path: %s\nToken storage: system keyring (preferred) or %s\nUse --no-browser for manual login when running headless.",
+		message,
+		configPath,
+		tokenHint,
+	)
+
+	return utils.NewCLIError(code, fullMessage).
+		WithContext("configPath", configPath).
+		WithContext("tokenLocation", tokenHint)
+}
+
+func isTruthyEnv(key string) bool {
+	value := strings.ToLower(strings.TrimSpace(os.Getenv(key)))
+	return value == "1" || value == "true" || value == "yes" || value == "on"
 }

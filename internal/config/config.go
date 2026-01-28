@@ -52,6 +52,12 @@ type Config struct {
 
 	// ColorOutput enables color output for table format
 	ColorOutput bool `json:"colorOutput"`
+
+	// OAuthClientID is the OAuth client ID used for user auth
+	OAuthClientID string `json:"oauthClientId,omitempty"`
+
+	// OAuthClientSecret is the OAuth client secret (optional for public clients)
+	OAuthClientSecret string `json:"oauthClientSecret,omitempty"`
 }
 
 // FieldMaskPreset defines field mask presets
@@ -160,6 +166,12 @@ func (c *Config) loadFromEnv() {
 	}
 	if v := os.Getenv(EnvPrefix + "COLOR_OUTPUT"); v != "" {
 		c.ColorOutput = parseBool(v)
+	}
+	if v := os.Getenv(EnvPrefix + "CLIENT_ID"); v != "" {
+		c.OAuthClientID = v
+	}
+	if v := os.Getenv(EnvPrefix + "CLIENT_SECRET"); v != "" {
+		c.OAuthClientSecret = v
 	}
 }
 
@@ -280,7 +292,25 @@ func GetConfigDir() (string, error) {
 		return "", fmt.Errorf("failed to get user home directory: %w", err)
 	}
 
-	return filepath.Join(homeDir, ".config", "gdrv"), nil
+	userConfigDir, err := os.UserConfigDir()
+	if err != nil {
+		return filepath.Join(homeDir, ".config", "gdrv"), nil
+	}
+
+	newDir := filepath.Join(userConfigDir, "gdrv")
+	legacyDir := filepath.Join(homeDir, ".config", "gdrv")
+	if !dirExists(newDir) && dirExists(legacyDir) {
+		return legacyDir, nil
+	}
+	return newDir, nil
+}
+
+func dirExists(path string) bool {
+	info, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return info.IsDir()
 }
 
 // parseBool parses a boolean value from a string

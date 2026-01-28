@@ -134,6 +134,10 @@ func runConfigSet(cmd *cobra.Command, args []string) error {
 		cfg.LogLevel = value
 	case "coloroutput":
 		cfg.ColorOutput = parseBool(value)
+	case "oauthclientid":
+		cfg.OAuthClientID = value
+	case "oauthclientsecret":
+		cfg.OAuthClientSecret = value
 	default:
 		return out.WriteError("config.set", utils.NewCLIError(utils.ErrCodeInvalidArgument,
 			fmt.Sprintf("Unknown configuration key: %s", key)).Build())

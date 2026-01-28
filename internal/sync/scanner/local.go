@@ -7,8 +7,8 @@ import (
 	"io"
 	"io/fs"
 	"os"
-	"path/filepath"
 	"path"
+	"path/filepath"
 
 	"github.com/dl-alexandre/gdrv/internal/sync/exclude"
 	"github.com/dl-alexandre/gdrv/internal/sync/index"
@@ -95,16 +95,12 @@ func ScanLocal(ctx context.Context, root string, matcher *exclude.Matcher, prev 
 	return entries, nil
 }
 
-func hashFile(path string) (hash string, err error) {
+func hashFile(path string) (string, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return "", err
 	}
-	defer func() {
-		if closeErr := f.Close(); closeErr != nil && err == nil {
-			err = closeErr
-		}
-	}()
+	defer f.Close()
 
 	h := md5.New()
 	if _, err := io.Copy(h, f); err != nil {

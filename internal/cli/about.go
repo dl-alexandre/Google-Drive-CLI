@@ -1,6 +1,9 @@
 package cli
 
 import (
+	"path/filepath"
+
+	"github.com/dl-alexandre/gdrv/internal/config"
 	"github.com/dl-alexandre/gdrv/pkg/version"
 	"github.com/spf13/cobra"
 )
@@ -22,6 +25,12 @@ func init() {
 func runAbout(cmd *cobra.Command, args []string) error {
 	flags := GetGlobalFlags()
 	out := NewOutputWriter(flags.OutputFormat, flags.Quiet, flags.Verbose)
+
+	configDir := getConfigDir()
+	configPath, err := config.GetConfigPath()
+	if err != nil {
+		configPath = filepath.Join(configDir, config.ConfigFileName)
+	}
 
 	capabilities := map[string]interface{}{
 		"version": version.Version,
@@ -71,9 +80,9 @@ func runAbout(cmd *cobra.Command, args []string) error {
 		},
 		"output_formats": []string{"json", "table"},
 		"configuration": map[string]interface{}{
-			"config_file":     "~/.config/gdrv/config.json",
-			"credentials_dir": "~/.config/gdrv/credentials",
-			"cache_dir":       "~/.config/gdrv/cache",
+			"config_file":     configPath,
+			"credentials_dir": filepath.Join(configDir, "credentials"),
+			"cache_dir":       filepath.Join(configDir, "cache"),
 		},
 	}
 

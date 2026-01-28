@@ -53,7 +53,7 @@ func NewDeviceCodeFlow(config *oauth2.Config) *DeviceCodeFlow {
 }
 
 // RequestDeviceCode requests a device code from Google
-func (f *DeviceCodeFlow) RequestDeviceCode(ctx context.Context) (response *DeviceCodeResponse, err error) {
+func (f *DeviceCodeFlow) RequestDeviceCode(ctx context.Context) (*DeviceCodeResponse, error) {
 	data := url.Values{}
 	data.Set("client_id", f.config.ClientID)
 	data.Set("scope", strings.Join(f.config.Scopes, " "))
@@ -69,11 +69,7 @@ func (f *DeviceCodeFlow) RequestDeviceCode(ctx context.Context) (response *Devic
 	if err != nil {
 		return nil, fmt.Errorf("failed to request device code: %w", err)
 	}
-	defer func() {
-		if closeErr := resp.Body.Close(); closeErr != nil && err == nil {
-			err = fmt.Errorf("failed to close device code response body: %w", closeErr)
-		}
-	}()
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
@@ -118,8 +114,8 @@ func (f *DeviceCodeFlow) PollForToken(ctx context.Context) (*types.Credentials, 
 			token, err := f.pollOnce(ctx, client)
 			if err != nil {
 				// Continue polling on specific errors
-				if strings.Contains(err.Error(), "authorization_pending") || 
-				   strings.Contains(err.Error(), "slow_down") {
+				if strings.Contains(err.Error(), "authorization_pending") ||
+					strings.Contains(err.Error(), "slow_down") {
 					continue
 				}
 				return nil, err
@@ -133,10 +129,12 @@ func (f *DeviceCodeFlow) PollForToken(ctx context.Context) (*types.Credentials, 
 }
 
 // pollOnce performs a single poll attempt
-func (f *DeviceCodeFlow) pollOnce(ctx context.Context, client *http.Client) (creds *types.Credentials, err error) {
+func (f *DeviceCodeFlow) pollOnce(ctx context.Context, client *http.Client) (*types.Credentials, error) {
 	data := url.Values{}
 	data.Set("client_id", f.config.ClientID)
-	data.Set("client_secret", f.config.ClientSecret)
+	if f.config.ClientSecret != "" {
+		data.Set("client_secret", f.config.ClientSecret)
+	}
 	data.Set("device_code", f.response.DeviceCode)
 	data.Set("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
 
@@ -150,11 +148,7 @@ func (f *DeviceCodeFlow) pollOnce(ctx context.Context, client *http.Client) (cre
 	if err != nil {
 		return nil, fmt.Errorf("failed to poll for token: %w", err)
 	}
-	defer func() {
-		if closeErr := resp.Body.Close(); closeErr != nil && err == nil {
-			err = fmt.Errorf("failed to close token response body: %w", closeErr)
-		}
-	}()
+	defer resp.Body.Close()
 
 	var tokenResp TokenResponse
 	if err := json.NewDecoder(resp.Body).Decode(&tokenResp); err != nil {
@@ -214,12 +208,12 @@ func (m *Manager) AuthenticateWithDeviceCode(ctx context.Context, profile string
 	fmt.Printf("Please visit the following URL and enter the code:\n\n")
 	fmt.Printf("URL:  %s\n", deviceResp.VerificationURL)
 	fmt.Printf("Code: %s\n\n", deviceResp.UserCode)
-	
+
 	if deviceResp.VerificationURLComplete != "" {
 		fmt.Printf("Or visit this URL to auto-fill the code:\n")
 		fmt.Printf("%s\n\n", deviceResp.VerificationURLComplete)
 	}
-	
+
 	fmt.Printf("Waiting for authorization (expires in %d seconds)...\n", deviceResp.ExpiresIn)
 
 	// Poll for token

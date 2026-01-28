@@ -55,10 +55,12 @@ jobs:
           VERSION: ${{ steps.version.outputs.VERSION }}
           COMMIT: ${{ github.sha }}
           DATE: ${{ github.event.head_commit.timestamp }}
+          OAUTH_CLIENT_ID: ${{ secrets.GDRV_BUNDLED_OAUTH_CLIENT_ID }}
+          OAUTH_CLIENT_SECRET: ${{ secrets.GDRV_BUNDLED_OAUTH_CLIENT_SECRET }}
         run: |
           mkdir -p dist
 
-          LDFLAGS="-s -w -X github.com/dl-alexandre/gdrv/pkg/version.Version=${VERSION} -X github.com/dl-alexandre/gdrv/pkg/version.GitCommit=${COMMIT} -X github.com/dl-alexandre/gdrv/pkg/version.BuildTime=${DATE}"
+          LDFLAGS="-s -w -X github.com/dl-alexandre/gdrv/pkg/version.Version=${VERSION} -X github.com/dl-alexandre/gdrv/pkg/version.GitCommit=${COMMIT} -X github.com/dl-alexandre/gdrv/pkg/version.BuildTime=${DATE} -X github.com/dl-alexandre/gdrv/internal/auth.BundledOAuthClientID=${OAUTH_CLIENT_ID} -X github.com/dl-alexandre/gdrv/internal/auth.BundledOAuthClientSecret=${OAUTH_CLIENT_SECRET}"
 
           GOOS=darwin GOARCH=arm64 go build -ldflags="${LDFLAGS}" -o dist/${APP_NAME}-darwin-arm64 ./cmd/${APP_NAME}
           codesign --sign - --timestamp --options runtime dist/${APP_NAME}-darwin-arm64
