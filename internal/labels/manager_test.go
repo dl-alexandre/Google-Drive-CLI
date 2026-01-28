@@ -16,7 +16,15 @@ func TestManager_Creation(t *testing.T) {
 	manager := NewManager(client)
 
 	if manager == nil {
-		t.Error("NewManager returned nil")
+		t.Fatal("NewManager returned nil")
+	}
+
+	if manager.client != client { //nolint:staticcheck // False positive: t.Fatal() never returns
+		t.Error("Manager client not set correctly")
+	}
+
+	if manager.shaper == nil { //nolint:staticcheck // False positive: t.Fatal() never returns
+		t.Error("Manager shaper not initialized")
 	}
 
 	if manager.client != client {
