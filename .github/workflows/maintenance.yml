@@ -31,7 +31,7 @@ jobs:
           go list -u -m all > .artifacts/maintenance/dependency-updates.txt
 
       - name: Upload dependency report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: gdrv-dependency-updates
           path: .artifacts/maintenance/dependency-updates.txt
@@ -60,7 +60,7 @@ jobs:
           govulncheck -json ./... > .artifacts/maintenance/govulncheck.json || true
 
       - name: Upload vulnerability summary
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: gdrv-vuln-summary
           path: .artifacts/maintenance/govulncheck.json
@@ -89,7 +89,7 @@ jobs:
           go tool cover -func=.artifacts/coverage/coverage.out > .artifacts/coverage/coverage-summary.txt
 
       - name: Upload coverage snapshot
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: gdrv-coverage-snapshot
           path: .artifacts/coverage/
