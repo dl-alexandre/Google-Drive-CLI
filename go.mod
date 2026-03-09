@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	cloud.google.com/go/ai v0.10.0
-	cloud.google.com/go/apps v0.5.3
+	cloud.google.com/go/apps v0.8.0
 	cloud.google.com/go/iam v1.5.2
 	cloud.google.com/go/logging v1.13.0
 	cloud.google.com/go/monitoring v1.24.3
