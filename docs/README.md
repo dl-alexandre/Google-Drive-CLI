@@ -100,3 +100,8 @@ See the [`examples/`](../examples/) directory for sample JSON files:
 - Check the main [README](../README.md) for installation and basic usage
 - Review the specific workflow guides linked above
 - Use `gdrv <command> --help` for command-specific help
+
+## Development Resources
+
+- **[Dependency Analysis](./DEPENDENCIES.md)** - Complete dependency breakdown and recommendations
+- **[Testing Strategy](./TESTING_STRATEGY.md)** - Coverage status and testing roadmap
