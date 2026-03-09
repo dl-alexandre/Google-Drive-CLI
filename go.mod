@@ -3,7 +3,7 @@ module github.com/dl-alexandre/gdrv
 go 1.25.0
 
 require (
-	cloud.google.com/go/ai v0.10.0
+	cloud.google.com/go/ai v0.15.0
 	cloud.google.com/go/apps v0.5.3
 	cloud.google.com/go/iam v1.5.2
 	cloud.google.com/go/logging v1.13.0
@@ -17,7 +17,7 @@ require (
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/zalando/go-keyring v0.2.6
 	golang.org/x/oauth2 v0.36.0
-	google.golang.org/api v0.247.0
+	google.golang.org/api v0.256.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20260120221211-b8f7ae30c516
 	google.golang.org/grpc v1.81.0-dev
 	google.golang.org/protobuf v1.36.11
@@ -26,11 +26,11 @@ require (
 
 require (
 	al.essio.dev/pkg/shellescape v1.5.1 // indirect
-	cloud.google.com/go v0.120.0 // indirect
-	cloud.google.com/go/auth v0.16.4 // indirect
+	cloud.google.com/go v0.121.6 // indirect
+	cloud.google.com/go/auth v0.17.0 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.9.0 // indirect
-	cloud.google.com/go/longrunning v0.6.7 // indirect
+	cloud.google.com/go/longrunning v0.7.0 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/charmbracelet/colorprofile v0.4.1 // indirect
