@@ -9,25 +9,10 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: darwin
-            arch: arm64
-          - os: darwin
-            arch: amd64
-          - os: linux
-            arch: amd64
-          - os: linux
-            arch: arm64
-          - os: windows
-            arch: amd64
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -35,184 +20,17 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
-          cache: true
 
-      - name: Build binaries
-        env:
-          GOOS: ${{ matrix.os }}
-          GOARCH: ${{ matrix.arch }}
-          VERSION: ${{ github.ref_name }}
-          COMMIT: ${{ github.sha }}
-          DATE: ${{ github.event.head_commit.timestamp }}
-          OAUTH_CLIENT_ID: ${{ secrets.GDRV_BUNDLED_OAUTH_CLIENT_ID }}
-          OAUTH_CLIENT_SECRET: ${{ secrets.GDRV_BUNDLED_OAUTH_CLIENT_SECRET }}
-        run: |
-          mkdir -p dist
-          LDFLAGS="-s -w -X github.com/dl-alexandre/gdrv/pkg/version.Version=${VERSION} -X github.com/dl-alexandre/gdrv/pkg/version.GitCommit=${COMMIT} -X github.com/dl-alexandre/gdrv/pkg/version.BuildTime=${DATE} -X github.com/dl-alexandre/gdrv/internal/auth.BundledOAuthClientID=${OAUTH_CLIENT_ID} -X github.com/dl-alexandre/gdrv/internal/auth.BundledOAuthClientSecret=${OAUTH_CLIENT_SECRET}"
-          if [ "${{ matrix.os }}" = "windows" ]; then
-            go build -ldflags="${LDFLAGS}" -o dist/gdrv-${{ matrix.os }}-${{ matrix.arch }}.exe ./cmd/gdrv
-          else
-            go build -ldflags="${LDFLAGS}" -o dist/gdrv-${{ matrix.os }}-${{ matrix.arch }} ./cmd/gdrv
-          fi
+      - name: Run tests
+        run: go test ./...
 
-      - name: Package
-        run: |
-          cd dist
-          if [ "${{ matrix.os }}" = "windows" ]; then
-            mv gdrv-${{ matrix.os }}-${{ matrix.arch }}.exe gdrv.exe
-            zip gdrv-${{ matrix.os }}-${{ matrix.arch }}.zip gdrv.exe
-            rm gdrv.exe
-          else
-            mv gdrv-${{ matrix.os }}-${{ matrix.arch }} gdrv
-            tar -czf gdrv-${{ matrix.os }}-${{ matrix.arch }}.tar.gz gdrv
-            rm gdrv
-          fi
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v7
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v7
         with:
-          name: gdrv-${{ matrix.os }}-${{ matrix.arch }}
-          path: dist/*
-          retention-days: 1
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v8
-        with:
-          path: dist
-          pattern: gdrv-*
-          merge-multiple: true
-
-      - name: Create Arch Linux PKGBUILD
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-          cat > dist/PKGBUILD << PKGBUILD_EOF
-          pkgname=gdrv-bin
-          pkgver=${VERSION}
-          pkgrel=1
-          pkgdesc="Google Drive CLI with full read/write support"
-          arch=('x86_64' 'aarch64')
-          url="https://github.com/dl-alexandre/Google-Drive-CLI"
-          license=('MIT')
-          provides=('gdrv')
-          conflicts=('gdrv')
-
-          source_x86_64=("https://github.com/dl-alexandre/Google-Drive-CLI/releases/download/${VERSION}/gdrv-linux-amd64.tar.gz")
-          source_aarch64=("https://github.com/dl-alexandre/Google-Drive-CLI/releases/download/${VERSION}/gdrv-linux-arm64.tar.gz")
-
-          sha256sums_x86_64=('SKIP')
-          sha256sums_aarch64=('SKIP')
-
-          package() {
-            cd "${srcdir}"
-            install -Dm755 gdrv "${pkgdir}/usr/bin/gdrv"
-          }
-          PKGBUILD_EOF
-
-          AMD64_SHA=$(sha256sum dist/gdrv-linux-amd64.tar.gz | awk '{print $1}')
-          ARM64_SHA=$(sha256sum dist/gdrv-linux-arm64.tar.gz | awk '{print $1}')
-          sed -i "s/sha256sums_x86_64=('SKIP')/sha256sums_x86_64=('${AMD64_SHA}')/" dist/PKGBUILD
-          sed -i "s/sha256sums_aarch64=('SKIP')/sha256sums_aarch64=('${ARM64_SHA}')/" dist/PKGBUILD
-
-      - name: Generate checksums
-        run: |
-          cd dist
-          sha256sum gdrv-* > checksums.txt
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/*
-          generate_release_notes: true
+          distribution: goreleaser
+          version: '~> v2'
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Notify forks
-        env:
-          GH_TOKEN: ${{ secrets.FORKS_DISPATCH_TOKEN }}
-          RELEASE_TAG: ${{ github.ref_name }}
-          RELEASE_URL: https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}
-          REPO: ${{ github.repository }}
-        run: |
-          PAGE=1
-          while true; do
-            FORKS=$(gh api "repos/$REPO/forks?per_page=100&page=$PAGE" --jq '.[].full_name')
-            [ -z "$FORKS" ] && break
-
-            for FORK in $FORKS; do
-              echo "Dispatching to $FORK"
-              gh api "repos/$FORK/dispatches" \
-                --method POST \
-                --field event_type=upstream-release \
-                --field "client_payload[tag]=$RELEASE_TAG" \
-                --field "client_payload[url]=$RELEASE_URL" \
-                --field "client_payload[upstream]=$REPO" \
-                2>&1 || echo "  Skipped $FORK (no permission or workflow not present)"
-            done
-
-            PAGE=$((PAGE + 1))
-          done
-
-      - name: Update Homebrew Tap
-        env:
-          TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-          SHA256_ARM64=$(sha256sum dist/gdrv-darwin-arm64.tar.gz | awk '{print $1}')
-          SHA256_AMD64=$(sha256sum dist/gdrv-darwin-amd64.tar.gz | awk '{print $1}')
-          SHA256_LINUX_ARM64=$(sha256sum dist/gdrv-linux-arm64.tar.gz | awk '{print $1}')
-          SHA256_LINUX_AMD64=$(sha256sum dist/gdrv-linux-amd64.tar.gz | awk '{print $1}')
-
-          git clone https://x-access-token:${TAP_GITHUB_TOKEN}@github.com/dl-alexandre/tap.git tap-repo
-          cd tap-repo
-
-          cat > Formula/gdrv.rb << EOF
-          class Gdrv < Formula
-            desc "Google Drive CLI with full read/write support"
-            homepage "https://github.com/dl-alexandre/Google-Drive-CLI"
-            version "${VERSION}"
-            license "MIT"
-
-            on_macos do
-              if Hardware::CPU.arm?
-                url "https://github.com/dl-alexandre/Google-Drive-CLI/releases/download/${VERSION}/gdrv-darwin-arm64.tar.gz"
-                sha256 "${SHA256_ARM64}"
-              end
-              if Hardware::CPU.intel?
-                url "https://github.com/dl-alexandre/Google-Drive-CLI/releases/download/${VERSION}/gdrv-darwin-amd64.tar.gz"
-                sha256 "${SHA256_AMD64}"
-              end
-            end
-
-            on_linux do
-              if Hardware::CPU.arm?
-                url "https://github.com/dl-alexandre/Google-Drive-CLI/releases/download/${VERSION}/gdrv-linux-arm64.tar.gz"
-                sha256 "${SHA256_LINUX_ARM64}"
-              end
-              if Hardware::CPU.intel?
-                url "https://github.com/dl-alexandre/Google-Drive-CLI/releases/download/${VERSION}/gdrv-linux-amd64.tar.gz"
-                sha256 "${SHA256_LINUX_AMD64}"
-              end
-            end
-
-            def install
-              bin.install "gdrv"
-            end
-
-            test do
-              system "#{bin}/gdrv", "version"
-            end
-          end
-          EOF
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Formula/gdrv.rb
-          git commit -m "Update gdrv to ${VERSION}"
-          git push
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          SCOOP_BUCKET_TOKEN: ${{ secrets.SCOOP_BUCKET_TOKEN }}
