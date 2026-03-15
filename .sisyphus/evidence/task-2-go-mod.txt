@@ -1,6 +1,0 @@
-	github.com/alecthomas/kong v1.14.0 // indirect
-ok  	github.com/dl-alexandre/gdrv/internal/testing/mocks	(cached)
-ok  	github.com/dl-alexandre/gdrv/internal/types	(cached)
-ok  	github.com/dl-alexandre/gdrv/internal/utils	(cached)
-?   	github.com/dl-alexandre/gdrv/pkg	[no test files]
-ok  	github.com/dl-alexandre/gdrv/pkg/version	(cached)

@@ -1,1 +1,0 @@
-https://github.com/steipete/gogcli/issues/337
