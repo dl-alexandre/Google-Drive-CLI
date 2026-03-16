@@ -212,7 +212,7 @@ jobs:
     
     - name: Create Pull Request
       if: steps.check.outputs.drift_detected == 'true' && !github.event.inputs.dry_run
-      uses: peter-evans/create-pull-request@v5
+      uses: peter-evans/create-pull-request@v8
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: 'chore(grpc): Update gRPC proto definitions'
