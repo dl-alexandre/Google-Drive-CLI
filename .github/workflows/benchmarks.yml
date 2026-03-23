@@ -23,7 +23,7 @@ jobs:
         if: ${{ env.ACT != 'true' }}
         uses: actions/setup-go@v6
         with:
-          go-version: "1.24.x"
+          go-version: "1.25.x"
           cache: true
 
       - name: Set up Go for act
