@@ -2003,6 +2003,376 @@
     "users": {
       "methods": null,
       "resources": {
+        "sections": {
+          "methods": {
+            "create": {
+              "id": "chat.users.sections.create",
+              "path": "v1/{+parent}/sections",
+              "httpMethod": "POST",
+              "description": "[Developer Preview](https://developers.google.com/workspace/preview): Creates a section in Google Chat. Sections help users group conversations and customize the list of spaces displayed in Chat navigation panel. Only sections of type `CUSTOM_SECTION` can be created. For details, see [Create and organize sections in Google Chat](https://support.google.com/chat/answer/16059854). Requires [user authentication](https://developers.google.com/workspace/chat/authenticate-authorize-chat-user) with the [authorization scope](https://developers.google.com/workspace/chat/authenticate-authorize#chat-api-scopes): - `https://www.googleapis.com/auth/chat.users.sections`",
+              "parameters": {
+                "parent": {
+                  "id": "",
+                  "type": "string",
+                  "$ref": "",
+                  "description": "Required. The parent resource name where the section is created. Format: `users/{user}`",
+                  "default": null,
+                  "required": true,
+                  "pattern": "^users/[^/]+$",
+                  "format": "",
+                  "minimum": "",
+                  "maximum": "",
+                  "repeated": false,
+                  "location": "path",
+                  "enum": null,
+                  "enumDescriptions": null
+                }
+              },
+              "request": {
+                "$ref": "GoogleChatV1Section",
+                "type": ""
+              },
+              "response": {
+                "$ref": "GoogleChatV1Section",
+                "type": ""
+              },
+              "scopes": [
+                "https://www.googleapis.com/auth/chat.users.sections"
+              ],
+              "supportsMediaUpload": false,
+              "supportsMediaDownload": false,
+              "flatPath": "v1/users/{usersId}/sections",
+              "etag": ""
+            },
+            "delete": {
+              "id": "chat.users.sections.delete",
+              "path": "v1/{+name}",
+              "httpMethod": "DELETE",
+              "description": "[Developer Preview](https://developers.google.com/workspace/preview): Deletes a section of type `CUSTOM_SECTION`. If the section contains items, such as spaces, the items are moved to Google Chat's default sections and are not deleted. For details, see [Create and organize sections in Google Chat](https://support.google.com/chat/answer/16059854). Requires [user authentication](https://developers.google.com/workspace/chat/authenticate-authorize-chat-user) with the [authorization scope](https://developers.google.com/workspace/chat/authenticate-authorize#chat-api-scopes): - `https://www.googleapis.com/auth/chat.users.sections`",
+              "parameters": {
+                "name": {
+                  "id": "",
+                  "type": "string",
+                  "$ref": "",
+                  "description": "Required. The name of the section to delete. Format: `users/{user}/sections/{section}`",
+                  "default": null,
+                  "required": true,
+                  "pattern": "^users/[^/]+/sections/[^/]+$",
+                  "format": "",
+                  "minimum": "",
+                  "maximum": "",
+                  "repeated": false,
+                  "location": "path",
+                  "enum": null,
+                  "enumDescriptions": null
+                }
+              },
+              "response": {
+                "$ref": "Empty",
+                "type": ""
+              },
+              "scopes": [
+                "https://www.googleapis.com/auth/chat.users.sections"
+              ],
+              "supportsMediaUpload": false,
+              "supportsMediaDownload": false,
+              "flatPath": "v1/users/{usersId}/sections/{sectionsId}",
+              "etag": ""
+            },
+            "list": {
+              "id": "chat.users.sections.list",
+              "path": "v1/{+parent}/sections",
+              "httpMethod": "GET",
+              "description": "[Developer Preview](https://developers.google.com/workspace/preview): Lists sections available to the Chat user. Sections help users group their conversations and customize the list of spaces displayed in Chat navigation panel. For details, see [Create and organize sections in Google Chat](https://support.google.com/chat/answer/16059854). Requires [user authentication](https://developers.google.com/workspace/chat/authenticate-authorize-chat-user) with the [authorization scope](https://developers.google.com/workspace/chat/authenticate-authorize#chat-api-scopes): - `https://www.googleapis.com/auth/chat.users.sections` - `https://www.googleapis.com/auth/chat.users.sections.readonly`",
+              "parameters": {
+                "pageSize": {
+                  "id": "",
+                  "type": "integer",
+                  "$ref": "",
+                  "description": "Optional. The maximum number of sections to return. The service may return fewer than this value. If unspecified, at most 10 sections will be returned. The maximum value is 100. If you use a value more than 100, it's automatically changed to 100. Negative values return an `INVALID_ARGUMENT` error.",
+                  "default": null,
+                  "required": false,
+                  "pattern": "",
+                  "format": "int32",
+                  "minimum": "",
+                  "maximum": "",
+                  "repeated": false,
+                  "location": "query",
+                  "enum": null,
+                  "enumDescriptions": null
+                },
+                "pageToken": {
+                  "id": "",
+                  "type": "string",
+                  "$ref": "",
+                  "description": "Optional. A page token, received from a previous list sections call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided should match the call that provided the page token. Passing different values to the other parameters might lead to unexpected results.",
+                  "default": null,
+                  "required": false,
+                  "pattern": "",
+                  "format": "",
+                  "minimum": "",
+                  "maximum": "",
+                  "repeated": false,
+                  "location": "query",
+                  "enum": null,
+                  "enumDescriptions": null
+                },
+                "parent": {
+                  "id": "",
+                  "type": "string",
+                  "$ref": "",
+                  "description": "Required. The parent, which is the user resource name that owns this collection of sections. Only supports listing sections for the calling user. To refer to the calling user, set one of the following: - The `me` alias. For example, `users/me`. - Their Workspace email address. For example, `users/user@example.com`. - Their user id. For example, `users/123456789`. Format: `users/{user}`",
+                  "default": null,
+                  "required": true,
+                  "pattern": "^users/[^/]+$",
+                  "format": "",
+                  "minimum": "",
+                  "maximum": "",
+                  "repeated": false,
+                  "location": "path",
+                  "enum": null,
+                  "enumDescriptions": null
+                }
+              },
+              "response": {
+                "$ref": "ListSectionsResponse",
+                "type": ""
+              },
+              "scopes": [
+                "https://www.googleapis.com/auth/chat.users.sections",
+                "https://www.googleapis.com/auth/chat.users.sections.readonly"
+              ],
+              "supportsMediaUpload": false,
+              "supportsMediaDownload": false,
+              "flatPath": "v1/users/{usersId}/sections",
+              "etag": ""
+            },
+            "patch": {
+              "id": "chat.users.sections.patch",
+              "path": "v1/{+name}",
+              "httpMethod": "PATCH",
+              "description": "[Developer Preview](https://developers.google.com/workspace/preview): Updates a section. Only sections of type `CUSTOM_SECTION` can be updated. For details, see [Create and organize sections in Google Chat](https://support.google.com/chat/answer/16059854). Requires [user authentication](https://developers.google.com/workspace/chat/authenticate-authorize-chat-user) with the [authorization scope](https://developers.google.com/workspace/chat/authenticate-authorize#chat-api-scopes): - `https://www.googleapis.com/auth/chat.users.sections`",
+              "parameters": {
+                "name": {
+                  "id": "",
+                  "type": "string",
+                  "$ref": "",
+                  "description": "Identifier. Resource name of the section. For system sections, the section ID is a constant string: - DEFAULT_DIRECT_MESSAGES: `users/{user}/sections/default-direct-messages` - DEFAULT_SPACES: `users/{user}/sections/default-spaces` - DEFAULT_APPS: `users/{user}/sections/default-apps` Format: `users/{user}/sections/{section}`",
+                  "default": null,
+                  "required": true,
+                  "pattern": "^users/[^/]+/sections/[^/]+$",
+                  "format": "",
+                  "minimum": "",
+                  "maximum": "",
+                  "repeated": false,
+                  "location": "path",
+                  "enum": null,
+                  "enumDescriptions": null
+                },
+                "updateMask": {
+                  "id": "",
+                  "type": "string",
+                  "$ref": "",
+                  "description": "Required. The mask to specify which fields to update. Currently supported field paths: - `display_name`",
+                  "default": null,
+                  "required": false,
+                  "pattern": "",
+                  "format": "google-fieldmask",
+                  "minimum": "",
+                  "maximum": "",
+                  "repeated": false,
+                  "location": "query",
+                  "enum": null,
+                  "enumDescriptions": null
+                }
+              },
+              "request": {
+                "$ref": "GoogleChatV1Section",
+                "type": ""
+              },
+              "response": {
+                "$ref": "GoogleChatV1Section",
+                "type": ""
+              },
+              "scopes": [
+                "https://www.googleapis.com/auth/chat.users.sections"
+              ],
+              "supportsMediaUpload": false,
+              "supportsMediaDownload": false,
+              "flatPath": "v1/users/{usersId}/sections/{sectionsId}",
+              "etag": ""
+            },
+            "position": {
+              "id": "chat.users.sections.position",
+              "path": "v1/{+name}:position",
+              "httpMethod": "POST",
+              "description": "[Developer Preview](https://developers.google.com/workspace/preview): Changes the sort order of a section. For details, see [Create and organize sections in Google Chat](https://support.google.com/chat/answer/16059854). Requires [user authentication](https://developers.google.com/workspace/chat/authenticate-authorize-chat-user) with the [authorization scope](https://developers.google.com/workspace/chat/authenticate-authorize#chat-api-scopes): - `https://www.googleapis.com/auth/chat.users.sections`",
+              "parameters": {
+                "name": {
+                  "id": "",
+                  "type": "string",
+                  "$ref": "",
+                  "description": "Required. The resource name of the section to position. Format: `users/{user}/sections/{section}`",
+                  "default": null,
+                  "required": true,
+                  "pattern": "^users/[^/]+/sections/[^/]+$",
+                  "format": "",
+                  "minimum": "",
+                  "maximum": "",
+                  "repeated": false,
+                  "location": "path",
+                  "enum": null,
+                  "enumDescriptions": null
+                }
+              },
+              "request": {
+                "$ref": "PositionSectionRequest",
+                "type": ""
+              },
+              "response": {
+                "$ref": "PositionSectionResponse",
+                "type": ""
+              },
+              "scopes": [
+                "https://www.googleapis.com/auth/chat.users.sections"
+              ],
+              "supportsMediaUpload": false,
+              "supportsMediaDownload": false,
+              "flatPath": "v1/users/{usersId}/sections/{sectionsId}:position",
+              "etag": ""
+            }
+          },
+          "resources": {
+            "items": {
+              "methods": {
+                "list": {
+                  "id": "chat.users.sections.items.list",
+                  "path": "v1/{+parent}/items",
+                  "httpMethod": "GET",
+                  "description": "[Developer Preview](https://developers.google.com/workspace/preview): Lists items in a section. Only spaces can be section items. For details, see [Create and organize sections in Google Chat](https://support.google.com/chat/answer/16059854). Requires [user authentication](https://developers.google.com/workspace/chat/authenticate-authorize-chat-user) with the [authorization scope](https://developers.google.com/workspace/chat/authenticate-authorize#chat-api-scopes): - `https://www.googleapis.com/auth/chat.users.sections` - `https://www.googleapis.com/auth/chat.users.sections.readonly`",
+                  "parameters": {
+                    "filter": {
+                      "id": "",
+                      "type": "string",
+                      "$ref": "",
+                      "description": "Optional. A query filter. Currently only supports filtering by space. For example, `space = spaces/{space}`. Invalid queries are rejected with an `INVALID_ARGUMENT` error.",
+                      "default": null,
+                      "required": false,
+                      "pattern": "",
+                      "format": "",
+                      "minimum": "",
+                      "maximum": "",
+                      "repeated": false,
+                      "location": "query",
+                      "enum": null,
+                      "enumDescriptions": null
+                    },
+                    "pageSize": {
+                      "id": "",
+                      "type": "integer",
+                      "$ref": "",
+                      "description": "Optional. The maximum number of section items to return. The service may return fewer than this value. If unspecified, at most 10 section items will be returned. The maximum value is 100. If you use a value more than 100, it's automatically changed to 100. Negative values return an `INVALID_ARGUMENT` error.",
+                      "default": null,
+                      "required": false,
+                      "pattern": "",
+                      "format": "int32",
+                      "minimum": "",
+                      "maximum": "",
+                      "repeated": false,
+                      "location": "query",
+                      "enum": null,
+                      "enumDescriptions": null
+                    },
+                    "pageToken": {
+                      "id": "",
+                      "type": "string",
+                      "$ref": "",
+                      "description": "Optional. A page token, received from a previous list section items call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided should match the call that provided the page token. Passing different values to the other parameters might lead to unexpected results.",
+                      "default": null,
+                      "required": false,
+                      "pattern": "",
+                      "format": "",
+                      "minimum": "",
+                      "maximum": "",
+                      "repeated": false,
+                      "location": "query",
+                      "enum": null,
+                      "enumDescriptions": null
+                    },
+                    "parent": {
+                      "id": "",
+                      "type": "string",
+                      "$ref": "",
+                      "description": "Required. The parent, which is the section resource name that owns this collection of section items. Only supports listing section items for the calling user. When you're filtering by space, use the wildcard `-` to search across all sections. For example, `users/{user}/sections/-`. Format: `users/{user}/sections/{section}`",
+                      "default": null,
+                      "required": true,
+                      "pattern": "^users/[^/]+/sections/[^/]+$",
+                      "format": "",
+                      "minimum": "",
+                      "maximum": "",
+                      "repeated": false,
+                      "location": "path",
+                      "enum": null,
+                      "enumDescriptions": null
+                    }
+                  },
+                  "response": {
+                    "$ref": "ListSectionItemsResponse",
+                    "type": ""
+                  },
+                  "scopes": [
+                    "https://www.googleapis.com/auth/chat.users.sections",
+                    "https://www.googleapis.com/auth/chat.users.sections.readonly"
+                  ],
+                  "supportsMediaUpload": false,
+                  "supportsMediaDownload": false,
+                  "flatPath": "v1/users/{usersId}/sections/{sectionsId}/items",
+                  "etag": ""
+                },
+                "move": {
+                  "id": "chat.users.sections.items.move",
+                  "path": "v1/{+name}:move",
+                  "httpMethod": "POST",
+                  "description": "[Developer Preview](https://developers.google.com/workspace/preview): Moves an item from one section to another. For example, if a section contains spaces, this method can be used to move a space to a different section. For details, see [Create and organize sections in Google Chat](https://support.google.com/chat/answer/16059854). Requires [user authentication](https://developers.google.com/workspace/chat/authenticate-authorize-chat-user) with the [authorization scope](https://developers.google.com/workspace/chat/authenticate-authorize#chat-api-scopes): - `https://www.googleapis.com/auth/chat.users.sections`",
+                  "parameters": {
+                    "name": {
+                      "id": "",
+                      "type": "string",
+                      "$ref": "",
+                      "description": "Required. The resource name of the section item to move. Format: `users/{user}/sections/{section}/items/{item}`",
+                      "default": null,
+                      "required": true,
+                      "pattern": "^users/[^/]+/sections/[^/]+/items/[^/]+$",
+                      "format": "",
+                      "minimum": "",
+                      "maximum": "",
+                      "repeated": false,
+                      "location": "path",
+                      "enum": null,
+                      "enumDescriptions": null
+                    }
+                  },
+                  "request": {
+                    "$ref": "MoveSectionItemRequest",
+                    "type": ""
+                  },
+                  "response": {
+                    "$ref": "MoveSectionItemResponse",
+                    "type": ""
+                  },
+                  "scopes": [
+                    "https://www.googleapis.com/auth/chat.users.sections"
+                  ],
+                  "supportsMediaUpload": false,
+                  "supportsMediaDownload": false,
+                  "flatPath": "v1/users/{usersId}/sections/{sectionsId}/items/{itemsId}:move",
+                  "etag": ""
+                }
+              },
+              "resources": null
+            }
+          }
+        },
         "spaces": {
           "methods": {
             "getSpaceReadState": {
@@ -3222,7 +3592,7 @@
     "CardWithId": {
       "id": "CardWithId",
       "type": "object",
-      "description": "A [card](https://developers.google.com/workspace/chat/api/reference/rest/v1/cards) in a Google Chat message. Only Chat apps can create cards. If your Chat app [authenticates as a user](https://developers.google.com/workspace/chat/authenticate-authorize-chat-user), the message can't contain cards. [Card builder](https://addons.gsuite.google.com/uikit/builder)",
+      "description": "A [card](https://developers.google.com/workspace/chat/api/reference/rest/v1/cards) in a Google Chat message. Chat apps can create cards with [app authentication](https://developers.google.com/workspace/chat/authenticate-authorize-chat-app). As part of the [Developer Preview Program](https://developers.google.com/workspace/preview), if your Chat app [authenticates as a user](https://developers.google.com/workspace/chat/authenticate-authorize-chat-user), it can create card messages. If your Chat app is not part of Developer Preview Program, it can't create cards with user authentication. To learn how to create a message that contains cards, see [Send a message](https://developers.google.com/workspace/chat/create-messages). [Card builder](https://addons.gsuite.google.com/uikit/builder)",
       "default": null,
       "properties": {
         "card": {
@@ -8783,6 +9153,89 @@
       "enumDescriptions": null,
       "additionalProperties": null
     },
+    "GoogleChatV1Section": {
+      "id": "GoogleChatV1Section",
+      "type": "object",
+      "description": "Represents a [section](https://support.google.com/chat/answer/16059854) in Google Chat. Sections help users organize their spaces. There are two types of sections: 1. **System Sections:** These are predefined sections managed by Google Chat. Their resource names are fixed, and they cannot be created, deleted, or have their `display_name` modified. Examples include: * `users/{user}/sections/default-direct-messages` * `users/{user}/sections/default-spaces` * `users/{user}/sections/default-apps` 2. **Custom Sections:** These are sections created and managed by the user. Creating a custom section using `CreateSection` **requires** a `display_name`. Custom sections can be updated using `UpdateSection` and deleted using `DeleteSection`. [Developer Preview](https://developers.google.com/workspace/preview).",
+      "default": null,
+      "properties": {
+        "displayName": {
+          "id": "",
+          "type": "string",
+          "description": "Optional. The section's display name. Only populated for sections of type `CUSTOM_SECTION`. Supports up to 80 characters. Required when creating a `CUSTOM_SECTION`.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "name": {
+          "id": "",
+          "type": "string",
+          "description": "Identifier. Resource name of the section. For system sections, the section ID is a constant string: - DEFAULT_DIRECT_MESSAGES: `users/{user}/sections/default-direct-messages` - DEFAULT_SPACES: `users/{user}/sections/default-spaces` - DEFAULT_APPS: `users/{user}/sections/default-apps` Format: `users/{user}/sections/{section}`",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "sortOrder": {
+          "id": "",
+          "type": "integer",
+          "description": "Output only. The order of the section in relation to other sections. Sections with a lower `sort_order` value appear before sections with a higher value.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "int32",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "type": {
+          "id": "",
+          "type": "string",
+          "description": "Required. The type of the section.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": [
+            "SECTION_TYPE_UNSPECIFIED",
+            "CUSTOM_SECTION",
+            "DEFAULT_DIRECT_MESSAGES",
+            "DEFAULT_SPACES",
+            "DEFAULT_APPS"
+          ],
+          "enumDescriptions": [
+            "Unspecified section type.",
+            "Custom section.",
+            "Default section containing [DIRECT_MESSAGE](https://developers.google.com/workspace/chat/api/reference/rest/v1/spaces#spacetype) between two human users or [GROUP_CHAT](https://developers.google.com/workspace/chat/api/reference/rest/v1/spaces#spacetype) spaces that don't belong to any custom section.",
+            "Default spaces that don't belong to any custom section.",
+            "Default section containing a user's installed apps."
+          ],
+          "additionalProperties": null
+        }
+      },
+      "$ref": "",
+      "required": null,
+      "format": "",
+      "pattern": "",
+      "enum": null,
+      "enumDescriptions": null,
+      "additionalProperties": null
+    },
     "Group": {
       "id": "Group",
       "type": "object",
@@ -9513,6 +9966,120 @@
             "default": null,
             "properties": null,
             "$ref": "Reaction",
+            "required": null,
+            "format": "",
+            "pattern": "",
+            "enum": null,
+            "enumDescriptions": null,
+            "additionalProperties": null
+          },
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        }
+      },
+      "$ref": "",
+      "required": null,
+      "format": "",
+      "pattern": "",
+      "enum": null,
+      "enumDescriptions": null,
+      "additionalProperties": null
+    },
+    "ListSectionItemsResponse": {
+      "id": "ListSectionItemsResponse",
+      "type": "object",
+      "description": "Response message for listing section items. [Developer Preview](https://developers.google.com/workspace/preview).",
+      "default": null,
+      "properties": {
+        "nextPageToken": {
+          "id": "",
+          "type": "string",
+          "description": "A token, which can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no subsequent pages.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "sectionItems": {
+          "id": "",
+          "type": "array",
+          "description": "The section items from the specified section.",
+          "default": null,
+          "properties": null,
+          "items": {
+            "id": "",
+            "type": "",
+            "description": "",
+            "default": null,
+            "properties": null,
+            "$ref": "SectionItem",
+            "required": null,
+            "format": "",
+            "pattern": "",
+            "enum": null,
+            "enumDescriptions": null,
+            "additionalProperties": null
+          },
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        }
+      },
+      "$ref": "",
+      "required": null,
+      "format": "",
+      "pattern": "",
+      "enum": null,
+      "enumDescriptions": null,
+      "additionalProperties": null
+    },
+    "ListSectionsResponse": {
+      "id": "ListSectionsResponse",
+      "type": "object",
+      "description": "Response message for listing sections. [Developer Preview](https://developers.google.com/workspace/preview).",
+      "default": null,
+      "properties": {
+        "nextPageToken": {
+          "id": "",
+          "type": "string",
+          "description": "A token, which can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no subsequent pages.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "sections": {
+          "id": "",
+          "type": "array",
+          "description": "The sections from the specified user.",
+          "default": null,
+          "properties": null,
+          "items": {
+            "id": "",
+            "type": "",
+            "description": "",
+            "default": null,
+            "properties": null,
+            "$ref": "GoogleChatV1Section",
             "required": null,
             "format": "",
             "pattern": "",
@@ -10353,7 +10920,7 @@
         "cardsV2": {
           "id": "",
           "type": "array",
-          "description": "Optional. An array of [cards](https://developers.google.com/workspace/chat/api/reference/rest/v1/cards). Only Chat apps can create cards. If your Chat app [authenticates as a user](https://developers.google.com/workspace/chat/authenticate-authorize-chat-user), the messages can't contain cards. To learn how to create a message that contains cards, see [Send a message](https://developers.google.com/workspace/chat/create-messages). [Card builder](https://addons.gsuite.google.com/uikit/builder)",
+          "description": "Optional. An array of [cards](https://developers.google.com/workspace/chat/api/reference/rest/v1/cards). Chat apps can create cards with [app authentication](https://developers.google.com/workspace/chat/authenticate-authorize-chat-app). As part of the [Developer Preview Program](https://developers.google.com/workspace/preview), if your Chat app [authenticates as a user](https://developers.google.com/workspace/chat/authenticate-authorize-chat-user), it can create card messages. If your Chat app is not part of Developer Preview Program, it can't create cards with user authentication. To learn how to create a message that contains cards, see [Send a message](https://developers.google.com/workspace/chat/create-messages). [Card builder](https://addons.gsuite.google.com/uikit/builder)",
           "default": null,
           "properties": null,
           "items": {
@@ -10479,7 +11046,7 @@
         "formattedText": {
           "id": "",
           "type": "string",
-          "description": "Output only. Contains the message `text` with markups added to communicate formatting. This field might not capture all formatting visible in the UI, but includes the following: * [Markup syntax](https://developers.google.com/workspace/chat/format-messages) for bold, italic, strikethrough, monospace, monospace block, and bulleted list. * [User mentions](https://developers.google.com/workspace/chat/format-messages#messages-@mention) using the format ``. * Custom hyperlinks using the format `\u003c{url}|{rendered_text}\u003e` where the first string is the URL and the second is the rendered text—for example, ``. * Custom emoji using the format `:{emoji_name}:`—for example, `:smile:`. This doesn't apply to Unicode emoji, such as `U+1F600` for a grinning face emoji. * Bullet list items using asterisks (`*`)—for example, `* item`. For more information, see [View text formatting sent in a message](https://developers.google.com/workspace/chat/format-messages#view_text_formatting_sent_in_a_message)",
+          "description": "Output only. Contains the message `text` with markups added to communicate formatting. This field might not capture all formatting visible in the UI, but includes the following: * [Markup syntax](https://developers.google.com/workspace/chat/format-messages) for bold, italic, strikethrough, monospace, monospace block, bulleted list, and block quote. * [User mentions](https://developers.google.com/workspace/chat/format-messages#messages-@mention) using the format ``. * Custom hyperlinks using the format `\u003c{url}|{rendered_text}\u003e` where the first string is the URL and the second is the rendered text—for example, ``. * Custom emoji using the format `:{emoji_name}:`—for example, `:smile:`. This doesn't apply to Unicode emoji, such as `U+1F600` for a grinning face emoji. * Bullet list items using asterisks (`*`)—for example, `* item`. For more information, see [View text formatting sent in a message](https://developers.google.com/workspace/chat/format-messages#view_text_formatting_sent_in_a_message)",
           "default": null,
           "properties": null,
           "$ref": "",
@@ -10507,7 +11074,7 @@
         "matchedUrl": {
           "id": "",
           "type": "",
-          "description": "Output only. A URL in `spaces.messages.text` that matches a link preview pattern. For more information, see [Preview links](https://developers.google.com/workspace/chat/preview-links).",
+          "description": "Output only. A URL in the Chat message `text` field that matches a link preview pattern. For more information, see [Preview links](https://developers.google.com/workspace/chat/preview-links).",
           "default": null,
           "properties": null,
           "$ref": "MatchedUrl",
@@ -10869,6 +11436,64 @@
       "enumDescriptions": null,
       "additionalProperties": null
     },
+    "MoveSectionItemRequest": {
+      "id": "MoveSectionItemRequest",
+      "type": "object",
+      "description": "Request message for moving a section item across sections. [Developer Preview](https://developers.google.com/workspace/preview).",
+      "default": null,
+      "properties": {
+        "targetSection": {
+          "id": "",
+          "type": "string",
+          "description": "Required. The resource name of the section to move the section item to. Format: `users/{user}/sections/{section}`",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        }
+      },
+      "$ref": "",
+      "required": null,
+      "format": "",
+      "pattern": "",
+      "enum": null,
+      "enumDescriptions": null,
+      "additionalProperties": null
+    },
+    "MoveSectionItemResponse": {
+      "id": "MoveSectionItemResponse",
+      "type": "object",
+      "description": "Response message for moving a section item. [Developer Preview](https://developers.google.com/workspace/preview).",
+      "default": null,
+      "properties": {
+        "sectionItem": {
+          "id": "",
+          "type": "",
+          "description": "The updated section item.",
+          "default": null,
+          "properties": null,
+          "$ref": "SectionItem",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        }
+      },
+      "$ref": "",
+      "required": null,
+      "format": "",
+      "pattern": "",
+      "enum": null,
+      "enumDescriptions": null,
+      "additionalProperties": null
+    },
     "OnClick": {
       "id": "OnClick",
       "type": "object",
@@ -11109,6 +11734,86 @@
           "default": null,
           "properties": null,
           "$ref": "PermissionSetting",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        }
+      },
+      "$ref": "",
+      "required": null,
+      "format": "",
+      "pattern": "",
+      "enum": null,
+      "enumDescriptions": null,
+      "additionalProperties": null
+    },
+    "PositionSectionRequest": {
+      "id": "PositionSectionRequest",
+      "type": "object",
+      "description": "Request message for positioning a section. [Developer Preview](https://developers.google.com/workspace/preview).",
+      "default": null,
+      "properties": {
+        "relativePosition": {
+          "id": "",
+          "type": "string",
+          "description": "Optional. The relative position of the section in the list of sections.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": [
+            "POSITION_UNSPECIFIED",
+            "START",
+            "END"
+          ],
+          "enumDescriptions": [
+            "Unspecified position.",
+            "Start of the list of sections.",
+            "End of the list of sections."
+          ],
+          "additionalProperties": null
+        },
+        "sortOrder": {
+          "id": "",
+          "type": "integer",
+          "description": "Optional. The absolute position of the section in the list of sections. The position must be greater than 0. If the position is greater than the number of sections, the section will be appended to the end of the list. This operation inserts the section at the given position and shifts the original section at that position, and those below it, to the next position.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "int32",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        }
+      },
+      "$ref": "",
+      "required": null,
+      "format": "",
+      "pattern": "",
+      "enum": null,
+      "enumDescriptions": null,
+      "additionalProperties": null
+    },
+    "PositionSectionResponse": {
+      "id": "PositionSectionResponse",
+      "type": "object",
+      "description": "Response message for positioning a section. [Developer Preview](https://developers.google.com/workspace/preview).",
+      "default": null,
+      "properties": {
+        "section": {
+          "id": "",
+          "type": "",
+          "description": "The updated section.",
+          "default": null,
+          "properties": null,
+          "$ref": "GoogleChatV1Section",
           "required": null,
           "format": "",
           "pattern": "",
@@ -11754,6 +12459,49 @@
             "enumDescriptions": null,
             "additionalProperties": null
           },
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        }
+      },
+      "$ref": "",
+      "required": null,
+      "format": "",
+      "pattern": "",
+      "enum": null,
+      "enumDescriptions": null,
+      "additionalProperties": null
+    },
+    "SectionItem": {
+      "id": "SectionItem",
+      "type": "object",
+      "description": "A user's defined section item. This is used to represent section items, such as spaces, grouped under a section. [Developer Preview](https://developers.google.com/workspace/preview).",
+      "default": null,
+      "properties": {
+        "name": {
+          "id": "",
+          "type": "string",
+          "description": "Identifier. The resource name of the section item. Format: `users/{user}/sections/{section}/items/{item}`",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "space": {
+          "id": "",
+          "type": "string",
+          "description": "Optional. The space resource name. Format: `spaces/{space}`",
+          "default": null,
+          "properties": null,
           "$ref": "",
           "required": null,
           "format": "",
@@ -13960,6 +14708,12 @@
         },
         "https://www.googleapis.com/auth/chat.users.readstate.readonly": {
           "description": "View last read time for Google Chat conversations"
+        },
+        "https://www.googleapis.com/auth/chat.users.sections": {
+          "description": "View, create, update, and delete your sections in Google Chat; move and list your section items in Google Chat"
+        },
+        "https://www.googleapis.com/auth/chat.users.sections.readonly": {
+          "description": "View your sections and their section items in Google Chat"
         },
         "https://www.googleapis.com/auth/chat.users.spacesettings": {
           "description": "Read and update your space settings"
