@@ -3,13 +3,15 @@ package version
 import (
 	"fmt"
 	"runtime"
+
+	"github.com/dl-alexandre/cli-tools/version"
 )
 
 var (
-	Version    = "dev"
-	GitCommit  = "unknown"
-	BuildTime  = "unknown"
-	BinaryName = "gdrv"
+	Version    = version.Version
+	GitCommit  = version.GitCommit
+	BuildTime  = version.BuildTime
+	BinaryName = version.BinaryName
 	GitHubRepo = "Google-Drive-CLI"
 )
 
@@ -37,4 +39,8 @@ func (i *Info) String() string {
 
 func (i *Info) Short() string {
 	return i.Version
+}
+
+func init() {
+	version.BinaryName = "gdrv"
 }
