@@ -15,7 +15,7 @@ require (
 	github.com/sahilm/fuzzy v0.1.1
 	github.com/schollz/progressbar/v3 v3.19.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
-	github.com/zalando/go-keyring v0.2.7
+	github.com/zalando/go-keyring v0.2.8
 	golang.org/x/oauth2 v0.36.0
 	golang.org/x/text v0.35.0
 	google.golang.org/api v0.272.0
