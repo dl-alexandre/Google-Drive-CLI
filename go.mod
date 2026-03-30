@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	cloud.google.com/go/ai v0.10.0
 	cloud.google.com/go/apps v0.5.3
-	cloud.google.com/go/iam v1.5.3
+	cloud.google.com/go/iam v1.6.0
 	cloud.google.com/go/logging v1.13.2
 	cloud.google.com/go/monitoring v1.24.3
 	github.com/alecthomas/kong v1.14.0
@@ -19,7 +19,7 @@ require (
 	golang.org/x/oauth2 v0.36.0
 	golang.org/x/text v0.35.0
 	google.golang.org/api v0.272.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20260217215200-42d3e9bedb6d
+	google.golang.org/genproto/googleapis/api v0.0.0-20260316180232-0b37fe3546d5
 	google.golang.org/grpc v1.81.0-dev
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/yaml.v3 v3.0.1
@@ -67,9 +67,9 @@ require (
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.63.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.61.0 // indirect
-	go.opentelemetry.io/otel v1.39.0 // indirect
-	go.opentelemetry.io/otel/metric v1.39.0 // indirect
-	go.opentelemetry.io/otel/trace v1.39.0 // indirect
+	go.opentelemetry.io/otel v1.40.0 // indirect
+	go.opentelemetry.io/otel/metric v1.40.0 // indirect
+	go.opentelemetry.io/otel/trace v1.40.0 // indirect
 	golang.org/x/crypto v0.49.0 // indirect
 	golang.org/x/net v0.52.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
