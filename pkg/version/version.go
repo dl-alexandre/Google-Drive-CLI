@@ -8,13 +8,10 @@ import (
 )
 
 var (
-	Version    = version.Version
-	GitCommit  = version.GitCommit
-	BuildTime  = version.BuildTime
-	BinaryName = version.BinaryName
 	GitHubRepo = "Google-Drive-CLI"
 )
 
+// Info holds version information
 type Info struct {
 	Version   string `json:"version"`
 	GitCommit string `json:"gitCommit"`
@@ -23,11 +20,12 @@ type Info struct {
 	Platform  string `json:"platform"`
 }
 
+// Get returns the current version info
 func Get() *Info {
 	return &Info{
-		Version:   Version,
-		GitCommit: GitCommit,
-		BuildTime: BuildTime,
+		Version:   version.Version,
+		GitCommit: version.GitCommit,
+		BuildTime: version.BuildTime,
 		GoVersion: runtime.Version(),
 		Platform:  fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH),
 	}
