@@ -38,6 +38,28 @@ func (m *Manager) GetValues(ctx context.Context, reqCtx *types.RequestContext, s
 	}, nil
 }
 
+// HasFormulas reports whether a sheet range contains formula cells.
+func (m *Manager) HasFormulas(ctx context.Context, reqCtx *types.RequestContext, spreadsheetID, rangeNotation string) (bool, error) {
+	call := m.service.Spreadsheets.Values.Get(spreadsheetID, rangeNotation).ValueRenderOption("FORMULA")
+
+	result, err := api.ExecuteWithRetry(ctx, m.client, reqCtx, func() (*sheets.ValueRange, error) {
+		return call.Do()
+	})
+	if err != nil {
+		return false, err
+	}
+
+	for _, row := range result.Values {
+		for _, cell := range row {
+			if s, ok := cell.(string); ok && len(s) > 1 && s[0] == '=' {
+				return true, nil
+			}
+		}
+	}
+
+	return false, nil
+}
+
 func (m *Manager) UpdateValues(ctx context.Context, reqCtx *types.RequestContext, spreadsheetID, rangeNotation string, values [][]interface{}, valueInputOption string) (*types.UpdateValuesResponse, error) {
 	valueRange := &sheets.ValueRange{
 		Values:         values,

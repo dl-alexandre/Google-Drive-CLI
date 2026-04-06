@@ -149,6 +149,7 @@ type CLI struct {
 	Monitoring   MonitoringCmd   `cmd:"" help:"Cloud Monitoring operations"`
 	IAMAdmin     IAMAdminCmd     `cmd:"" aliases:"iam-admin" help:"IAM Admin operations"`
 	CheckUpdates UpdateCheckCmd  `cmd:"" aliases:"check-update" help:"Check for available updates"`
+	TUI          TUICmd          `cmd:"" help:"Interactive TUI file browser"`
 }
 
 // VersionCmd prints the version.
