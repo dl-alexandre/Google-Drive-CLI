@@ -83,9 +83,7 @@ func TestFormatSheetPreview_TruncatesRowsAndColumns(t *testing.T) {
 }
 
 func TestPrepareSheetEditCmd_AddsFormulaWarningOnlyWhenNeeded(t *testing.T) {
-	originalCheckEditor := checkEditor
-	checkEditor = func(string) error { return nil }
-	defer func() { checkEditor = originalCheckEditor }()
+	installFakeSheets(t)
 
 	v := &commandTestVFS{
 		exportCSV:      "A,B\n=SUM(1,2),3\n",
@@ -98,7 +96,7 @@ func TestPrepareSheetEditCmd_AddsFormulaWarningOnlyWhenNeeded(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected EditPreparedMsg, got %T", msg)
 	}
-	defer os.Remove(prepared.Session.TempPath)
+	defer func() { _ = os.Remove(prepared.Session.TempPath) }()
 
 	joined := strings.Join(prepared.Warnings, " ")
 	if !strings.Contains(joined, "contains formulas") {
@@ -111,12 +109,22 @@ func TestPrepareSheetEditCmd_AddsFormulaWarningOnlyWhenNeeded(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected EditPreparedMsg, got %T", msg)
 	}
-	defer os.Remove(prepared.Session.TempPath)
+	defer func() { _ = os.Remove(prepared.Session.TempPath) }()
 
 	joined = strings.Join(prepared.Warnings, " ")
 	if strings.Contains(joined, "contains formulas") {
 		t.Fatalf("did not expect formula warning, got %q", joined)
 	}
+}
+
+func installFakeSheets(t *testing.T) {
+	t.Helper()
+	dir := t.TempDir()
+	path := filepath.Join(dir, "sheets")
+	if err := os.WriteFile(path, []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
 }
 
 func TestFinalizeSheetEditCmd_NoChanges(t *testing.T) {

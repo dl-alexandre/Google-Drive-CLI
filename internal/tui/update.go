@@ -132,6 +132,7 @@ func (m Model) moveCursor(delta int) (tea.Model, tea.Cmd) {
 	// Schedule debounced preview if visible
 	if m.previewVisible && len(m.items) > 0 {
 		node := &m.items[m.cursor]
+		m.previewNode = node
 		return m, tea.Tick(PreviewDebounceDelay, func(t time.Time) tea.Msg {
 			return DebouncedPreviewMsg{NodeID: node.ID}
 		})
@@ -202,7 +203,6 @@ func (m Model) loadPreview() tea.Cmd {
 		return nil
 	}
 	node := &m.items[m.cursor]
-	m.previewNode = node
 	return statPreviewCmd(m.vfs, node.ID)
 }
 
@@ -232,6 +232,7 @@ func (m Model) handleLoadDir(msg LoadDirMsg) (tea.Model, tea.Cmd) {
 
 	// Load initial preview if visible
 	if m.previewVisible && len(m.items) > 0 {
+		m.previewNode = &m.items[m.cursor]
 		return m, m.loadPreview()
 	}
 	return m, nil

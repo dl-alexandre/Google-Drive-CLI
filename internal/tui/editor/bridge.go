@@ -131,7 +131,8 @@ func (b *SheetsBridge) EditCSV(ctx context.Context, path string) (Result, error)
 	exitCode := 0
 	var editorError error
 	if err != nil {
-		if exitErr, ok := err.(*exec.ExitError); ok {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
 			exitCode = exitErr.ExitCode()
 			// Exit code 0 is success, anything else may indicate error
 			// But some editors return non-zero on normal quit, so we don't treat it as fatal
@@ -189,20 +190,6 @@ func ComputeFileHash(path string) (string, error) {
 
 func computeFileHash(path string) (string, error) {
 	return ComputeFileHash(path)
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }
 
 // CheckEditor verifies the editor binary exists in PATH.

@@ -41,13 +41,8 @@ type Model struct {
 	breadcrumbs []vfs.Node
 
 	// Modal state
-	modal        ModalType
-	sheetModal   *SheetPickerModal
-	confirmModal *struct {
-		Title   string
-		Message string
-		Action  func() tea.Cmd
-	}
+	modal      ModalType
+	sheetModal *SheetPickerModal
 
 	// Listing state
 	items    []vfs.Node
@@ -67,9 +62,6 @@ type Model struct {
 	// Layout
 	width  int
 	height int
-
-	// Preview debounce
-	previewDebounceTimer time.Time
 }
 
 // NewModel creates a new TUI model.
@@ -89,20 +81,6 @@ func (m Model) Title() string {
 // Init kicks off initial loading.
 func (m Model) Init() tea.Cmd {
 	return loadRootsCmd(m.vfs)
-}
-
-// Helper methods
-
-func (m *Model) currentNode() *vfs.Node {
-	if len(m.items) == 0 || m.cursor >= len(m.items) {
-		return nil
-	}
-	return &m.items[m.cursor]
-}
-
-func (m *Model) setError(err error) {
-	m.err = err
-	m.loading = false
 }
 
 func (m *Model) clearError() {

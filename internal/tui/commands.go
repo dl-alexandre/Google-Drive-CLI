@@ -68,7 +68,7 @@ func statPreviewCmd(vfs vfs.VFS, id string) tea.Cmd {
 
 // formatNodePreview creates simple metadata preview.
 func formatNodePreview(node vfs.Node) string {
-	icon := getIcon(node.Kind)
+	icon := iconForKind(node.Kind)
 	modified := node.Modified.Format("2006-01-02 15:04")
 	if node.Modified.IsZero() {
 		modified = "—"
@@ -91,20 +91,20 @@ func formatNodePreview(node vfs.Node) string {
 		"ID: " + id
 }
 
-func getIcon(kind vfs.NodeKind) string {
+func iconForKind(kind vfs.NodeKind) string {
 	switch kind {
 	case vfs.KindFolder:
-		return ""
+		return "[DIR]"
 	case vfs.KindSheet:
-		return ""
+		return "[SHEET]"
 	case vfs.KindDoc:
-		return ""
+		return "[DOC]"
 	case vfs.KindPDF:
-		return ""
+		return "[PDF]"
 	case vfs.KindImage:
-		return ""
+		return "[IMG]"
 	default:
-		return ""
+		return "[FILE]"
 	}
 }
 
@@ -248,7 +248,7 @@ func finalizeSheetEditCmd(vfs vfs.VFS, session editor.EditSession, duration time
 
 		if err := vfs.ImportSheetTab(ctx, session.FileID, session.TabName, string(editedData), session.Revision); err != nil {
 			if isConflictError(err) {
-				return ErrMsg{Err: fmt.Errorf("conflict detected: %w. Re-export and edit again, or cancel.", err)}
+				return ErrMsg{Err: fmt.Errorf("conflict detected: %w Re-export and edit again, or cancel", err)}
 			}
 			return ErrMsg{Err: fmt.Errorf("import failed: %w", err)}
 		}

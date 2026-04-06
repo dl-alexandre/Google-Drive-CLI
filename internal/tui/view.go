@@ -153,7 +153,7 @@ func (m Model) renderBreadcrumb() string {
 // renderItem renders a single file list item.
 func (m Model) renderItem(idx int) string {
 	node := m.items[idx]
-	icon := m.getIconForNode(node)
+	icon := iconForNode(node)
 	kindLabel := m.getKindLabel(node)
 	name := node.Name
 	if node.IsDir {
@@ -178,25 +178,25 @@ func (m Model) renderItem(idx int) string {
 }
 
 // getIconForNode returns an icon for the node kind.
-func (m Model) getIconForNode(node vfs.Node) string {
+func iconForNode(node vfs.Node) string {
 	if node.IsDir {
-		return ""
+		return "[DIR]"
 	}
 	switch node.Kind {
 	case vfs.KindSheet:
-		return ""
+		return "[SHEET]"
 	case vfs.KindDoc:
-		return ""
+		return "[DOC]"
 	case vfs.KindSlide:
-		return ""
+		return "[SLIDE]"
 	case vfs.KindPDF:
-		return ""
+		return "[PDF]"
 	case vfs.KindImage:
-		return ""
+		return "[IMG]"
 	case vfs.KindVideo:
-		return ""
+		return "[VID]"
 	default:
-		return ""
+		return "[FILE]"
 	}
 }
 
