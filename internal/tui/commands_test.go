@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -120,8 +121,14 @@ func TestPrepareSheetEditCmd_AddsFormulaWarningOnlyWhenNeeded(t *testing.T) {
 func installFakeSheets(t *testing.T) {
 	t.Helper()
 	dir := t.TempDir()
-	path := filepath.Join(dir, "sheets")
-	if err := os.WriteFile(path, []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
+	name := "sheets"
+	content := []byte("#!/bin/sh\nexit 0\n")
+	if runtime.GOOS == "windows" {
+		name = "sheets.cmd"
+		content = []byte("@echo off\r\nexit /b 0\r\n")
+	}
+	path := filepath.Join(dir, name)
+	if err := os.WriteFile(path, content, 0o755); err != nil {
 		t.Fatal(err)
 	}
 	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
