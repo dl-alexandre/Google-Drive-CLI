@@ -4,11 +4,11 @@ go 1.25.0
 
 require (
 	cloud.google.com/go/ai v0.10.0
-	cloud.google.com/go/apps v0.9.0
+	cloud.google.com/go/apps v0.5.3
 	cloud.google.com/go/iam v1.5.3
 	cloud.google.com/go/logging v1.13.2
-	cloud.google.com/go/monitoring v1.24.3
-	github.com/alecthomas/kong v1.14.0
+	cloud.google.com/go/monitoring v1.25.0
+	github.com/alecthomas/kong v1.15.0
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/dl-alexandre/cli-tools v0.0.1
 	github.com/google/uuid v1.6.0
@@ -78,7 +78,7 @@ require (
 	golang.org/x/term v0.41.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
 	google.golang.org/genproto v0.0.0-20260319201613-d00831a3d3e7 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260319201613-d00831a3d3e7 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260401001100-f93e5f3e9f0f // indirect
 	modernc.org/libc v1.70.0 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
