@@ -28,6 +28,9 @@ endif
 LDFLAGS = -ldflags "-X github.com/dl-alexandre/gdrv/pkg/version.Version=$(VERSION) \
 	-X github.com/dl-alexandre/gdrv/pkg/version.GitCommit=$(GIT_COMMIT) \
 	-X github.com/dl-alexandre/gdrv/pkg/version.BuildTime=$(BUILD_TIME) \
+	-X github.com/dl-alexandre/cli-tools/version.Version=$(VERSION) \
+	-X github.com/dl-alexandre/cli-tools/version.GitCommit=$(GIT_COMMIT) \
+	-X github.com/dl-alexandre/cli-tools/version.BuildTime=$(BUILD_TIME) \
 	$(OAUTH_LDFLAGS)"
 
 # Optimized build flags for smaller binaries
@@ -37,6 +40,9 @@ LDFLAGS = -ldflags "-X github.com/dl-alexandre/gdrv/pkg/version.Version=$(VERSIO
 OPTIMIZED_LDFLAGS = -ldflags "-s -w -X github.com/dl-alexandre/gdrv/pkg/version.Version=$(VERSION) \
 	-X github.com/dl-alexandre/gdrv/pkg/version.GitCommit=$(GIT_COMMIT) \
 	-X github.com/dl-alexandre/gdrv/pkg/version.BuildTime=$(BUILD_TIME) \
+	-X github.com/dl-alexandre/cli-tools/version.Version=$(VERSION) \
+	-X github.com/dl-alexandre/cli-tools/version.GitCommit=$(GIT_COMMIT) \
+	-X github.com/dl-alexandre/cli-tools/version.BuildTime=$(BUILD_TIME) \
 	$(OAUTH_LDFLAGS)"
 
 PLATFORMS = linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64
