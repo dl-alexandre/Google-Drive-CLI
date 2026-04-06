@@ -7,6 +7,14 @@ import (
 	"github.com/dl-alexandre/cli-tools/version"
 )
 
+// Re-export build-time variables from cli-tools/version
+// These are set at build time via ldflags in the cli-tools package
+var (
+	Version   = version.Version
+	GitCommit = version.GitCommit
+	BuildTime = version.BuildTime
+)
+
 var (
 	GitHubRepo = "Google-Drive-CLI"
 )
@@ -23,9 +31,9 @@ type Info struct {
 // Get returns the current version info
 func Get() *Info {
 	return &Info{
-		Version:   version.Version,
-		GitCommit: version.GitCommit,
-		BuildTime: version.BuildTime,
+		Version:   Version,
+		GitCommit: GitCommit,
+		BuildTime: BuildTime,
 		GoVersion: runtime.Version(),
 		Platform:  fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH),
 	}
