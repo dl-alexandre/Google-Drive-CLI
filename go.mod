@@ -9,6 +9,7 @@ require (
 	cloud.google.com/go/logging v1.13.2
 	cloud.google.com/go/monitoring v1.25.0
 	github.com/alecthomas/kong v1.15.0
+	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/dl-alexandre/cli-tools v0.0.1
 	github.com/google/uuid v1.6.0
@@ -24,7 +25,7 @@ require (
 	google.golang.org/grpc v1.81.0-dev
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/yaml.v3 v3.0.1
-	modernc.org/sqlite v1.48.1
+	modernc.org/sqlite v1.48.2
 )
 
 require (
@@ -35,7 +36,6 @@ require (
 	cloud.google.com/go/longrunning v0.8.0 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/charmbracelet/bubbletea v1.3.10 // indirect
 	github.com/charmbracelet/colorprofile v0.4.1 // indirect
 	github.com/charmbracelet/x/ansi v0.11.6 // indirect
 	github.com/charmbracelet/x/cellbuf v0.0.15 // indirect
