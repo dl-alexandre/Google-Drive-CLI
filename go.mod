@@ -3,11 +3,11 @@ module github.com/dl-alexandre/gdrv
 go 1.25.0
 
 require (
-	cloud.google.com/go/ai v0.10.0
-	cloud.google.com/go/apps v0.5.3
-	cloud.google.com/go/iam v1.5.3
-	cloud.google.com/go/logging v1.13.2
-	cloud.google.com/go/monitoring v1.25.0
+	cloud.google.com/go/ai v0.17.0
+	cloud.google.com/go/apps v0.10.0
+	cloud.google.com/go/iam v1.8.0
+	cloud.google.com/go/logging v1.15.0
+	cloud.google.com/go/monitoring v1.26.0
 	github.com/alecthomas/kong v1.15.0
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
@@ -19,9 +19,9 @@ require (
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/zalando/go-keyring v0.2.7
 	golang.org/x/oauth2 v0.36.0
-	golang.org/x/text v0.35.0
+	golang.org/x/text v0.36.0
 	google.golang.org/api v0.275.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20260401001100-f93e5f3e9f0f
+	google.golang.org/genproto/googleapis/api v0.0.0-20260401024825-9d38bb4040a9
 	google.golang.org/grpc v1.81.0-dev
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/yaml.v3 v3.0.1
@@ -33,7 +33,7 @@ require (
 	cloud.google.com/go/auth v0.20.0 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.9.0 // indirect
-	cloud.google.com/go/longrunning v0.8.0 // indirect
+	cloud.google.com/go/longrunning v0.9.0 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/charmbracelet/colorprofile v0.4.1 // indirect
