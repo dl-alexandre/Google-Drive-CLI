@@ -7,7 +7,7 @@ require (
 	cloud.google.com/go/apps v0.11.0
 	cloud.google.com/go/iam v1.8.0
 	cloud.google.com/go/logging v1.15.0
-	cloud.google.com/go/monitoring v1.26.0
+	cloud.google.com/go/monitoring v1.27.0
 	github.com/alecthomas/kong v1.15.0
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
