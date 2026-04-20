@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	cloud.google.com/go/ai v0.17.0
 	cloud.google.com/go/apps v0.11.0
-	cloud.google.com/go/iam v1.8.0
+	cloud.google.com/go/iam v1.9.0
 	cloud.google.com/go/logging v1.15.0
 	cloud.google.com/go/monitoring v1.27.0
 	github.com/alecthomas/kong v1.15.0
