@@ -392,6 +392,10 @@ func buildEventDateTime(dateTimeStr string, allDay bool) *calendar.EventDateTime
 // convertEvent converts a Google Calendar API Event to the domain CalendarEvent type.
 // For Start/End, it prefers DateTime if set, otherwise falls back to Date.
 func convertEvent(e *calendar.Event) types.CalendarEvent {
+	if e == nil {
+		return types.CalendarEvent{}
+	}
+
 	event := types.CalendarEvent{
 		ID:          e.Id,
 		Summary:     e.Summary,
