@@ -3,7 +3,7 @@ module github.com/dl-alexandre/gdrv
 go 1.25.0
 
 require (
-	cloud.google.com/go/ai v0.18.0
+	cloud.google.com/go/ai v0.19.0
 	cloud.google.com/go/apps v0.11.0
 	cloud.google.com/go/iam v1.8.0
 	cloud.google.com/go/logging v1.16.0
