@@ -7,7 +7,12 @@ updates:
       interval: "weekly"
       day: "monday"
       time: "10:00"
-    open-pull-requests-limit: 10
+      timezone: "Etc/UTC"
+    groups:
+      go-modules:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 5
     reviewers:
       - "dl-alexandre"
     assignees:
@@ -24,8 +29,13 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
-      time: "10:00"
-    open-pull-requests-limit: 5
+      time: "10:15"
+      timezone: "Etc/UTC"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 3
     reviewers:
       - "dl-alexandre"
     assignees:
