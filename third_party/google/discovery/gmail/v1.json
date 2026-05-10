@@ -66,7 +66,7 @@
           "id": "gmail.users.stop",
           "path": "gmail/v1/users/{userId}/stop",
           "httpMethod": "POST",
-          "description": "Stop receiving push notifications for the given user mailbox.",
+          "description": "Turn off push notification delivery for the given user mailbox. For more information, see [Configure push notifications in Gmail API](https://developers.google.com/workspace/gmail/api/guides/push).",
           "parameters": {
             "userId": {
               "id": "",
@@ -100,7 +100,7 @@
           "id": "gmail.users.watch",
           "path": "gmail/v1/users/{userId}/watch",
           "httpMethod": "POST",
-          "description": "Set up or update a push notification watch on the given user mailbox.",
+          "description": "Set up or update a push notification watch on the given user mailbox. For more information, see [Configure push notifications in Gmail API](https://developers.google.com/workspace/gmail/api/guides/push).",
           "parameters": {
             "userId": {
               "id": "",
@@ -146,7 +146,7 @@
               "id": "gmail.users.drafts.create",
               "path": "gmail/v1/users/{userId}/drafts",
               "httpMethod": "POST",
-              "description": "Creates a new draft with the `DRAFT` label.",
+              "description": "Creates a draft with the `DRAFT` label. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -203,7 +203,7 @@
               "id": "gmail.users.drafts.delete",
               "path": "gmail/v1/users/{userId}/drafts/{id}",
               "httpMethod": "DELETE",
-              "description": "Immediately and permanently deletes the specified draft. Does not simply trash it.",
+              "description": "Immediately and permanently deletes the specified draft. Does not simply trash it. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).",
               "parameters": {
                 "id": {
                   "id": "",
@@ -253,7 +253,7 @@
               "id": "gmail.users.drafts.get",
               "path": "gmail/v1/users/{userId}/drafts/{id}",
               "httpMethod": "GET",
-              "description": "Gets the specified draft.",
+              "description": "Gets the specified draft. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).",
               "parameters": {
                 "format": {
                   "id": "",
@@ -333,7 +333,7 @@
               "id": "gmail.users.drafts.list",
               "path": "gmail/v1/users/{userId}/drafts",
               "httpMethod": "GET",
-              "description": "Lists the drafts in the user's mailbox.",
+              "description": "Lists the drafts in the user's mailbox. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).",
               "parameters": {
                 "includeSpamTrash": {
                   "id": "",
@@ -435,7 +435,7 @@
               "id": "gmail.users.drafts.send",
               "path": "gmail/v1/users/{userId}/drafts/send",
               "httpMethod": "POST",
-              "description": "Sends the specified, existing draft to the recipients in the `To`, `Cc`, and `Bcc` headers.",
+              "description": "Sends the specified, existing draft to the recipients in the `To`, `Cc`, and `Bcc` headers. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -492,7 +492,7 @@
               "id": "gmail.users.drafts.update",
               "path": "gmail/v1/users/{userId}/drafts/{id}",
               "httpMethod": "PUT",
-              "description": "Replaces a draft's content.",
+              "description": "Replaces a draft's content. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).",
               "parameters": {
                 "id": {
                   "id": "",
@@ -570,7 +570,7 @@
               "id": "gmail.users.history.list",
               "path": "gmail/v1/users/{userId}/history",
               "httpMethod": "GET",
-              "description": "Lists the history of all changes to the given mailbox. History results are returned in chronological order (increasing `historyId`).",
+              "description": "Lists the history of all changes to the given mailbox. History results are returned in chronological order (increasing `historyId`). For more information, see [Synchronize clients with Gmail](https://developers.google.com/workspace/gmail/api/guides/sync).",
               "parameters": {
                 "historyTypes": {
                   "id": "",
@@ -703,7 +703,7 @@
               "id": "gmail.users.labels.create",
               "path": "gmail/v1/users/{userId}/labels",
               "httpMethod": "POST",
-              "description": "Creates a new label.",
+              "description": "Creates a label. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -744,7 +744,7 @@
               "id": "gmail.users.labels.delete",
               "path": "gmail/v1/users/{userId}/labels/{id}",
               "httpMethod": "DELETE",
-              "description": "Immediately and permanently deletes the specified label and removes it from any messages and threads that it is applied to.",
+              "description": "Immediately and permanently deletes the specified label and removes it from any messages and threads that it's applied to. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).",
               "parameters": {
                 "id": {
                   "id": "",
@@ -793,7 +793,7 @@
               "id": "gmail.users.labels.get",
               "path": "gmail/v1/users/{userId}/labels/{id}",
               "httpMethod": "GET",
-              "description": "Gets the specified label.",
+              "description": "Gets the specified label. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).",
               "parameters": {
                 "id": {
                   "id": "",
@@ -848,7 +848,7 @@
               "id": "gmail.users.labels.list",
               "path": "gmail/v1/users/{userId}/labels",
               "httpMethod": "GET",
-              "description": "Lists all labels in the user's mailbox.",
+              "description": "Lists all labels in the user's mailbox. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -887,7 +887,7 @@
               "id": "gmail.users.labels.patch",
               "path": "gmail/v1/users/{userId}/labels/{id}",
               "httpMethod": "PATCH",
-              "description": "Patch the specified label.",
+              "description": "Patch the specified label. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).",
               "parameters": {
                 "id": {
                   "id": "",
@@ -944,7 +944,7 @@
               "id": "gmail.users.labels.update",
               "path": "gmail/v1/users/{userId}/labels/{id}",
               "httpMethod": "PUT",
-              "description": "Updates the specified label.",
+              "description": "Updates the specified label. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).",
               "parameters": {
                 "id": {
                   "id": "",
@@ -1223,7 +1223,7 @@
               "id": "gmail.users.messages.import",
               "path": "gmail/v1/users/{userId}/messages/import",
               "httpMethod": "POST",
-              "description": "Imports a message into only this user's mailbox, with standard email delivery scanning and classification similar to receiving via SMTP. This method doesn't perform SPF checks, so it might not work for some spam messages, such as those attempting to perform domain spoofing. This method does not send a message. Note that the maximum size of the message is 150MB.",
+              "description": "Imports a message into only this user's mailbox, with standard email delivery scanning and classification similar to receiving via SMTP. This method doesn't perform SPF checks, so it might not work for some spam messages, such as those attempting to perform domain spoofing. This method does not send a message. Note that the maximum size of the message is 150 MB.",
               "parameters": {
                 "deleted": {
                   "id": "",
@@ -1349,7 +1349,7 @@
               "id": "gmail.users.messages.insert",
               "path": "gmail/v1/users/{userId}/messages",
               "httpMethod": "POST",
-              "description": "Directly inserts a message into only this user's mailbox similar to `IMAP APPEND`, bypassing most scanning and classification. Does not send a message.",
+              "description": "Directly inserts a message into only this user's mailbox similar to `IMAP APPEND`, bypassing most scanning and classification. Does not send a message. For more information, see [Create and send email messages](https://developers.google.com/workspace/gmail/api/guides/sending).",
               "parameters": {
                 "deleted": {
                   "id": "",
@@ -1443,7 +1443,7 @@
               "id": "gmail.users.messages.list",
               "path": "gmail/v1/users/{userId}/messages",
               "httpMethod": "GET",
-              "description": "Lists the messages in the user's mailbox. For example usage, see [List Gmail messages](https://developers.google.com/workspace/gmail/api/guides/list-messages).",
+              "description": "Lists the messages in the user's mailbox. For more information, see [List Gmail messages](https://developers.google.com/workspace/gmail/api/guides/list-messages).",
               "parameters": {
                 "includeSpamTrash": {
                   "id": "",
@@ -1617,7 +1617,7 @@
               "id": "gmail.users.messages.send",
               "path": "gmail/v1/users/{userId}/messages/send",
               "httpMethod": "POST",
-              "description": "Sends the specified message to the recipients in the `To`, `Cc`, and `Bcc` headers. For example usage, see [Sending email](https://developers.google.com/workspace/gmail/api/guides/sending).",
+              "description": "Sends the specified message to the recipients in the `To`, `Cc`, and `Bcc` headers. For more information, see [Create and send email messages](https://developers.google.com/workspace/gmail/api/guides/sending).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -1861,7 +1861,7 @@
               "id": "gmail.users.settings.getAutoForwarding",
               "path": "gmail/v1/users/{userId}/settings/autoForwarding",
               "httpMethod": "GET",
-              "description": "Gets the auto-forwarding setting for the specified account.",
+              "description": "Gets the auto-forwarding setting for the specified account. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -1899,7 +1899,7 @@
               "id": "gmail.users.settings.getImap",
               "path": "gmail/v1/users/{userId}/settings/imap",
               "httpMethod": "GET",
-              "description": "Gets IMAP settings.",
+              "description": "Gets IMAP settings. For more information, see [Configure POP and IMAP settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/pop_imap_settings).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -1937,7 +1937,7 @@
               "id": "gmail.users.settings.getLanguage",
               "path": "gmail/v1/users/{userId}/settings/language",
               "httpMethod": "GET",
-              "description": "Gets language settings.",
+              "description": "Gets language settings. For more information, see [Manage language settings](https://developers.google.com/workspace/gmail/api/guides/language-settings).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -1975,7 +1975,7 @@
               "id": "gmail.users.settings.getPop",
               "path": "gmail/v1/users/{userId}/settings/pop",
               "httpMethod": "GET",
-              "description": "Gets POP settings.",
+              "description": "Gets POP settings. For more information, see [Configure POP and IMAP settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/pop_imap_settings).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -2013,7 +2013,7 @@
               "id": "gmail.users.settings.getVacation",
               "path": "gmail/v1/users/{userId}/settings/vacation",
               "httpMethod": "GET",
-              "description": "Gets vacation responder settings.",
+              "description": "Gets vacation responder settings. For more information, see [Manage vacation settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/vacation_settings).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -2051,7 +2051,7 @@
               "id": "gmail.users.settings.updateAutoForwarding",
               "path": "gmail/v1/users/{userId}/settings/autoForwarding",
               "httpMethod": "PUT",
-              "description": "Updates the auto-forwarding setting for the specified account. A verified forwarding address must be specified when auto-forwarding is enabled. This method is only available to service account clients that have been delegated domain-wide authority.",
+              "description": "Updates the auto-forwarding setting for the specified account. A verified forwarding address must be specified when auto-forwarding is enabled. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings). This method is only available to service account clients that have been delegated domain-wide authority.",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -2090,7 +2090,7 @@
               "id": "gmail.users.settings.updateImap",
               "path": "gmail/v1/users/{userId}/settings/imap",
               "httpMethod": "PUT",
-              "description": "Updates IMAP settings.",
+              "description": "Updates IMAP settings. For more information, see [Configure POP and IMAP settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/pop_imap_settings).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -2129,7 +2129,7 @@
               "id": "gmail.users.settings.updateLanguage",
               "path": "gmail/v1/users/{userId}/settings/language",
               "httpMethod": "PUT",
-              "description": "Updates language settings. If successful, the return object contains the `displayLanguage` that was saved for the user, which may differ from the value passed into the request. This is because the requested `displayLanguage` may not be directly supported by Gmail but have a close variant that is, and so the variant may be chosen and saved instead.",
+              "description": "Updates language settings. For more information, see [Manage language settings](https://developers.google.com/workspace/gmail/api/guides/language-settings). If successful, the return object contains the `displayLanguage` that was saved for the user, which may differ from the value passed into the request. This is because the requested `displayLanguage` may not be directly supported by Gmail but have a close variant that is, and so the variant may be chosen and saved instead.",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -2168,7 +2168,7 @@
               "id": "gmail.users.settings.updatePop",
               "path": "gmail/v1/users/{userId}/settings/pop",
               "httpMethod": "PUT",
-              "description": "Updates POP settings.",
+              "description": "Updates POP settings. For more information, see [Configure POP and IMAP settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/pop_imap_settings).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -2207,7 +2207,7 @@
               "id": "gmail.users.settings.updateVacation",
               "path": "gmail/v1/users/{userId}/settings/vacation",
               "httpMethod": "PUT",
-              "description": "Updates vacation responder settings.",
+              "description": "Updates vacation responder settings. For more information, see [Manage vacation settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/vacation_settings).",
               "parameters": {
                 "userId": {
                   "id": "",
@@ -2865,7 +2865,7 @@
                   "id": "gmail.users.settings.delegates.create",
                   "path": "gmail/v1/users/{userId}/settings/delegates",
                   "httpMethod": "POST",
-                  "description": "Adds a delegate with its verification status set directly to `accepted`, without sending any verification email. The delegate user must be a member of the same Google Workspace organization as the delegator user. Gmail imposes limitations on the number of delegates and delegators each user in a Google Workspace organization can have. These limits depend on your organization, but in general each user can have up to 25 delegates and up to 10 delegators. Note that a delegate user must be referred to by their primary email address, and not an email alias. Also note that when a new delegate is created, there may be up to a one minute delay before the new delegate is available for use. This method is only available to service account clients that have been delegated domain-wide authority.",
+                  "description": "Adds a delegate with its verification status set directly to `accepted`, without sending any verification email. The delegate user must be a member of the same Google Workspace organization as the delegator user. For more information, see [Manage delegates](https://developers.google.com/workspace/gmail/api/guides/delegate_settings). Gmail imposes limitations on the number of delegates and delegators each user in a Google Workspace organization can have. These limits depend on your organization, but in general each user can have up to 25 delegates and up to 10 delegators. A delegate user must be referred to by their primary email address, and not an email alias. When a new delegate is created, there may be up to a one minute delay before the new delegate is available for use. This method is only available to service account clients that have been delegated domain-wide authority.",
                   "parameters": {
                     "userId": {
                       "id": "",
@@ -2904,7 +2904,7 @@
                   "id": "gmail.users.settings.delegates.delete",
                   "path": "gmail/v1/users/{userId}/settings/delegates/{delegateEmail}",
                   "httpMethod": "DELETE",
-                  "description": "Removes the specified delegate (which can be of any verification status), and revokes any verification that may have been required for using it. Note that a delegate user must be referred to by their primary email address, and not an email alias. This method is only available to service account clients that have been delegated domain-wide authority.",
+                  "description": "Removes the specified delegate (which can be of any verification status), and revokes any verification that may have been required for using it. For more information, see [Manage delegates](https://developers.google.com/workspace/gmail/api/guides/delegate_settings). A delegate user must be referred to by their primary email address, and not an email alias. This method is only available to service account clients that have been delegated domain-wide authority.",
                   "parameters": {
                     "delegateEmail": {
                       "id": "",
@@ -2951,7 +2951,7 @@
                   "id": "gmail.users.settings.delegates.get",
                   "path": "gmail/v1/users/{userId}/settings/delegates/{delegateEmail}",
                   "httpMethod": "GET",
-                  "description": "Gets the specified delegate. Note that a delegate user must be referred to by their primary email address, and not an email alias. This method is only available to service account clients that have been delegated domain-wide authority.",
+                  "description": "Gets the specified delegate. For more information, see [Manage delegates](https://developers.google.com/workspace/gmail/api/guides/delegate_settings). A delegate user must be referred to by their primary email address, and not an email alias. This method is only available to service account clients that have been delegated domain-wide authority.",
                   "parameters": {
                     "delegateEmail": {
                       "id": "",
@@ -3005,7 +3005,7 @@
                   "id": "gmail.users.settings.delegates.list",
                   "path": "gmail/v1/users/{userId}/settings/delegates",
                   "httpMethod": "GET",
-                  "description": "Lists the delegates for the specified account. This method is only available to service account clients that have been delegated domain-wide authority.",
+                  "description": "Lists the delegates for the specified account. For more information, see [Manage delegates](https://developers.google.com/workspace/gmail/api/guides/delegate_settings). This method is only available to service account clients that have been delegated domain-wide authority.",
                   "parameters": {
                     "userId": {
                       "id": "",
@@ -3048,7 +3048,7 @@
                   "id": "gmail.users.settings.filters.create",
                   "path": "gmail/v1/users/{userId}/settings/filters",
                   "httpMethod": "POST",
-                  "description": "Creates a filter. Note: you can only create a maximum of 1,000 filters.",
+                  "description": "Creates a filter. Note: you can only create a maximum of 1,000 filters. For more information, see [Manage Gmail filters](https://developers.google.com/workspace/gmail/api/guides/filter_settings).",
                   "parameters": {
                     "userId": {
                       "id": "",
@@ -3087,7 +3087,7 @@
                   "id": "gmail.users.settings.filters.delete",
                   "path": "gmail/v1/users/{userId}/settings/filters/{id}",
                   "httpMethod": "DELETE",
-                  "description": "Immediately and permanently deletes the specified filter.",
+                  "description": "Immediately and permanently deletes the specified filter. For more information, see [Manage Gmail filters](https://developers.google.com/workspace/gmail/api/guides/filter_settings).",
                   "parameters": {
                     "id": {
                       "id": "",
@@ -3134,7 +3134,7 @@
                   "id": "gmail.users.settings.filters.get",
                   "path": "gmail/v1/users/{userId}/settings/filters/{id}",
                   "httpMethod": "GET",
-                  "description": "Gets a filter.",
+                  "description": "Gets a filter. For more information, see [Manage Gmail filters](https://developers.google.com/workspace/gmail/api/guides/filter_settings).",
                   "parameters": {
                     "id": {
                       "id": "",
@@ -3188,7 +3188,7 @@
                   "id": "gmail.users.settings.filters.list",
                   "path": "gmail/v1/users/{userId}/settings/filters",
                   "httpMethod": "GET",
-                  "description": "Lists the message filters of a Gmail user.",
+                  "description": "Lists the message filters of a Gmail user. For more information, see [Manage Gmail filters](https://developers.google.com/workspace/gmail/api/guides/filter_settings).",
                   "parameters": {
                     "userId": {
                       "id": "",
@@ -3231,7 +3231,7 @@
                   "id": "gmail.users.settings.forwardingAddresses.create",
                   "path": "gmail/v1/users/{userId}/settings/forwardingAddresses",
                   "httpMethod": "POST",
-                  "description": "Creates a forwarding address. If ownership verification is required, a message will be sent to the recipient and the resource's verification status will be set to `pending`; otherwise, the resource will be created with verification status set to `accepted`. This method is only available to service account clients that have been delegated domain-wide authority.",
+                  "description": "Creates a forwarding address. If ownership verification is required, a message will be sent to the recipient and the resource's verification status will be set to `pending`; otherwise, the resource will be created with verification status set to `accepted`. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings). This method is only available to service account clients that have been delegated domain-wide authority.",
                   "parameters": {
                     "userId": {
                       "id": "",
@@ -3270,7 +3270,7 @@
                   "id": "gmail.users.settings.forwardingAddresses.delete",
                   "path": "gmail/v1/users/{userId}/settings/forwardingAddresses/{forwardingEmail}",
                   "httpMethod": "DELETE",
-                  "description": "Deletes the specified forwarding address and revokes any verification that may have been required. This method is only available to service account clients that have been delegated domain-wide authority.",
+                  "description": "Deletes the specified forwarding address and revokes any verification that may have been required. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings). This method is only available to service account clients that have been delegated domain-wide authority.",
                   "parameters": {
                     "forwardingEmail": {
                       "id": "",
@@ -3317,7 +3317,7 @@
                   "id": "gmail.users.settings.forwardingAddresses.get",
                   "path": "gmail/v1/users/{userId}/settings/forwardingAddresses/{forwardingEmail}",
                   "httpMethod": "GET",
-                  "description": "Gets the specified forwarding address.",
+                  "description": "Gets the specified forwarding address. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings).",
                   "parameters": {
                     "forwardingEmail": {
                       "id": "",
@@ -3371,7 +3371,7 @@
                   "id": "gmail.users.settings.forwardingAddresses.list",
                   "path": "gmail/v1/users/{userId}/settings/forwardingAddresses",
                   "httpMethod": "GET",
-                  "description": "Lists the forwarding addresses for the specified account.",
+                  "description": "Lists the forwarding addresses for the specified account. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings).",
                   "parameters": {
                     "userId": {
                       "id": "",
@@ -3414,7 +3414,7 @@
                   "id": "gmail.users.settings.sendAs.create",
                   "path": "gmail/v1/users/{userId}/settings/sendAs",
                   "httpMethod": "POST",
-                  "description": "Creates a custom \"from\" send-as alias. If an SMTP MSA is specified, Gmail will attempt to connect to the SMTP service to validate the configuration before creating the alias. If ownership verification is required for the alias, a message will be sent to the email address and the resource's verification status will be set to `pending`; otherwise, the resource will be created with verification status set to `accepted`. If a signature is provided, Gmail will sanitize the HTML before saving it with the alias. This method is only available to service account clients that have been delegated domain-wide authority.",
+                  "description": "Creates a custom \"from\" send-as alias. If an SMTP MSA is specified, Gmail will attempt to connect to the SMTP service to validate the configuration before creating the alias. If ownership verification is required for the alias, a message will be sent to the email address and the resource's verification status will be set to `pending`; otherwise, the resource will be created with verification status set to `accepted`. If a signature is provided, Gmail will sanitize the HTML before saving it with the alias. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings). This method is only available to service account clients that have been delegated domain-wide authority.",
                   "parameters": {
                     "userId": {
                       "id": "",
@@ -3453,7 +3453,7 @@
                   "id": "gmail.users.settings.sendAs.delete",
                   "path": "gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}",
                   "httpMethod": "DELETE",
-                  "description": "Deletes the specified send-as alias. Revokes any verification that may have been required for using it. This method is only available to service account clients that have been delegated domain-wide authority.",
+                  "description": "Deletes the specified send-as alias. Revokes any verification that may have been required for using it. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings). This method is only available to service account clients that have been delegated domain-wide authority.",
                   "parameters": {
                     "sendAsEmail": {
                       "id": "",
@@ -3500,7 +3500,7 @@
                   "id": "gmail.users.settings.sendAs.get",
                   "path": "gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}",
                   "httpMethod": "GET",
-                  "description": "Gets the specified send-as alias. Fails with an HTTP 404 error if the specified address is not a member of the collection.",
+                  "description": "Gets the specified send-as alias. Fails with an HTTP 404 error if the specified address is not a member of the collection. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings).",
                   "parameters": {
                     "sendAsEmail": {
                       "id": "",
@@ -3554,7 +3554,7 @@
                   "id": "gmail.users.settings.sendAs.list",
                   "path": "gmail/v1/users/{userId}/settings/sendAs",
                   "httpMethod": "GET",
-                  "description": "Lists the send-as aliases for the specified account. The result includes the primary send-as address associated with the account as well as any custom \"from\" aliases.",
+                  "description": "Lists the send-as aliases for the specified account. The result includes the primary send-as address associated with the account as well as any custom \"from\" aliases. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings).",
                   "parameters": {
                     "userId": {
                       "id": "",
@@ -3592,7 +3592,7 @@
                   "id": "gmail.users.settings.sendAs.patch",
                   "path": "gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}",
                   "httpMethod": "PATCH",
-                  "description": "Patch the specified send-as alias.",
+                  "description": "Patch the specified send-as alias. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings).",
                   "parameters": {
                     "sendAsEmail": {
                       "id": "",
@@ -3648,7 +3648,7 @@
                   "id": "gmail.users.settings.sendAs.update",
                   "path": "gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}",
                   "httpMethod": "PUT",
-                  "description": "Updates a send-as alias. If a signature is provided, Gmail will sanitize the HTML before saving it with the alias. Addresses other than the primary address for the account can only be updated by service account clients that have been delegated domain-wide authority.",
+                  "description": "Updates a send-as alias. If a signature is provided, Gmail will sanitize the HTML before saving it with the alias. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings). Addresses other than the primary address for the account can only be updated by service account clients that have been delegated domain-wide authority.",
                   "parameters": {
                     "sendAsEmail": {
                       "id": "",
@@ -3704,7 +3704,7 @@
                   "id": "gmail.users.settings.sendAs.verify",
                   "path": "gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/verify",
                   "httpMethod": "POST",
-                  "description": "Sends a verification email to the specified send-as alias address. The verification status must be `pending`. This method is only available to service account clients that have been delegated domain-wide authority.",
+                  "description": "Sends a verification email to the specified send-as alias address. The verification status must be `pending`. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings). This method is only available to service account clients that have been delegated domain-wide authority.",
                   "parameters": {
                     "sendAsEmail": {
                       "id": "",
@@ -3755,7 +3755,7 @@
                       "id": "gmail.users.settings.sendAs.smimeInfo.delete",
                       "path": "gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/smimeInfo/{id}",
                       "httpMethod": "DELETE",
-                      "description": "Deletes the specified S/MIME config for the specified send-as alias.",
+                      "description": "Deletes the specified S/MIME config for the specified send-as alias. For more information, see [Manage S/MIME certificates with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/smime_certs).",
                       "parameters": {
                         "id": {
                           "id": "",
@@ -3819,7 +3819,7 @@
                       "id": "gmail.users.settings.sendAs.smimeInfo.get",
                       "path": "gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/smimeInfo/{id}",
                       "httpMethod": "GET",
-                      "description": "Gets the specified S/MIME config for the specified send-as alias.",
+                      "description": "Gets the specified S/MIME config for the specified send-as alias. For more information, see [Manage S/MIME certificates with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/smime_certs).",
                       "parameters": {
                         "id": {
                           "id": "",
@@ -3890,7 +3890,7 @@
                       "id": "gmail.users.settings.sendAs.smimeInfo.insert",
                       "path": "gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/smimeInfo",
                       "httpMethod": "POST",
-                      "description": "Insert (upload) the given S/MIME config for the specified send-as alias. Note that pkcs12 format is required for the key.",
+                      "description": "Insert (upload) the given S/MIME config for the specified send-as alias. Note that `pkcs12` format is required for the key. For more information, see [Manage S/MIME certificates with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/smime_certs).",
                       "parameters": {
                         "sendAsEmail": {
                           "id": "",
@@ -3946,7 +3946,7 @@
                       "id": "gmail.users.settings.sendAs.smimeInfo.list",
                       "path": "gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/smimeInfo",
                       "httpMethod": "GET",
-                      "description": "Lists S/MIME configs for the specified send-as alias.",
+                      "description": "Lists S/MIME configs for the specified send-as alias. For more information, see [Manage S/MIME certificates with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/smime_certs).",
                       "parameters": {
                         "sendAsEmail": {
                           "id": "",
@@ -4001,7 +4001,7 @@
                       "id": "gmail.users.settings.sendAs.smimeInfo.setDefault",
                       "path": "gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/smimeInfo/{id}/setDefault",
                       "httpMethod": "POST",
-                      "description": "Sets the default S/MIME config for the specified send-as alias.",
+                      "description": "Sets the default S/MIME config for the specified send-as alias. For more information, see [Manage S/MIME certificates with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/smime_certs).",
                       "parameters": {
                         "id": {
                           "id": "",
@@ -4074,7 +4074,7 @@
               "id": "gmail.users.threads.delete",
               "path": "gmail/v1/users/{userId}/threads/{id}",
               "httpMethod": "DELETE",
-              "description": "Immediately and permanently deletes the specified thread. Any messages that belong to the thread are also deleted. This operation cannot be undone. Prefer `threads.trash` instead.",
+              "description": "Immediately and permanently deletes the specified thread. Any messages that belong to the thread are also deleted. This operation cannot be undone. Prefer `threads.trash` instead. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).",
               "parameters": {
                 "id": {
                   "id": "",
@@ -4121,7 +4121,7 @@
               "id": "gmail.users.threads.get",
               "path": "gmail/v1/users/{userId}/threads/{id}",
               "httpMethod": "GET",
-              "description": "Gets the specified thread.",
+              "description": "Gets the specified thread. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).",
               "parameters": {
                 "format": {
                   "id": "",
@@ -4218,7 +4218,7 @@
               "id": "gmail.users.threads.list",
               "path": "gmail/v1/users/{userId}/threads",
               "httpMethod": "GET",
-              "description": "Lists the threads in the user's mailbox.",
+              "description": "Lists the threads in the user's mailbox. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).",
               "parameters": {
                 "includeSpamTrash": {
                   "id": "",
@@ -4336,7 +4336,7 @@
               "id": "gmail.users.threads.modify",
               "path": "gmail/v1/users/{userId}/threads/{id}/modify",
               "httpMethod": "POST",
-              "description": "Modifies the labels applied to the thread. This applies to all messages in the thread.",
+              "description": "Modifies the labels applied to the thread. This applies to all messages in the thread. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).",
               "parameters": {
                 "id": {
                   "id": "",
@@ -4392,7 +4392,7 @@
               "id": "gmail.users.threads.trash",
               "path": "gmail/v1/users/{userId}/threads/{id}/trash",
               "httpMethod": "POST",
-              "description": "Moves the specified thread to the trash. Any messages that belong to the thread are also moved to the trash.",
+              "description": "Moves the specified thread to the trash. Any messages that belong to the thread are also moved to the trash. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).",
               "parameters": {
                 "id": {
                   "id": "",
@@ -4444,7 +4444,7 @@
               "id": "gmail.users.threads.untrash",
               "path": "gmail/v1/users/{userId}/threads/{id}/untrash",
               "httpMethod": "POST",
-              "description": "Removes the specified thread from the trash. Any messages that belong to the thread are also removed from the trash.",
+              "description": "Removes the specified thread from the trash. Any messages that belong to the thread are also removed from the trash. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).",
               "parameters": {
                 "id": {
                   "id": "",
@@ -5293,7 +5293,7 @@
         "forward": {
           "id": "",
           "type": "string",
-          "description": "Email address that the message should be forwarded to.",
+          "description": "Email address that the message should be forwarded to. This effectively redirects the message to the address specified in this field, maintaining the original sender in the \"From\" field.",
           "default": null,
           "properties": null,
           "$ref": "",
@@ -6219,7 +6219,7 @@
         "backgroundColor": {
           "id": "",
           "type": "string",
-          "description": "The background color represented as hex string #RRGGBB (ex #000000). This field is required in order to set the color of a label. Only the following predefined set of color values are allowed: \\#000000, #434343, #666666, #999999, #cccccc, #efefef, #f3f3f3, #ffffff, \\#fb4c2f, #ffad47, #fad165, #16a766, #43d692, #4a86e8, #a479e2, #f691b3, \\#f6c5be, #ffe6c7, #fef1d1, #b9e4d0, #c6f3de, #c9daf8, #e4d7f5, #fcdee8, \\#efa093, #ffd6a2, #fce8b3, #89d3b2, #a0eac9, #a4c2f4, #d0bcf1, #fbc8d9, \\#e66550, #ffbc6b, #fcda83, #44b984, #68dfa9, #6d9eeb, #b694e8, #f7a7c0, \\#cc3a21, #eaa041, #f2c960, #149e60, #3dc789, #3c78d8, #8e63ce, #e07798, \\#ac2b16, #cf8933, #d5ae49, #0b804b, #2a9c68, #285bac, #653e9b, #b65775, \\#822111, #a46a21, #aa8831, #076239, #1a764d, #1c4587, #41236d, #83334c \\#464646, #e7e7e7, #0d3472, #b6cff5, #0d3b44, #98d7e4, #3d188e, #e3d7ff, \\#711a36, #fbd3e0, #8a1c0a, #f2b2a8, #7a2e0b, #ffc8af, #7a4706, #ffdeb5, \\#594c05, #fbe983, #684e07, #fdedc1, #0b4f30, #b3efd3, #04502e, #a2dcc1, \\#c2c2c2, #4986e7, #2da2bb, #b99aff, #994a64, #f691b2, #ff7537, #ffad46, \\#662e37, #ebdbde, #cca6ac, #094228, #42d692, #16a765",
+          "description": "The background color represented as hex string #RRGGBB (ex #000000). This field is required in order to set the color of a label. Only the following predefined set of color values are allowed: \\#000000, #434343, #666666, #999999, #cccccc, #efefef, #f3f3f3, #ffffff, \\#fb4c2f, #ffad47, #fad165, #16a766, #43d692, #4a86e8, #a479e2, #f691b3, \\#f6c5be, #ffe6c7, #fef1d1, #b9e4d0, #c6f3de, #c9daf8, #e4d7f5, #fcdee8, \\#efa093, #ffd6a2, #fce8b3, #89d3b2, #a0eac9, #a4c2f4, #d0bcf1, #fbc8d9, \\#e66550, #ffbc6b, #fcda83, #44b984, #68dfa9, #6d9eeb, #b694e8, #f7a7c0, \\#cc3a21, #eaa041, #f2c960, #149e60, #3dc789, #3c78d8, #8e63ce, #e07798, \\#ac2b16, #cf8933, #d5ae49, #0b804b, #2a9c68, #285bac, #653e9b, #b65775, \\#822111, #a46a21, #aa8831, #076239, #1a764d, #1c4587, #41236d, #83334c, \\#464646, #e7e7e7, #0d3472, #b6cff5, #0d3b44, #98d7e4, #3d188e, #e3d7ff, \\#711a36, #fbd3e0, #8a1c0a, #f2b2a8, #7a2e0b, #ffc8af, #7a4706, #ffdeb5, \\#594c05, #fbe983, #684e07, #fdedc1, #0b4f30, #b3efd3, #04502e, #a2dcc1, \\#c2c2c2, #4986e7, #2da2bb, #b99aff, #994a64, #f691b2, #ff7537, #ffad46, \\#662e37, #ebdbde, #cca6ac, #094228, #42d692, #16a765",
           "default": null,
           "properties": null,
           "$ref": "",
@@ -6233,7 +6233,7 @@
         "textColor": {
           "id": "",
           "type": "string",
-          "description": "The text color of the label, represented as hex string. This field is required in order to set the color of a label. Only the following predefined set of color values are allowed: \\#000000, #434343, #666666, #999999, #cccccc, #efefef, #f3f3f3, #ffffff, \\#fb4c2f, #ffad47, #fad165, #16a766, #43d692, #4a86e8, #a479e2, #f691b3, \\#f6c5be, #ffe6c7, #fef1d1, #b9e4d0, #c6f3de, #c9daf8, #e4d7f5, #fcdee8, \\#efa093, #ffd6a2, #fce8b3, #89d3b2, #a0eac9, #a4c2f4, #d0bcf1, #fbc8d9, \\#e66550, #ffbc6b, #fcda83, #44b984, #68dfa9, #6d9eeb, #b694e8, #f7a7c0, \\#cc3a21, #eaa041, #f2c960, #149e60, #3dc789, #3c78d8, #8e63ce, #e07798, \\#ac2b16, #cf8933, #d5ae49, #0b804b, #2a9c68, #285bac, #653e9b, #b65775, \\#822111, #a46a21, #aa8831, #076239, #1a764d, #1c4587, #41236d, #83334c \\#464646, #e7e7e7, #0d3472, #b6cff5, #0d3b44, #98d7e4, #3d188e, #e3d7ff, \\#711a36, #fbd3e0, #8a1c0a, #f2b2a8, #7a2e0b, #ffc8af, #7a4706, #ffdeb5, \\#594c05, #fbe983, #684e07, #fdedc1, #0b4f30, #b3efd3, #04502e, #a2dcc1, \\#c2c2c2, #4986e7, #2da2bb, #b99aff, #994a64, #f691b2, #ff7537, #ffad46, \\#662e37, #ebdbde, #cca6ac, #094228, #42d692, #16a765",
+          "description": "The text color of the label, represented as hex string. This field is required in order to set the color of a label. Only the following predefined set of color values are allowed: \\#000000, #434343, #666666, #999999, #cccccc, #efefef, #f3f3f3, #ffffff, \\#fb4c2f, #ffad47, #fad165, #16a766, #43d692, #4a86e8, #a479e2, #f691b3, \\#f6c5be, #ffe6c7, #fef1d1, #b9e4d0, #c6f3de, #c9daf8, #e4d7f5, #fcdee8, \\#efa093, #ffd6a2, #fce8b3, #89d3b2, #a0eac9, #a4c2f4, #d0bcf1, #fbc8d9, \\#e66550, #ffbc6b, #fcda83, #44b984, #68dfa9, #6d9eeb, #b694e8, #f7a7c0, \\#cc3a21, #eaa041, #f2c960, #149e60, #3dc789, #3c78d8, #8e63ce, #e07798, \\#ac2b16, #cf8933, #d5ae49, #0b804b, #2a9c68, #285bac, #653e9b, #b65775, \\#822111, #a46a21, #aa8831, #076239, #1a764d, #1c4587, #41236d, #83334c, \\#464646, #e7e7e7, #0d3472, #b6cff5, #0d3b44, #98d7e4, #3d188e, #e3d7ff, \\#711a36, #fbd3e0, #8a1c0a, #f2b2a8, #7a2e0b, #ffc8af, #7a4706, #ffdeb5, \\#594c05, #fbe983, #684e07, #fdedc1, #0b4f30, #b3efd3, #04502e, #a2dcc1, \\#c2c2c2, #4986e7, #2da2bb, #b99aff, #994a64, #f691b2, #ff7537, #ffad46, \\#662e37, #ebdbde, #cca6ac, #094228, #42d692, #16a765",
           "default": null,
           "properties": null,
           "$ref": "",
@@ -7643,7 +7643,7 @@
     "SendAs": {
       "id": "SendAs",
       "type": "object",
-      "description": "Settings associated with a send-as alias, which can be either the primary login address associated with the account or a custom \"from\" address. Send-as aliases correspond to the \"Send Mail As\" feature in the web interface.",
+      "description": "Settings associated with a send-as alias, which can be either the primary login address associated with the account or a custom \"from\" address. Send-as aliases correspond to the \"Send Mail As\" feature in the web interface. The send-as alias must be a valid email address.",
       "default": null,
       "properties": {
         "displayName": {
