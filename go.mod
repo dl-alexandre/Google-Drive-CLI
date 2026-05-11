@@ -3,29 +3,29 @@ module github.com/dl-alexandre/gdrv
 go 1.25.0
 
 require (
-	cloud.google.com/go/ai v0.19.0
-	cloud.google.com/go/apps v0.12.0
-	cloud.google.com/go/iam v1.10.0
-	cloud.google.com/go/logging v1.17.0
-	cloud.google.com/go/monitoring v1.28.0
+	cloud.google.com/go/ai v0.20.0
+	cloud.google.com/go/apps v0.13.0
+	cloud.google.com/go/iam v1.11.0
+	cloud.google.com/go/logging v1.18.0
+	cloud.google.com/go/monitoring v1.29.0
 	github.com/alecthomas/kong v1.15.0
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/dl-alexandre/cli-tools v0.0.1
 	github.com/google/uuid v1.6.0
 	github.com/olekukonko/tablewriter v1.1.4
-	github.com/sahilm/fuzzy v0.1.1
+	github.com/sahilm/fuzzy v0.1.2
 	github.com/schollz/progressbar/v3 v3.19.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/zalando/go-keyring v0.2.8
 	golang.org/x/oauth2 v0.36.0
-	golang.org/x/text v0.36.0
-	google.golang.org/api v0.277.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20260427160629-7cedc36a6bc4
+	golang.org/x/text v0.37.0
+	google.golang.org/api v0.278.0
+	google.golang.org/genproto/googleapis/api v0.0.0-20260504160031-60b97b32f348
 	google.golang.org/grpc v1.82.0-dev
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/yaml.v3 v3.0.1
-	modernc.org/sqlite v1.50.0
+	modernc.org/sqlite v1.50.1
 )
 
 require (
@@ -33,7 +33,7 @@ require (
 	cloud.google.com/go/auth v0.20.0 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.9.0 // indirect
-	cloud.google.com/go/longrunning v0.12.0 // indirect
+	cloud.google.com/go/longrunning v0.13.0 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/charmbracelet/colorprofile v0.4.3 // indirect
@@ -57,7 +57,6 @@ require (
 	github.com/google/s2a-go v0.1.9 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.15 // indirect
 	github.com/googleapis/gax-go/v2 v2.22.0 // indirect
-	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.22 // indirect
@@ -82,17 +81,16 @@ require (
 	go.opentelemetry.io/otel v1.43.0 // indirect
 	go.opentelemetry.io/otel/metric v1.43.0 // indirect
 	go.opentelemetry.io/otel/trace v1.43.0 // indirect
-	golang.org/x/crypto v0.50.0 // indirect
+	golang.org/x/crypto v0.51.0 // indirect
 	golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f // indirect
-	golang.org/x/net v0.53.0 // indirect
+	golang.org/x/net v0.54.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/sys v0.43.0 // indirect
-	golang.org/x/term v0.42.0 // indirect
+	golang.org/x/sys v0.44.0 // indirect
+	golang.org/x/term v0.43.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
-	golang.org/x/tools v0.44.0 // indirect
-	google.golang.org/genproto v0.0.0-20260427160629-7cedc36a6bc4 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260427160629-7cedc36a6bc4 // indirect
-	modernc.org/libc v1.72.2 // indirect
+	google.golang.org/genproto v0.0.0-20260504160031-60b97b32f348 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260504160031-60b97b32f348 // indirect
+	modernc.org/libc v1.72.3 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
 )
