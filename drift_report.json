@@ -1,0 +1,451 @@
+{
+  "additive": 29,
+  "apis": [
+    {
+      "api": "drive",
+      "version": "v3",
+      "total_changes": 19,
+      "additive_changes": 19,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CancelApprovalRequest",
+          "api": "drive"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DecryptionMetadata",
+          "api": "drive"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ReplaceReviewer",
+          "api": "drive"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ReassignApprovalRequest",
+          "api": "drive"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AddReviewer",
+          "api": "drive"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CommentApprovalRequest",
+          "api": "drive"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DeclineApprovalRequest",
+          "api": "drive"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: GenerateCseTokenResponse",
+          "api": "drive"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ApproveApprovalRequest",
+          "api": "drive"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to File: clientEncryptionDetails",
+          "api": "",
+          "field": "clientEncryptionDetails"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: StartApprovalRequest",
+          "api": "drive"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ClientEncryptionDetails",
+          "api": "drive"
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: approvals.approve",
+          "api": "drive",
+          "resource": "approvals",
+          "method": "approve"
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: approvals.start",
+          "api": "drive",
+          "resource": "approvals",
+          "method": "start"
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: approvals.cancel",
+          "api": "drive",
+          "resource": "approvals",
+          "method": "cancel"
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: approvals.comment",
+          "api": "drive",
+          "resource": "approvals",
+          "method": "comment"
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: approvals.reassign",
+          "api": "drive",
+          "resource": "approvals",
+          "method": "reassign"
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: approvals.decline",
+          "api": "drive",
+          "resource": "approvals",
+          "method": "decline"
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: files.generateCseToken",
+          "api": "drive",
+          "resource": "files",
+          "method": "generateCseToken"
+        }
+      ],
+      "has_breaking_change": false
+    },
+    {
+      "api": "gmail",
+      "version": "v1",
+      "total_changes": 0,
+      "additive_changes": 0,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [],
+      "has_breaking_change": false
+    },
+    {
+      "api": "calendar",
+      "version": "v3",
+      "total_changes": 0,
+      "additive_changes": 0,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [],
+      "has_breaking_change": false
+    },
+    {
+      "api": "people",
+      "version": "v1",
+      "total_changes": 0,
+      "additive_changes": 0,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [],
+      "has_breaking_change": false
+    },
+    {
+      "api": "slides",
+      "version": "v1",
+      "total_changes": 1,
+      "additive_changes": 0,
+      "risky_changes": 1,
+      "breaking_changes": 0,
+      "changes": [
+        {
+          "severity": "risky",
+          "category": "enum",
+          "description": "New enum value in presentations/pages/getThumbnail.thumbnailProperties.thumbnailSize: WIDTH2000_PX",
+          "api": "",
+          "field": "thumbnailProperties.thumbnailSize",
+          "new_value": "WIDTH2000_PX"
+        }
+      ],
+      "has_breaking_change": false
+    },
+    {
+      "api": "docs",
+      "version": "v1",
+      "total_changes": 4,
+      "additive_changes": 4,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: InsertRichLinkRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: UpdateNamedStyleRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: insertRichLink",
+          "api": "",
+          "field": "insertRichLink"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: updateNamedStyle",
+          "api": "",
+          "field": "updateNamedStyle"
+        }
+      ],
+      "has_breaking_change": false
+    },
+    {
+      "api": "sheets",
+      "version": "v4",
+      "total_changes": 0,
+      "additive_changes": 0,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [],
+      "has_breaking_change": false
+    },
+    {
+      "api": "chat",
+      "version": "v1",
+      "total_changes": 9,
+      "additive_changes": 6,
+      "risky_changes": 3,
+      "breaking_changes": 0,
+      "changes": [
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.app.spaces.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.app.spaces.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.app.memberships.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.app.memberships.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Message: silent",
+          "api": "",
+          "field": "silent"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: FindGroupChatsResponse",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: spaces.findGroupChats",
+          "api": "chat",
+          "resource": "spaces",
+          "method": "findGroupChats"
+        },
+        {
+          "severity": "risky",
+          "category": "scope",
+          "description": "OAuth scopes changed for spaces.search",
+          "api": "chat",
+          "resource": "spaces",
+          "method": "search",
+          "old_value": [
+            "https://www.googleapis.com/auth/chat.admin.spaces",
+            "https://www.googleapis.com/auth/chat.admin.spaces.readonly"
+          ],
+          "new_value": [
+            "https://www.googleapis.com/auth/chat.admin.spaces",
+            "https://www.googleapis.com/auth/chat.admin.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ]
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to spaces/messages.create: createMessageNotificationOptions.notificationType",
+          "api": "chat",
+          "resource": "spaces/messages",
+          "method": "create",
+          "field": "createMessageNotificationOptions.notificationType"
+        },
+        {
+          "severity": "risky",
+          "category": "scope",
+          "description": "OAuth scopes changed for spaces/spaceEvents.list",
+          "api": "chat",
+          "resource": "spaces/spaceEvents",
+          "method": "list",
+          "old_value": [
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ],
+          "new_value": [
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ]
+        },
+        {
+          "severity": "risky",
+          "category": "scope",
+          "description": "OAuth scopes changed for spaces/spaceEvents.get",
+          "api": "chat",
+          "resource": "spaces/spaceEvents",
+          "method": "get",
+          "old_value": [
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ],
+          "new_value": [
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ]
+        }
+      ],
+      "has_breaking_change": false
+    },
+    {
+      "api": "admin",
+      "version": "directory_v1",
+      "total_changes": 0,
+      "additive_changes": 0,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [],
+      "has_breaking_change": false
+    },
+    {
+      "api": "cloudidentity",
+      "version": "v1",
+      "total_changes": 0,
+      "additive_changes": 0,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [],
+      "has_breaking_change": false
+    },
+    {
+      "api": "drivelabels",
+      "version": "v2",
+      "total_changes": 0,
+      "additive_changes": 0,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [],
+      "has_breaking_change": false
+    },
+    {
+      "api": "script",
+      "version": "v1",
+      "total_changes": 0,
+      "additive_changes": 0,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [],
+      "has_breaking_change": false
+    },
+    {
+      "api": "tasks",
+      "version": "v1",
+      "total_changes": 0,
+      "additive_changes": 0,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [],
+      "has_breaking_change": false
+    },
+    {
+      "api": "forms",
+      "version": "v1",
+      "total_changes": 0,
+      "additive_changes": 0,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [],
+      "has_breaking_change": false
+    }
+  ],
+  "breaking": 0,
+  "risky": 4,
+  "timestamp": "2026-05-10T05:43:44Z",
+  "total_apis": 14,
+  "total_changes": 33
+}
