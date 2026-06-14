@@ -213,6 +213,7 @@ jobs:
     
     - name: Create Pull Request
       if: steps.check.outputs.drift_detected == 'true' && !github.event.inputs.dry_run
+      continue-on-error: true
       uses: peter-evans/create-pull-request@v8
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -269,10 +270,14 @@ jobs:
           Run: \`${{ github.run_id }}\`
           `;
           
-          await github.rest.issues.create({
-            owner: context.repo.owner,
-            repo: context.repo.name,
-            title: title,
-            body: body,
-            labels: ['breaking-change', 'urgent', 'grpc-api-drift']
-          });
+          try {
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['breaking-change', 'urgent', 'grpc-api-drift']
+            });
+          } catch (error) {
+            core.warning(`Failed to create gRPC drift issue: ${error.message}`);
+          }
