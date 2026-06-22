@@ -12,8 +12,6 @@ import (
 	"time"
 
 	"github.com/dl-alexandre/gdrv/internal/discovery"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
 const (
@@ -37,14 +35,18 @@ const (
 
 package {{ .Package }}
 
+{{ if .NeedsTime }}import "time"
+
+{{ end }}
 {{ range .Schemas }}
 {{ if .IsEnum }}
 {{ comment .Description }}
 type {{ .GoName }} string
 
 const (
+{{ $schema := . }}
 {{ range .EnumValues }}
-	{{ $.GoName }}{{ . }} {{ $.GoName }} = "{{ . }}"
+	{{ enumConstName $schema.GoName . }} {{ $schema.GoName }} = {{ printf "%q" . }}
 {{ end }}
 )
 {{ else }}
@@ -82,12 +84,6 @@ var Service = ServiceDescriptor{
 	ServicePath: "{{ .ServicePath }}",
 }
 
-{{ range .Resources }}
-{{ comment .Name }}
-type {{ .GoName }}Descriptor struct {
-	Methods map[string]MethodDescriptor
-}
-
 type MethodDescriptor struct {
 	Name       string
 	HTTPMethod string
@@ -101,6 +97,37 @@ type ParameterDescriptor struct {
 	Location string
 	Required bool
 }
+
+type ResourceDescriptor struct {
+	Name    string
+	Methods map[string]MethodDescriptor
+}
+
+var Resources = map[string]ResourceDescriptor{
+{{ range .Resources }}
+	{{ printf "%q" .Name }}: {{ .GoName }},
+{{ end }}
+}
+
+{{ range .Resources }}
+{{ comment .Description }}
+var {{ .GoName }} = ResourceDescriptor{
+	Name: {{ printf "%q" .Name }},
+	Methods: map[string]MethodDescriptor{
+{{ range .Methods }}
+		{{ printf "%q" .Name }}: {
+			Name:       {{ printf "%q" .Name }},
+			HTTPMethod: {{ printf "%q" .HTTPMethod }},
+			Path:       {{ printf "%q" .Path }},
+			Parameters: []ParameterDescriptor{
+{{ range .Parameters }}
+				{Name: {{ printf "%q" .Name }}, Type: {{ printf "%q" .Type }}, Location: {{ printf "%q" .Location }}, Required: {{ .Required }}},
+{{ end }}
+			},
+		},
+{{ end }}
+	},
+}
 {{ end }}
 `
 )
@@ -108,6 +135,7 @@ type ParameterDescriptor struct {
 // GeneratorConfig holds configuration for code generation
 type GeneratorConfig struct {
 	PackagePrefix     string
+	PackageName       string
 	OutputDir         string
 	IncludeTimestamp  bool
 	IncludeSourceInfo bool
@@ -136,7 +164,7 @@ func NewTypeGenerator(config GeneratorConfig) (*TypeGenerator, error) {
 // Generate creates Go type definitions from a discovery document
 func (g *TypeGenerator) Generate(doc *discovery.DiscoveryDocument, serviceName string) ([]byte, error) {
 	data := typeTemplateData{
-		Package:       packageName(serviceName),
+		Package:       g.packageName(serviceName),
 		GeneratedTime: time.Now().UTC().Format(time.RFC3339),
 		ServiceName:   doc.Name,
 		ServiceTitle:  doc.Title,
@@ -144,6 +172,7 @@ func (g *TypeGenerator) Generate(doc *discovery.DiscoveryDocument, serviceName s
 		DiscoveryURL:  fmt.Sprintf("https://%s.googleapis.com/$discovery/rest?version=%s", serviceName, doc.Version),
 		Schemas:       convertSchemas(doc.Schemas),
 	}
+	data.NeedsTime = schemasNeedTime(data.Schemas)
 
 	var buf bytes.Buffer
 	if err := g.tmpl.Execute(&buf, data); err != nil {
@@ -197,7 +226,7 @@ func NewDescriptorGenerator(config GeneratorConfig) (*DescriptorGenerator, error
 // Generate creates endpoint descriptors from a discovery document
 func (g *DescriptorGenerator) Generate(doc *discovery.DiscoveryDocument, serviceName string) ([]byte, error) {
 	data := descriptorTemplateData{
-		Package:       packageName(serviceName) + "descriptors",
+		Package:       g.packageName(serviceName + "descriptors"),
 		GeneratedTime: time.Now().UTC().Format(time.RFC3339),
 		ServiceName:   doc.Name,
 		ServiceTitle:  doc.Title,
@@ -238,6 +267,20 @@ func (g *DescriptorGenerator) WriteToFile(serviceName string, content []byte) er
 	return nil
 }
 
+func (g *TypeGenerator) packageName(serviceName string) string {
+	if g.config.PackageName != "" {
+		return packageName(g.config.PackageName)
+	}
+	return packageName(serviceName)
+}
+
+func (g *DescriptorGenerator) packageName(serviceName string) string {
+	if g.config.PackageName != "" {
+		return packageName(g.config.PackageName)
+	}
+	return packageName(serviceName)
+}
+
 // Template data structures
 type typeTemplateData struct {
 	Package       string
@@ -247,6 +290,7 @@ type typeTemplateData struct {
 	Version       string
 	DiscoveryURL  string
 	Schemas       []SchemaInfo
+	NeedsTime     bool
 }
 
 type descriptorTemplateData struct {
@@ -282,9 +326,10 @@ type FieldInfo struct {
 }
 
 type ResourceInfo struct {
-	Name    string
-	GoName  string
-	Methods []MethodInfo
+	Name        string
+	GoName      string
+	Description string
+	Methods     []MethodInfo
 }
 
 type MethodInfo struct {
@@ -316,10 +361,17 @@ func NewTypeMapper(schemas map[string]discovery.Schema) *TypeMapper {
 	return &TypeMapper{schemas: schemas}
 }
 
+func (m *TypeMapper) MapSchema(schema discovery.Schema) string {
+	if schema.Type == "array" && schema.Items != nil {
+		return "[]" + m.MapSchema(*schema.Items)
+	}
+	return m.MapJSONType(schema.Type, schema.Format, schema.Ref)
+}
+
 func (m *TypeMapper) MapJSONType(jsonType, format, ref string) string {
 	// Handle $ref references
 	if ref != "" {
-		return ref
+		return toGoName(ref)
 	}
 
 	// Map JSON Schema types to Go types
@@ -358,7 +410,8 @@ func (m *TypeMapper) MapJSONType(jsonType, format, ref string) string {
 // templateFuncs returns functions available in templates
 func templateFuncs() template.FuncMap {
 	return template.FuncMap{
-		"toGoName": toGoName,
+		"toGoName":      toGoName,
+		"enumConstName": enumConstName,
 		"toJSONName": func(s string) string {
 			return s
 		},
@@ -368,12 +421,68 @@ func templateFuncs() template.FuncMap {
 
 // toGoName converts a discovery name to Go naming convention
 func toGoName(name string) string {
-	// Simple conversion - production would need more logic
-	parts := strings.Split(name, "_")
-	for i, part := range parts {
-		parts[i] = cases.Title(language.English).String(part)
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return "Value"
 	}
-	return strings.Join(parts, "")
+
+	var parts []string
+	var current strings.Builder
+	for _, r := range name {
+		switch {
+		case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r >= '0' && r <= '9':
+			current.WriteRune(r)
+		default:
+			if current.Len() > 0 {
+				parts = append(parts, current.String())
+				current.Reset()
+			}
+		}
+	}
+	if current.Len() > 0 {
+		parts = append(parts, current.String())
+	}
+	if len(parts) == 0 {
+		return "Value"
+	}
+
+	for i, part := range parts {
+		if part == "" {
+			continue
+		}
+		parts[i] = strings.ToUpper(part[:1]) + part[1:]
+	}
+
+	result := strings.Join(parts, "")
+	if result == "" {
+		return "Value"
+	}
+	if result[0] >= '0' && result[0] <= '9' {
+		result = "Value" + result
+	}
+	if isGoKeyword(strings.ToLower(result)) {
+		result += "Value"
+	}
+	return result
+}
+
+func enumConstName(typeName, value string) string {
+	name := toGoName(value)
+	if name == "Value" {
+		name = "Unknown"
+	}
+	return typeName + name
+}
+
+func isGoKeyword(name string) bool {
+	switch name {
+	case "break", "default", "func", "interface", "select", "case", "defer", "go", "map", "struct",
+		"chan", "else", "goto", "package", "switch", "const", "fallthrough", "if", "range",
+		"type", "continue", "for", "import", "return", "var":
+		return true
+	default:
+		return false
+	}
 }
 
 // formatComment formats a string as a Go comment
@@ -392,7 +501,11 @@ func formatComment(s string) string {
 
 // packageName converts service name to Go package name
 func packageName(service string) string {
-	return strings.ToLower(service)
+	name := strings.ToLower(toGoName(service))
+	if name == "" {
+		return "generated"
+	}
+	return name
 }
 
 // convertSchemas transforms discovery schemas to template-friendly format
@@ -439,7 +552,7 @@ func convertSchemas(schemas map[string]discovery.Schema) []SchemaInfo {
 			}
 
 			mapper := NewTypeMapper(schemas)
-			field.Type = mapper.MapJSONType(prop.Type, prop.Format, prop.Ref)
+			field.Type = mapper.MapSchema(prop)
 
 			info.Fields = append(info.Fields, field)
 		}
@@ -452,15 +565,35 @@ func convertSchemas(schemas map[string]discovery.Schema) []SchemaInfo {
 // convertResources transforms discovery resources to template-friendly format
 func convertResources(resources map[string]discovery.Resource) []ResourceInfo {
 	var result []ResourceInfo
-	for name, resource := range resources {
+
+	var names []string
+	for name := range resources {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+
+	for _, name := range names {
+		resource := resources[name]
 		info := ResourceInfo{
-			Name:   name,
-			GoName: toGoName(name),
+			Name:        name,
+			GoName:      toGoName(name),
+			Description: name,
 		}
 
-		for methodName, method := range resource.Methods {
+		var methodNames []string
+		for methodName := range resource.Methods {
+			methodNames = append(methodNames, methodName)
+		}
+		sort.Strings(methodNames)
+
+		for _, methodName := range methodNames {
+			method := resource.Methods[methodName]
+			displayName := method.ID
+			if displayName == "" {
+				displayName = methodName
+			}
 			methodInfo := MethodInfo{
-				Name:        methodName,
+				Name:        displayName,
 				GoName:      toGoName(methodName),
 				HTTPMethod:  method.HTTPMethod,
 				Path:        method.Path,
@@ -476,7 +609,14 @@ func convertResources(resources map[string]discovery.Resource) []ResourceInfo {
 			}
 
 			// Convert parameters
-			for paramName, param := range method.Parameters {
+			var paramNames []string
+			for paramName := range method.Parameters {
+				paramNames = append(paramNames, paramName)
+			}
+			sort.Strings(paramNames)
+
+			for _, paramName := range paramNames {
+				param := method.Parameters[paramName]
 				paramInfo := ParameterInfo{
 					Name:     paramName,
 					GoName:   toGoName(paramName),
@@ -493,6 +633,17 @@ func convertResources(resources map[string]discovery.Resource) []ResourceInfo {
 		result = append(result, info)
 	}
 	return result
+}
+
+func schemasNeedTime(schemas []SchemaInfo) bool {
+	for _, schema := range schemas {
+		for _, field := range schema.Fields {
+			if field.Type == "time.Time" {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func contains(slice []string, item string) bool {

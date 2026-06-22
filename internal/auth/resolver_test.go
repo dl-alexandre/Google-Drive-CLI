@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,6 +12,7 @@ import (
 	"time"
 
 	"github.com/dl-alexandre/gdrv/internal/types"
+	"github.com/dl-alexandre/gdrv/internal/utils"
 )
 
 // withEnv is a test helper that sets environment variables and restores them after the test.
@@ -539,6 +541,136 @@ func TestResolver_FileFormat_Unknown(t *testing.T) {
 	if format != formatUnknown {
 		t.Errorf("Expected unknown format, got: %s", format)
 	}
+}
+
+func TestResolver_ExportBundle_ResolvesBase64Credentials(t *testing.T) {
+	configDir := t.TempDir()
+	expiry := time.Now().Add(1 * time.Hour).UTC().Truncate(time.Second)
+	payload, err := json.Marshal(types.StoredCredentials{
+		Profile:      "work",
+		AccessToken:  "bundle-token",
+		RefreshToken: "bundle-refresh",
+		ExpiryDate:   expiry.Format(time.RFC3339),
+		Scopes:       []string{"https://www.googleapis.com/auth/drive"},
+		Type:         types.AuthTypeOAuth,
+		ClientID:     "client-123",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	bundle := map[string]any{
+		"version":        "1.0",
+		"profile":        "work",
+		"created_at":     "2024-01-01T00:00:00Z",
+		"encrypted_data": base64.StdEncoding.EncodeToString(payload),
+	}
+	bundleData, err := json.Marshal(bundle)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tmpFile := createTempCredentialsFile(t, string(bundleData))
+
+	withEnv(t, map[string]string{
+		"GDRV_TOKEN":            "",
+		"GDRV_CREDENTIALS_FILE": tmpFile,
+	}, func() {
+		resolver := NewResolver(configDir, false)
+		resolution, creds, err := resolver.Resolve(context.Background(), ResolveOptions{Profile: "default"})
+		if err != nil {
+			t.Fatalf("expected export bundle to resolve, got %v", err)
+		}
+		if resolution.Source != AuthSourceCredentialsFile {
+			t.Fatalf("expected credentials file source, got %s", resolution.Source)
+		}
+		if resolution.Subject != "work" {
+			t.Fatalf("expected profile subject, got %q", resolution.Subject)
+		}
+		if !resolution.Refreshable {
+			t.Fatal("expected refreshable OAuth bundle")
+		}
+		if creds.AccessToken != "bundle-token" || creds.RefreshToken != "bundle-refresh" {
+			t.Fatalf("unexpected credentials: %+v", creds)
+		}
+		if !creds.ExpiryDate.Equal(expiry) {
+			t.Fatalf("expected expiry %s, got %s", expiry, creds.ExpiryDate)
+		}
+	})
+}
+
+func TestResolver_ExportBundle_RejectsUnsupportedEncryptedPayload(t *testing.T) {
+	configDir := t.TempDir()
+	tmpFile := createTempCredentialsFile(t, `{
+		"version": "1.0",
+		"profile": "default",
+		"encrypted_data": "not-json-ciphertext",
+		"nonce": "nonce",
+		"key_hint": "host"
+	}`)
+
+	withEnv(t, map[string]string{
+		"GDRV_TOKEN":            "",
+		"GDRV_CREDENTIALS_FILE": tmpFile,
+	}, func() {
+		resolver := NewResolver(configDir, false)
+		_, _, err := resolver.Resolve(context.Background(), ResolveOptions{})
+		if err == nil {
+			t.Fatal("expected unsupported encrypted bundle error")
+		}
+
+		var appErr *utils.AppError
+		if !errors.As(err, &appErr) {
+			t.Fatalf("expected AppError, got %T: %v", err, err)
+		}
+		if appErr.CLIError.Code != utils.ErrCodeAuthRequired {
+			t.Fatalf("expected %s, got %s", utils.ErrCodeAuthRequired, appErr.CLIError.Code)
+		}
+		if !strings.Contains(appErr.CLIError.Message, "encrypted export bundles are not supported") {
+			t.Fatalf("expected actionable encrypted bundle message, got %q", appErr.CLIError.Message)
+		}
+	})
+}
+
+func TestResolver_ExportBundle_RejectsExpiredCredentials(t *testing.T) {
+	configDir := t.TempDir()
+	payload, err := json.Marshal(types.StoredCredentials{
+		Profile:     "expired",
+		AccessToken: "expired-token",
+		ExpiryDate:  time.Now().Add(-1 * time.Hour).UTC().Format(time.RFC3339),
+		Scopes:      []string{"https://www.googleapis.com/auth/drive"},
+		Type:        types.AuthTypeOAuth,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	bundleData, err := json.Marshal(map[string]any{
+		"version":        "1.0",
+		"profile":        "expired",
+		"encrypted_data": base64.StdEncoding.EncodeToString(payload),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	tmpFile := createTempCredentialsFile(t, string(bundleData))
+
+	withEnv(t, map[string]string{
+		"GDRV_TOKEN":            "",
+		"GDRV_CREDENTIALS_FILE": tmpFile,
+	}, func() {
+		resolver := NewResolver(configDir, false)
+		_, _, err := resolver.Resolve(context.Background(), ResolveOptions{})
+		if err == nil {
+			t.Fatal("expected expired bundle error")
+		}
+
+		var appErr *utils.AppError
+		if !errors.As(err, &appErr) {
+			t.Fatalf("expected AppError, got %T: %v", err, err)
+		}
+		if appErr.CLIError.Code != utils.ErrCodeAuthExpired {
+			t.Fatalf("expected %s, got %s", utils.ErrCodeAuthExpired, appErr.CLIError.Code)
+		}
+	})
 }
 
 // TestResolver_JWTParsing_ScopesExtracted verifies scope extraction from JWT

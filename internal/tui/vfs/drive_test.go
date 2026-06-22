@@ -3,6 +3,7 @@ package vfs
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -12,6 +13,7 @@ import (
 	"github.com/dl-alexandre/gdrv/internal/files"
 	"github.com/dl-alexandre/gdrv/internal/logging"
 	gsheets "github.com/dl-alexandre/gdrv/internal/sheets"
+	"github.com/dl-alexandre/gdrv/internal/utils"
 	"google.golang.org/api/drive/v3"
 	"google.golang.org/api/option"
 	sheetsapi "google.golang.org/api/sheets/v4"
@@ -127,6 +129,50 @@ func TestDriveVFSImportSheetTab_ConflictOnRevisionMismatch(t *testing.T) {
 	err := v.ImportSheetTab(context.Background(), "file123", "Sheet1", "A,B\n1,2\n", "2024-01-01T00:00:00Z")
 	if err == nil || !strings.Contains(err.Error(), "conflict:") {
 		t.Fatalf("expected conflict error, got %v", err)
+	}
+}
+
+func TestDriveVFSMove_WrapsStructuredDriveError(t *testing.T) {
+	server, driveSvc, sheetsSvc := newDriveVFSTestServer(t, func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.Method == http.MethodGet && r.URL.Path == "/drive/v3/files/file123":
+			writeJSON(t, w, http.StatusOK, map[string]any{
+				"id":      "file123",
+				"name":    "Report",
+				"parents": []string{"old-parent"},
+			})
+		case r.Method == http.MethodPatch && r.URL.Path == "/drive/v3/files/file123":
+			writeJSON(t, w, http.StatusNotFound, map[string]any{
+				"error": map[string]any{
+					"code":    http.StatusNotFound,
+					"message": "File not found",
+					"errors": []map[string]any{{
+						"reason":  "notFound",
+						"message": "File not found",
+					}},
+				},
+			})
+		default:
+			t.Fatalf("unexpected request: %s %s", r.Method, r.URL.Path)
+		}
+	})
+	defer server.Close()
+
+	v := newTestDriveVFS(driveSvc, sheetsSvc, "")
+	err := v.Move(context.Background(), "file123", "new-parent")
+	if err == nil {
+		t.Fatal("expected move error")
+	}
+	if !strings.Contains(err.Error(), `move file "file123" to parent "new-parent"`) {
+		t.Fatalf("expected move context in error, got %v", err)
+	}
+
+	var appErr *utils.AppError
+	if !errors.As(err, &appErr) {
+		t.Fatalf("expected wrapped AppError, got %T: %v", err, err)
+	}
+	if appErr.CLIError.Code != utils.ErrCodeFileNotFound {
+		t.Fatalf("expected %s, got %s", utils.ErrCodeFileNotFound, appErr.CLIError.Code)
 	}
 }
 
