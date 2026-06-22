@@ -98,9 +98,11 @@ func (d *DriveVFS) Rename(ctx context.Context, id, name string) error {
 // Move changes a file's parent.
 func (d *DriveVFS) Move(ctx context.Context, id, newParent string) error {
 	reqCtx := d.requestContext()
-	// TODO: Need proper error handling wrapper
 	_, err := d.files.Move(ctx, reqCtx, id, newParent)
-	return err
+	if err != nil {
+		return fmt.Errorf("move file %q to parent %q: %w", id, newParent, err)
+	}
+	return nil
 }
 
 // Delete permanently removes a file.

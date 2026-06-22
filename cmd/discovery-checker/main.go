@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	discoverygen "github.com/dl-alexandre/gdrv/cmd/discovery-checker/generator"
 	"github.com/dl-alexandre/gdrv/internal/discovery"
 	"github.com/dl-alexandre/gdrv/internal/logging"
 	"gopkg.in/yaml.v3"
@@ -319,13 +320,61 @@ func saveSnapshot(path string, doc *discovery.DiscoveryDocument) error {
 }
 
 func generateTypes(doc *discovery.DiscoveryDocument, outputPath, packageName string) error {
-	// TODO: Implement Go type generation from discovery schemas
+	gen, err := discoverygen.NewTypeGenerator(discoverygen.GeneratorConfig{
+		PackageName: goPackageName(packageName, doc.Name),
+	})
+	if err != nil {
+		return err
+	}
+
+	content, err := gen.Generate(doc, doc.Name)
+	if err != nil {
+		return err
+	}
+
+	if err := os.MkdirAll(outputPath, 0755); err != nil {
+		return fmt.Errorf("creating types output directory: %w", err)
+	}
+	if err := os.WriteFile(filepath.Join(outputPath, "types.go"), content, 0644); err != nil {
+		return fmt.Errorf("writing generated types: %w", err)
+	}
 	return nil
 }
 
 func generateDescriptors(doc *discovery.DiscoveryDocument, outputPath, packageName string) error {
-	// TODO: Implement endpoint descriptor generation
+	gen, err := discoverygen.NewDescriptorGenerator(discoverygen.GeneratorConfig{
+		PackageName: goPackageName(packageName, "descriptors"),
+	})
+	if err != nil {
+		return err
+	}
+
+	content, err := gen.Generate(doc, doc.Name)
+	if err != nil {
+		return err
+	}
+
+	if err := os.MkdirAll(filepath.Dir(outputPath), 0755); err != nil {
+		return fmt.Errorf("creating descriptors output directory: %w", err)
+	}
+	if err := os.WriteFile(outputPath, content, 0644); err != nil {
+		return fmt.Errorf("writing generated descriptors: %w", err)
+	}
 	return nil
+}
+
+func goPackageName(importPath, fallback string) string {
+	importPath = strings.Trim(importPath, "/")
+	if importPath == "" {
+		return fallback
+	}
+	if idx := strings.LastIndex(importPath, "/"); idx >= 0 {
+		importPath = importPath[idx+1:]
+	}
+	if importPath == "" {
+		return fallback
+	}
+	return importPath
 }
 
 // Required imports

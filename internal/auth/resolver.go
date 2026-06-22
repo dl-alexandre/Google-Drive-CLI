@@ -205,10 +205,40 @@ func (r *Resolver) resolveFromCredentialsFile(ctx context.Context, filePath stri
 		return resolution, creds, nil
 
 	case formatExportBundle:
-		// TODO: Phase 3 - Load exported bundle
-		resolution.Reason = fmt.Sprintf("Export bundle format detected in %s (Phase 3 not yet implemented)", filePath)
-		return resolution, nil, utils.NewAppError(utils.NewCLIError(utils.ErrCodeAuthRequired,
-			"Export bundle support via GDRV_CREDENTIALS_FILE coming in Phase 3").Build())
+		creds, profile, err := parseExportBundleCredentials(data)
+		if err != nil {
+			resolution.Reason = fmt.Sprintf("Invalid export bundle in %s: %v", filePath, err)
+			return resolution, nil, utils.NewAppError(utils.NewCLIError(utils.ErrCodeAuthRequired,
+				fmt.Sprintf("Invalid export bundle: %v", err)).
+				WithContext("credentialsFile", filePath).
+				WithContext("suggestedAction", "export credentials again or provide a service account JSON file").
+				Build())
+		}
+
+		if !creds.ExpiryDate.IsZero() && now.After(creds.ExpiryDate) {
+			resolution.Reason = fmt.Sprintf("Export bundle token expired at %s", creds.ExpiryDate.Format(time.RFC3339))
+			return resolution, nil, utils.NewAppError(utils.NewCLIError(utils.ErrCodeAuthExpired,
+				fmt.Sprintf("Export bundle token expired at %s. Export fresh credentials or run 'gdrv auth login'.",
+					creds.ExpiryDate.Format(time.RFC3339))).
+				WithContext("credentialsFile", filePath).
+				Build())
+		}
+
+		resolution.Reason = "GDRV_CREDENTIALS_FILE export bundle"
+		resolution.Subject = profile
+		resolution.Scopes = creds.Scopes
+		resolution.Refreshable = creds.RefreshToken != "" && creds.Type == types.AuthTypeOAuth
+		if creds.ServiceAccountEmail != "" {
+			resolution.Subject = creds.ServiceAccountEmail
+		}
+		if creds.ImpersonatedUser != "" {
+			resolution.Subject = creds.ImpersonatedUser
+		}
+		if !creds.ExpiryDate.IsZero() {
+			resolution.ExpiresAt = &creds.ExpiryDate
+		}
+
+		return resolution, creds, nil
 
 	default:
 		resolution.Reason = "Unrecognized credentials file format"
@@ -330,6 +360,24 @@ const (
 	formatUnknown        fileFormat = "unknown"
 )
 
+type exportBundle struct {
+	Version       string          `json:"version"`
+	Profile       string          `json:"profile"`
+	ProfileName   string          `json:"profile_name"`
+	EncryptedData json.RawMessage `json:"encrypted_data"`
+	Salt          string          `json:"salt"`
+	Nonce         string          `json:"nonce"`
+	KeyHint       string          `json:"key_hint"`
+	Token         *exportToken    `json:"token"`
+	Credentials   json.RawMessage `json:"credentials"`
+}
+
+type exportToken struct {
+	EncryptedData string `json:"encrypted_data"`
+	Nonce         string `json:"nonce"`
+	KeyHint       string `json:"key_hint"`
+}
+
 // detectFileFormat determines the credential file type by inspecting JSON structure
 func detectFileFormat(data []byte) (fileFormat, error) {
 	// Try to parse as generic JSON first
@@ -355,7 +403,189 @@ func detectFileFormat(data []byte) (fileFormat, error) {
 		if _, hasEncrypted := generic["encrypted_data"]; hasEncrypted {
 			return formatExportBundle, nil
 		}
+		if token, ok := generic["token"].(map[string]interface{}); ok {
+			if _, hasEncrypted := token["encrypted_data"]; hasEncrypted {
+				return formatExportBundle, nil
+			}
+		}
 	}
 
 	return formatUnknown, fmt.Errorf("unrecognized format. Expected service account JSON (with type='service_account') or gdrv export bundle (with version and encrypted_data)")
+}
+
+func parseExportBundleCredentials(data []byte) (*types.Credentials, string, error) {
+	var bundle exportBundle
+	if err := json.Unmarshal(data, &bundle); err != nil {
+		return nil, "", fmt.Errorf("parse bundle JSON: %w", err)
+	}
+	if bundle.Version == "" {
+		return nil, "", fmt.Errorf("missing version")
+	}
+
+	profile := bundle.Profile
+	if profile == "" {
+		profile = bundle.ProfileName
+	}
+
+	if len(bundle.Credentials) > 0 {
+		creds, err := credentialsFromJSON(bundle.Credentials)
+		if err != nil {
+			return nil, "", fmt.Errorf("invalid credentials payload: %w", err)
+		}
+		return creds, profile, nil
+	}
+
+	if credentialsFieldPresent(data) {
+		creds, err := credentialsFromJSON(data)
+		if err != nil {
+			return nil, "", fmt.Errorf("invalid credentials payload: %w", err)
+		}
+		return creds, profile, nil
+	}
+
+	if len(bundle.EncryptedData) > 0 {
+		creds, err := credentialsFromRawBundleData(bundle.EncryptedData)
+		if err == nil {
+			return creds, profile, nil
+		}
+		if bundle.Salt != "" || bundle.Nonce != "" || bundle.KeyHint != "" {
+			return nil, "", fmt.Errorf("encrypted export bundles are not supported by this resolver: %w", err)
+		}
+		return nil, "", fmt.Errorf("invalid encrypted_data payload: %w", err)
+	}
+
+	if bundle.Token != nil && bundle.Token.EncryptedData != "" {
+		creds, err := credentialsFromEncodedBundleData(bundle.Token.EncryptedData)
+		if err == nil {
+			return creds, profile, nil
+		}
+		if bundle.Token.Nonce != "" || bundle.Token.KeyHint != "" {
+			return nil, "", fmt.Errorf("encrypted token export bundles are not supported by this resolver: %w", err)
+		}
+		return nil, "", fmt.Errorf("invalid token encrypted_data payload: %w", err)
+	}
+
+	return nil, "", fmt.Errorf("missing credentials payload")
+}
+
+func credentialsFieldPresent(data []byte) bool {
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return false
+	}
+	_, ok := fields["access_token"]
+	return ok
+}
+
+func credentialsFromRawBundleData(raw json.RawMessage) (*types.Credentials, error) {
+	trimmed := strings.TrimSpace(string(raw))
+	if trimmed == "" || trimmed == "null" {
+		return nil, fmt.Errorf("empty encrypted_data")
+	}
+	if strings.HasPrefix(trimmed, "{") {
+		return credentialsFromJSON(raw)
+	}
+
+	var encoded string
+	if err := json.Unmarshal(raw, &encoded); err != nil {
+		return nil, fmt.Errorf("encrypted_data must be a JSON object or string: %w", err)
+	}
+	return credentialsFromEncodedBundleData(encoded)
+}
+
+func credentialsFromEncodedBundleData(encoded string) (*types.Credentials, error) {
+	if strings.TrimSpace(encoded) == "" {
+		return nil, fmt.Errorf("empty encrypted_data")
+	}
+
+	if strings.HasPrefix(strings.TrimSpace(encoded), "{") {
+		return credentialsFromJSON([]byte(encoded))
+	}
+
+	decoders := []*base64.Encoding{
+		base64.StdEncoding,
+		base64.RawStdEncoding,
+		base64.URLEncoding,
+		base64.RawURLEncoding,
+	}
+
+	var lastErr error
+	for _, decoder := range decoders {
+		decoded, err := decoder.DecodeString(encoded)
+		if err != nil {
+			lastErr = err
+			continue
+		}
+		creds, err := credentialsFromJSON(decoded)
+		if err == nil {
+			return creds, nil
+		}
+		lastErr = err
+	}
+
+	if lastErr == nil {
+		lastErr = fmt.Errorf("payload is not base64 encoded JSON")
+	}
+	return nil, lastErr
+}
+
+func credentialsFromJSON(data []byte) (*types.Credentials, error) {
+	var creds types.Credentials
+	if err := json.Unmarshal(data, &creds); err == nil && creds.AccessToken != "" {
+		normalizeBundleCredentials(&creds)
+		if err := validateBundleCredentials(&creds); err != nil {
+			return nil, err
+		}
+		return &creds, nil
+	}
+
+	var stored types.StoredCredentials
+	if err := json.Unmarshal(data, &stored); err != nil {
+		return nil, err
+	}
+	if stored.AccessToken == "" {
+		return nil, fmt.Errorf("missing access_token")
+	}
+	if stored.ExpiryDate == "" {
+		return nil, fmt.Errorf("missing expiry_date")
+	}
+	expiry, err := time.Parse(time.RFC3339, stored.ExpiryDate)
+	if err != nil {
+		return nil, fmt.Errorf("invalid expiry_date: %w", err)
+	}
+
+	storedCreds := &types.Credentials{
+		AccessToken:         stored.AccessToken,
+		RefreshToken:        stored.RefreshToken,
+		ExpiryDate:          expiry,
+		Scopes:              stored.Scopes,
+		Type:                stored.Type,
+		ClientID:            stored.ClientID,
+		ServiceAccountEmail: stored.ServiceAccountEmail,
+		ImpersonatedUser:    stored.ImpersonatedUser,
+	}
+	normalizeBundleCredentials(storedCreds)
+	if err := validateBundleCredentials(storedCreds); err != nil {
+		return nil, err
+	}
+	return storedCreds, nil
+}
+
+func normalizeBundleCredentials(creds *types.Credentials) {
+	if creds.Type == "" {
+		creds.Type = types.AuthTypeOAuth
+	}
+	if len(creds.Scopes) == 0 {
+		creds.Scopes = []string{"unknown"}
+	}
+}
+
+func validateBundleCredentials(creds *types.Credentials) error {
+	if creds.AccessToken == "" {
+		return fmt.Errorf("missing access_token")
+	}
+	if creds.ExpiryDate.IsZero() {
+		return fmt.Errorf("missing expiry_date")
+	}
+	return nil
 }
