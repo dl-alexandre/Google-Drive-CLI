@@ -1,57 +1,39 @@
 Checking for API drift...
   Checking drive v3...
-    ✗ 19 change(s) detected (19 additive, 0 risky, 0 breaking):
-      - additive (type): New type added: CancelApprovalRequest
-      - additive (type): New type added: DecryptionMetadata
-      - additive (type): New type added: ReplaceReviewer
-      - additive (type): New type added: ReassignApprovalRequest
-      - additive (type): New type added: AddReviewer
-      - additive (type): New type added: CommentApprovalRequest
-      - additive (type): New type added: DeclineApprovalRequest
-      - additive (type): New type added: GenerateCseTokenResponse
-      - additive (type): New type added: ApproveApprovalRequest
-      - additive (field): New field added to File: clientEncryptionDetails
-      - additive (type): New type added: StartApprovalRequest
-      - additive (type): New type added: ClientEncryptionDetails
-      - additive (method): New method added: approvals.approve
-      - additive (method): New method added: approvals.start
-      - additive (method): New method added: approvals.cancel
-      - additive (method): New method added: approvals.comment
-      - additive (method): New method added: approvals.reassign
-      - additive (method): New method added: approvals.decline
-      - additive (method): New method added: files.generateCseToken
+    ✓ No changes detected
   Checking gmail v1...
-    ✓ No changes detected
+    ✗ 4 change(s) detected (4 additive, 0 risky, 0 breaking):
+      - additive (field): New field added to BatchModifyMessagesRequest: removeClassificationLabelIds
+      - additive (field): New field added to BatchModifyMessagesRequest: addClassificationLabels
+      - additive (field): New field added to ModifyMessageRequest: addClassificationLabels
+      - additive (field): New field added to ModifyMessageRequest: removeClassificationLabelIds
   Checking calendar v3...
-    ✓ No changes detected
+    ✗ 3 change(s) detected (1 additive, 2 risky, 0 breaking):
+      - additive (field): New field added to EventAttendee: asyncOperation
+      - risky (enum): New enum value in calendarList/list.minAccessRole: writerWithoutPrivateAccess
+      - risky (enum): New enum value in calendarList/watch.minAccessRole: writerWithoutPrivateAccess
   Checking people v1...
     ✓ No changes detected
   Checking slides v1...
-    ✗ 1 change(s) detected (0 additive, 1 risky, 0 breaking):
-      - risky (enum): New enum value in presentations/pages/getThumbnail.thumbnailProperties.thumbnailSize: WIDTH2000_PX
+    ✓ No changes detected
   Checking docs v1...
-    ✗ 4 change(s) detected (4 additive, 0 risky, 0 breaking):
-      - additive (type): New type added: InsertRichLinkRequest
-      - additive (type): New type added: UpdateNamedStyleRequest
-      - additive (field): New field added to Request: insertRichLink
-      - additive (field): New field added to Request: updateNamedStyle
+    ✓ No changes detected
   Checking sheets v4...
     ✓ No changes detected
   Checking chat v1...
-    ✗ 9 change(s) detected (6 additive, 3 risky, 0 breaking):
-      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.app.spaces.readonly
-      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.app.memberships.readonly
-      - additive (field): New field added to Message: silent
-      - additive (type): New type added: FindGroupChatsResponse
-      - additive (method): New method added: spaces.findGroupChats
-      - risky (scope): OAuth scopes changed for spaces.search
-      - additive (parameter): New parameter added to spaces/messages.create: createMessageNotificationOptions.notificationType
-      - risky (scope): OAuth scopes changed for spaces/spaceEvents.list
-      - risky (scope): OAuth scopes changed for spaces/spaceEvents.get
+    ✗ 2 change(s) detected (1 additive, 1 risky, 0 breaking):
+      - additive (field): New field added to Membership: affiliation
+      - risky (enum): New enum value in QuotedMessageMetadata.quoteType: FORWARD
   Checking admin directory_v1...
-    ✓ No changes detected
+    ✗ 2 change(s) detected (2 additive, 0 risky, 0 breaking):
+      - additive (field): New field added to User: suspensionTime
+      - additive (field): New field added to User: archivalTime
   Checking cloudidentity v1...
-    ✓ No changes detected
+    ✗ 4 change(s) detected (3 additive, 1 risky, 0 breaking):
+      - risky (enum): New enum value in Membership.type: CHROME_OS_DEVICE
+      - additive (method): New method added: policies.delete
+      - additive (method): New method added: policies.patch
+      - additive (method): New method added: policies.create
   Checking drivelabels v2...
     ✓ No changes detected
   Checking script v1...

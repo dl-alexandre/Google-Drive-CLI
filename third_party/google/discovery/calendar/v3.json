@@ -687,13 +687,15 @@
                 "freeBusyReader",
                 "owner",
                 "reader",
-                "writer"
+                "writer",
+                "writerWithoutPrivateAccess"
               ],
               "enumDescriptions": [
                 "The user can read free/busy information.",
                 "The user can read and modify events and access control lists.",
                 "The user can read events that are not private.",
-                "The user can read and modify events."
+                "The user can read and modify events.",
+                "The user can read and modify events that aren't private. The user can read free/busy information about private events. The user can't modify private events."
               ]
             },
             "pageToken": {
@@ -929,13 +931,15 @@
                 "freeBusyReader",
                 "owner",
                 "reader",
-                "writer"
+                "writer",
+                "writerWithoutPrivateAccess"
               ],
               "enumDescriptions": [
                 "The user can read free/busy information.",
                 "The user can read and modify events and access control lists.",
                 "The user can read events that are not private.",
-                "The user can read and modify events."
+                "The user can read and modify events.",
+                "The user can read and modify events that aren't private. The user can read free/busy information about private events. The user can't modify private events."
               ]
             },
             "pageToken": {
@@ -6215,6 +6219,20 @@
           "$ref": "",
           "required": null,
           "format": "int32",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "asyncOperation": {
+          "id": "",
+          "type": "string",
+          "description": "If present, indicates the status of an asynchronous operation ongoing for this attendee (e.g. listing of members of large attendee groups). Read-only. The default is to not be present.\nPossible values are:  \n- \"inProgress\" - The asynchronous operation is in progress. \n- (not present) - Otherwise.",
+          "default": "",
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
           "pattern": "",
           "enum": null,
           "enumDescriptions": null,

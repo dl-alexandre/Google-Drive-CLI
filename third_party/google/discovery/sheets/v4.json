@@ -7117,7 +7117,7 @@
           "enumDescriptions": [
             "Paste values, formulas, formats, and merges.",
             "Paste the values ONLY without formats, formulas, or merges.",
-            "Paste the format and data validation only.",
+            "Paste the format only, excluding data validation.",
             "Like `PASTE_NORMAL` but without borders.",
             "Paste the formulas only.",
             "Paste the data validation only.",
@@ -7277,7 +7277,7 @@
           "enumDescriptions": [
             "Paste values, formulas, formats, and merges.",
             "Paste the values ONLY without formats, formulas, or merges.",
-            "Paste the format and data validation only.",
+            "Paste the format only, excluding data validation.",
             "Like `PASTE_NORMAL` but without borders.",
             "Paste the formulas only.",
             "Paste the data validation only.",
@@ -13160,7 +13160,7 @@
           "enumDescriptions": [
             "Paste values, formulas, formats, and merges.",
             "Paste the values ONLY without formats, formulas, or merges.",
-            "Paste the format and data validation only.",
+            "Paste the format only, excluding data validation.",
             "Like `PASTE_NORMAL` but without borders.",
             "Paste the formulas only.",
             "Paste the data validation only.",

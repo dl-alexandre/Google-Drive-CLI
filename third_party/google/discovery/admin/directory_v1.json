@@ -6062,7 +6062,7 @@
           "id": "directory.users.createGuest",
           "path": "admin/directory/v1/users:createGuest",
           "httpMethod": "POST",
-          "description": "Create a guest user with access to a [subset of Workspace capabilities](https://support.google.com/a/answer/16558545). This feature is currently in Alpha. Please reach out to support if you are interested in trying this feature.",
+          "description": "Create a guest user with access to a [subset of Workspace capabilities](https://support.google.com/a/answer/16558545). This feature is currently in Open Beta.",
           "parameters": {},
           "request": {
             "$ref": "DirectoryUsersCreateGuestRequest",
@@ -12078,7 +12078,7 @@
         "customer": {
           "id": "",
           "type": "string",
-          "description": "Optional. Immutable ID of the Google Workspace account.",
+          "description": "Optional. Immutable ID of the Google Workspace account. Only required when request is created by a service account. Defaults to the authenticated user's customer ID otherwise.",
           "default": null,
           "properties": null,
           "$ref": "",
@@ -12092,7 +12092,7 @@
         "primaryGuestEmail": {
           "id": "",
           "type": "string",
-          "description": "Immutable. External email of the guest user being created.",
+          "description": "Required. External email of the guest user being created.",
           "default": null,
           "properties": null,
           "$ref": "",
@@ -16622,6 +16622,20 @@
           "enumDescriptions": null,
           "additionalProperties": null
         },
+        "archivalTime": {
+          "id": "",
+          "type": "string",
+          "description": "Output only. User's account archival time. (Read-only)",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        },
         "archived": {
           "id": "",
           "type": "boolean",
@@ -17216,6 +17230,20 @@
           "id": "",
           "type": "string",
           "description": "Output only. Has the reason a user account is suspended either by the administrator or by Google at the time of suspension. The property is returned only if the `suspended` property is `true`.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "suspensionTime": {
+          "id": "",
+          "type": "string",
+          "description": "Output only. User's account suspension time. (Read-only)",
           "default": null,
           "properties": null,
           "$ref": "",
