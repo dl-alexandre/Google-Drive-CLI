@@ -7,7 +7,7 @@ require (
 	cloud.google.com/go/apps v1.0.0
 	cloud.google.com/go/iam v1.11.0
 	cloud.google.com/go/logging v1.18.0
-	cloud.google.com/go/longrunning v1.0.0
+	cloud.google.com/go/longrunning v1.1.0
 	cloud.google.com/go/monitoring v1.29.0
 	github.com/alecthomas/kong v1.15.0
 	github.com/charmbracelet/bubbletea v1.3.10
@@ -16,15 +16,14 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/olekukonko/tablewriter v1.1.4
 	github.com/sahilm/fuzzy v0.1.3
-	github.com/schollz/progressbar/v3 v3.19.0
+	github.com/schollz/progressbar/v3 v3.19.1
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/zalando/go-keyring v0.2.8
 	golang.org/x/oauth2 v0.36.0
-	golang.org/x/text v0.38.0
-	google.golang.org/api v0.285.0
+	google.golang.org/api v0.287.0
 	google.golang.org/genproto v0.0.0-20260504160031-60b97b32f348
-	google.golang.org/genproto/googleapis/api v0.0.0-20260504160031-60b97b32f348
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260610212136-7ab31c22f7ad
+	google.golang.org/genproto/googleapis/api v0.0.0-20260615183401-62b3387ff324
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260622175928-b703f567277d
 	google.golang.org/grpc v1.83.0-dev
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/yaml.v3 v3.0.1
@@ -57,7 +56,7 @@ require (
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
 	github.com/google/pprof v0.0.0-20260402051712-545e8a4df936 // indirect
 	github.com/google/s2a-go v0.1.9 // indirect
-	github.com/googleapis/enterprise-certificate-proxy v0.3.16 // indirect
+	github.com/googleapis/enterprise-certificate-proxy v0.3.17 // indirect
 	github.com/googleapis/gax-go/v2 v2.22.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
@@ -89,6 +88,7 @@ require (
 	golang.org/x/sync v0.21.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect
 	golang.org/x/term v0.44.0 // indirect
+	golang.org/x/text v0.38.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
 	modernc.org/libc v1.73.4 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
