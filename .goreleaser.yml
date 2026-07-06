@@ -11,7 +11,7 @@ before:
 
 builds:
   - id: gdrv
-    main: ./...
+    main: ./cmd/gdrv
     env:
       - CGO_ENABLED=0
     goos:
