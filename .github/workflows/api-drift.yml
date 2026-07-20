@@ -47,7 +47,7 @@ jobs:
         fetch-depth: 0  # Needed for accurate diffing
         
     - name: Set up Go
-      uses: actions/setup-go@v6
+      uses: actions/setup-go@v7
       with:
         # Pinned to specific patch version for reproducibility
         go-version-file: go.mod
