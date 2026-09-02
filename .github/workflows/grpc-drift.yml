@@ -62,18 +62,11 @@ jobs:
         sudo unzip -o "protoc-${PROTOC_VERSION}-linux-x86_64.zip" -d /usr/local
         rm "protoc-${PROTOC_VERSION}-linux-x86_64.zip"
         
-        # Install buf for proto linting and breaking change detection
-        BUF_VERSION=1.31.0
-        sudo curl -sSL "https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-$(uname -s)-$(uname -m)" -o /usr/local/bin/buf
-        sudo chmod +x /usr/local/bin/buf
-        
-        echo "✓ Installed protoc ${PROTOC_VERSION} and buf ${BUF_VERSION}"
+        echo "✓ Installed protoc ${PROTOC_VERSION}"
     
     - name: Check for proto drift
       id: check
       run: |
-        set +e
-        
         DRIFT_DETECTED=false
         SERVICES_CHANGED=""
         
@@ -117,41 +110,26 @@ jobs:
             continue
           fi
           
-          # Use buf to check for breaking changes
-          if ls googleapis/$service/*.proto 1> /dev/null 2>&1; then
-            # Create temporary buf.yaml for comparison
-            echo "version: v1" > /tmp/buf-check.yaml
-            echo "breaking:" >> /tmp/buf-check.yaml
-            echo "  use:" >> /tmp/buf-check.yaml
-            echo "    - FILE" >> /tmp/buf-check.yaml
-            
-            # Check for breaking changes
-            if buf breaking --config /tmp/buf-check.yaml "googleapis/$service" --against "$SNAPSHOT_DIR" 2>/dev/null; then
-              echo "    ✓ No breaking changes"
-            else
-              echo "    ✗ Changes detected in $service"
-              DRIFT_DETECTED=true
-              SERVICES_CHANGED="$SERVICES_CHANGED $service"
-              
-              # Copy new protos for PR
-              rm -rf "$SNAPSHOT_DIR"
-              mkdir -p "$SNAPSHOT_DIR"
-              cp -r "googleapis/$service/"* "$SNAPSHOT_DIR/"
-            fi
+          # Compare the checked-out source with the tracked snapshot. The old
+          # buf invocation treated configuration/import errors as drift and
+          # produced a false alert whenever the comparison itself failed.
+          if diff -rq --exclude='.git' "googleapis/$service" "$SNAPSHOT_DIR" > /dev/null 2>&1; then
+            echo "    ✓ No changes"
           else
-            # Fallback: compare files directly
-            if diff -r "googleapis/$service" "$SNAPSHOT_DIR" > /dev/null 2>&1; then
-              echo "    ✓ No changes"
-            else
-              echo "    ✗ Changes detected in $service"
-              DRIFT_DETECTED=true
-              SERVICES_CHANGED="$SERVICES_CHANGED $service"
-              
-              # Update snapshot
-              rm -rf "$SNAPSHOT_DIR"
-              mkdir -p "$SNAPSHOT_DIR"
-              cp -r "googleapis/$service/"* "$SNAPSHOT_DIR/"
+            diff_status=$?
+            if [ "$diff_status" -ne 1 ]; then
+              echo "    ✗ Unable to compare $service (diff exit code $diff_status)" >&2
+              exit "$diff_status"
             fi
+
+            echo "    ✗ Changes detected in $service"
+            DRIFT_DETECTED=true
+            SERVICES_CHANGED="$SERVICES_CHANGED $service"
+
+            # Update the tracked snapshot.
+            rm -rf "$SNAPSHOT_DIR"
+            mkdir -p "$SNAPSHOT_DIR"
+            cp -r "googleapis/$service/"* "$SNAPSHOT_DIR/"
           fi
         done
         
@@ -167,16 +145,14 @@ jobs:
           echo "✓ No gRPC drift detected"
         fi
         
-        set -e
-    
     - name: Generate Go code from protos (if drift detected)
-      if: steps.check.outputs.drift_detected == 'true' && !github.event.inputs.dry_run
+      if: steps.check.outputs.drift_detected == 'true' && !inputs.dry_run
       run: |
         echo "Generating Go code from updated proto files..."
         
         # Install protoc-gen-go
-        go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-        go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+        go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.12
+        go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.6.2
         
         # Generate for each changed service
         SERVICES="${{ steps.check.outputs.services_changed }}"
@@ -207,13 +183,12 @@ jobs:
         echo "✓ Generated Go code"
     
     - name: Run tests
-      if: steps.check.outputs.drift_detected == 'true' && !github.event.inputs.dry_run
+      if: steps.check.outputs.drift_detected == 'true' && !inputs.dry_run
       run: |
         go test ./internal/google/generated/... -v || true
     
     - name: Create Pull Request
-      if: steps.check.outputs.drift_detected == 'true' && !github.event.inputs.dry_run
-      continue-on-error: true
+      if: steps.check.outputs.drift_detected == 'true' && !inputs.dry_run
       uses: peter-evans/create-pull-request@v8
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -249,17 +224,51 @@ jobs:
   grpc-drift-summary:
     name: gRPC Drift Summary
     runs-on: ubuntu-latest
-    if: always() && needs.grpc-drift-detection.outputs.drift_detected == 'true'
+    if: always() && github.event_name == 'schedule'
     needs: grpc-drift-detection
     
     steps:
-    - name: Create issue for breaking changes
+    - name: Manage drift issue
       if: github.event_name == 'schedule'
       uses: actions/github-script@v9
       with:
         script: |
-          const title = '[URGENT] Breaking gRPC API changes detected';
-          const body = `## Breaking gRPC API Changes Detected
+          const detectionSucceeded = '${{ needs.grpc-drift-detection.result }}' === 'success';
+          if (!detectionSucceeded) {
+            core.setFailed('The gRPC drift detection job failed; leaving existing alerts open.');
+            return;
+          }
+
+          const driftDetected = '${{ needs.grpc-drift-detection.outputs.drift_detected }}' === 'true';
+          const issues = await github.paginate(github.rest.issues.listForRepo, {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'open',
+            labels: 'grpc-api-drift',
+            per_page: 100
+          });
+          const openIssues = issues.filter((issue) => !issue.pull_request);
+
+          if (!driftDetected) {
+            for (const issue of openIssues) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: 'No gRPC drift detected in the latest scheduled run; closing this alert.'
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed'
+              });
+            }
+            return;
+          }
+
+          const title = 'gRPC API drift detected';
+          const body = `## gRPC API Drift Detected
           
           The weekly gRPC drift detection job found changes in the following services:
           
@@ -271,13 +280,44 @@ jobs:
           `;
           
           try {
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: title,
-              body: body,
-              labels: ['breaking-change', 'urgent', 'grpc-api-drift']
-            });
+            if (openIssues.length > 0) {
+              // Keep one rolling issue instead of creating a new alert every week.
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: openIssues[0].number,
+                title,
+                body
+              });
+              await github.rest.issues.setLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: openIssues[0].number,
+                labels: ['grpc-api-drift']
+              });
+              for (const issue of openIssues.slice(1)) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: `Superseded by #${openIssues[0].number}; closing this duplicate alert.`
+                });
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
+              }
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['grpc-api-drift']
+              });
+            }
           } catch (error) {
-            core.warning(`Failed to create gRPC drift issue: ${error.message}`);
+            core.warning(`Failed to update gRPC drift issue: ${error.message}`);
           }

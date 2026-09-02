@@ -34,3 +34,5 @@ coverage.html
 internal/files/Large Document
 internal/files/auto-name.txt
 /discovery-checker
+# Temporary source checkout used by the gRPC drift workflow.
+/googleapis/
