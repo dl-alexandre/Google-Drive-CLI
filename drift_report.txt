@@ -1,17 +1,27 @@
 Checking for API drift...
   Checking drive v3...
-    ✓ No changes detected
+    ✗ 3 change(s) detected (3 additive, 0 risky, 0 breaking):
+      - additive (field): New field added to Approval: fileContentChangeBehavior
+      - additive (field): New field added to StartApprovalRequest: fileContentChangeBehavior
+      - additive (parameter): New parameter added to files.copy: copyComments
   Checking gmail v1...
-    ✗ 4 change(s) detected (4 additive, 0 risky, 0 breaking):
-      - additive (field): New field added to BatchModifyMessagesRequest: removeClassificationLabelIds
-      - additive (field): New field added to BatchModifyMessagesRequest: addClassificationLabels
-      - additive (field): New field added to ModifyMessageRequest: addClassificationLabels
-      - additive (field): New field added to ModifyMessageRequest: removeClassificationLabelIds
+    ✗ 1 change(s) detected (1 additive, 0 risky, 0 breaking):
+      - additive (parameter): New parameter added to users/settings/cse/keypairs.create: chainValidation
   Checking calendar v3...
-    ✗ 3 change(s) detected (1 additive, 2 risky, 0 breaking):
-      - additive (field): New field added to EventAttendee: asyncOperation
-      - risky (enum): New enum value in calendarList/list.minAccessRole: writerWithoutPrivateAccess
-      - risky (enum): New enum value in calendarList/watch.minAccessRole: writerWithoutPrivateAccess
+    ✗ 13 change(s) detected (13 additive, 0 risky, 0 breaking):
+      - additive (field): New field added to EventLabel: name
+      - additive (field): New field added to EventLabel: id
+      - additive (field): New field added to EventLabel: backgroundColor
+      - additive (field): New field added to Calendar: labelProperties
+      - additive (field): New field added to LabelProperties: eventLabels
+      - additive (field): New field added to Event: eventLabelId
+      - additive (method): New method added: calendars.transferOwnership
+      - additive (parameter): New parameter added to calendarList.list: showOwnOrganizationOnly
+      - additive (parameter): New parameter added to calendarList.watch: showOwnOrganizationOnly
+      - additive (parameter): New parameter added to events.import: eventLabelVersion
+      - additive (parameter): New parameter added to events.patch: eventLabelVersion
+      - additive (parameter): New parameter added to events.insert: eventLabelVersion
+      - additive (parameter): New parameter added to events.update: eventLabelVersion
   Checking people v1...
     ✓ No changes detected
   Checking slides v1...
@@ -21,19 +31,54 @@ Checking for API drift...
   Checking sheets v4...
     ✓ No changes detected
   Checking chat v1...
-    ✗ 2 change(s) detected (1 additive, 1 risky, 0 breaking):
-      - additive (field): New field added to Membership: affiliation
-      - risky (enum): New enum value in QuotedMessageMetadata.quoteType: FORWARD
+    ✗ 34 change(s) detected (31 additive, 3 risky, 0 breaking):
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.memberships.readonly
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.spaces.pins.readonly
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.spaces.pins
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.spaces.readonly
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.users.availability
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.users.availability.readonly
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.messages.readonly
+      - additive (type): New type added: SearchMessageResult
+      - additive (type): New type added: DoNotDisturbMetadata
+      - additive (type): New type added: ListMessagePinsResponse
+      - additive (type): New type added: Principal
+      - risky (enum): New enum value in AppCommandMetadata.appCommandType: MESSAGE_ACTION
+      - additive (type): New type added: AccessPermissionSetting
+      - additive (type): New type added: Audience
+      - additive (type): New type added: Availability
+      - additive (type): New type added: SearchSpaceResult
+      - additive (type): New type added: MarkAsActiveRequest
+      - additive (type): New type added: MessagePin
+      - additive (type): New type added: SearchMessagesRequest
+      - additive (field): New field added to SearchSpacesResponse: results
+      - additive (type): New type added: CustomStatus
+      - additive (type): New type added: AccessPermissionSettings
+      - additive (field): New field added to Message: markupSyntax
+      - additive (type): New type added: MarkAsDoNotDisturbRequest
+      - additive (type): New type added: SearchMessagesResponse
+      - additive (field): New field added to AccessSettings: accessPermissionSettings
+      - additive (type): New type added: MarkAsAwayRequest
+      - additive (resource): New nested resource added: users.availability
+      - additive (method): New method added: spaces/messages.search
+      - additive (parameter): New parameter added to spaces/messages.list: markupSyntax
+      - additive (parameter): New parameter added to spaces/messages.get: markupSyntax
+      - additive (resource): New nested resource added: spaces.messagePins
+      - risky (scope): OAuth scopes changed for spaces/spaceEvents.get
+      - risky (scope): OAuth scopes changed for spaces/spaceEvents.list
   Checking admin directory_v1...
-    ✗ 2 change(s) detected (2 additive, 0 risky, 0 breaking):
-      - additive (field): New field added to User: suspensionTime
-      - additive (field): New field added to User: archivalTime
+    ✗ 4 change(s) detected (4 additive, 0 risky, 0 breaking):
+      - additive (field): New field added to Group: externalIds
+      - additive (field): New field added to RoleAssignment: expirationDetails
+      - additive (type): New type added: ExternalId
+      - additive (type): New type added: ExpirationDetails
   Checking cloudidentity v1...
-    ✗ 4 change(s) detected (3 additive, 1 risky, 0 breaking):
-      - risky (enum): New enum value in Membership.type: CHROME_OS_DEVICE
-      - additive (method): New method added: policies.delete
-      - additive (method): New method added: policies.patch
-      - additive (method): New method added: policies.create
+    ✗ 5 change(s) detected (5 additive, 0 risky, 0 breaking):
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/cloud-identity.allowlisteddomains
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly
+      - additive (type): New type added: ListAllowlistedDomainsResponse
+      - additive (type): New type added: AllowlistedDomain
+      - additive (resource): New resource added: allowlistedDomains
   Checking drivelabels v2...
     ✓ No changes detected
   Checking script v1...

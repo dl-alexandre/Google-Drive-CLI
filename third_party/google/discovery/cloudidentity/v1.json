@@ -21,6 +21,172 @@
   "mtlsRootUrl": "https://cloudidentity.mtls.googleapis.com/",
   "fullyEncodeReservedExpansion": true,
   "resources": {
+    "allowlistedDomains": {
+      "methods": {
+        "create": {
+          "id": "cloudidentity.allowlistedDomains.create",
+          "path": "v1/allowlistedDomains",
+          "httpMethod": "POST",
+          "description": "Adds a domain to the allowlist.",
+          "parameters": {},
+          "request": {
+            "$ref": "AllowlistedDomain",
+            "type": ""
+          },
+          "response": {
+            "$ref": "Operation",
+            "type": ""
+          },
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains"
+          ],
+          "supportsMediaUpload": false,
+          "supportsMediaDownload": false,
+          "flatPath": "v1/allowlistedDomains",
+          "etag": ""
+        },
+        "delete": {
+          "id": "cloudidentity.allowlistedDomains.delete",
+          "path": "v1/{+name}",
+          "httpMethod": "DELETE",
+          "description": "Removes a domain from the allowlist.",
+          "parameters": {
+            "name": {
+              "id": "",
+              "type": "string",
+              "$ref": "",
+              "description": "Required. Specifies the [resource name](https://google.aip.dev/122) of the domain to delete.",
+              "default": null,
+              "required": true,
+              "pattern": "^allowlistedDomains/[^/]+$",
+              "format": "",
+              "minimum": "",
+              "maximum": "",
+              "repeated": false,
+              "location": "path",
+              "enum": null,
+              "enumDescriptions": null
+            }
+          },
+          "response": {
+            "$ref": "Operation",
+            "type": ""
+          },
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains"
+          ],
+          "supportsMediaUpload": false,
+          "supportsMediaDownload": false,
+          "flatPath": "v1/allowlistedDomains/{allowlistedDomainsId}",
+          "etag": ""
+        },
+        "get": {
+          "id": "cloudidentity.allowlistedDomains.get",
+          "path": "v1/{+name}",
+          "httpMethod": "GET",
+          "description": "Retrieves a specific domain from the allowlist.",
+          "parameters": {
+            "name": {
+              "id": "",
+              "type": "string",
+              "$ref": "",
+              "description": "Required. Specifies the [resource name](https://google.aip.dev/122) of the domain to retrieve.",
+              "default": null,
+              "required": true,
+              "pattern": "^allowlistedDomains/[^/]+$",
+              "format": "",
+              "minimum": "",
+              "maximum": "",
+              "repeated": false,
+              "location": "path",
+              "enum": null,
+              "enumDescriptions": null
+            }
+          },
+          "response": {
+            "$ref": "AllowlistedDomain",
+            "type": ""
+          },
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains",
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly"
+          ],
+          "supportsMediaUpload": false,
+          "supportsMediaDownload": false,
+          "flatPath": "v1/allowlistedDomains/{allowlistedDomainsId}",
+          "etag": ""
+        },
+        "list": {
+          "id": "cloudidentity.allowlistedDomains.list",
+          "path": "v1/allowlistedDomains",
+          "httpMethod": "GET",
+          "description": "Lists the domains in the allowlist.",
+          "parameters": {
+            "filter": {
+              "id": "",
+              "type": "string",
+              "$ref": "",
+              "description": "Optional. Provides an optional filter for list results. Currently, only exact matches on the domain are supported, such as \"domain = 'google.com'\", with no composite conditions.",
+              "default": null,
+              "required": false,
+              "pattern": "",
+              "format": "",
+              "minimum": "",
+              "maximum": "",
+              "repeated": false,
+              "location": "query",
+              "enum": null,
+              "enumDescriptions": null
+            },
+            "pageSize": {
+              "id": "",
+              "type": "integer",
+              "$ref": "",
+              "description": "Optional. Specifies the requested page size. If unspecified, the service returns at most 5000 domains. The maximum value is 5000; values above 5000 coerce to 5000. The limits can change over time.",
+              "default": null,
+              "required": false,
+              "pattern": "",
+              "format": "int32",
+              "minimum": "",
+              "maximum": "",
+              "repeated": false,
+              "location": "query",
+              "enum": null,
+              "enumDescriptions": null
+            },
+            "pageToken": {
+              "id": "",
+              "type": "string",
+              "$ref": "",
+              "description": "Optional. Identifies a token from a previous page of results, if any.",
+              "default": null,
+              "required": false,
+              "pattern": "",
+              "format": "",
+              "minimum": "",
+              "maximum": "",
+              "repeated": false,
+              "location": "query",
+              "enum": null,
+              "enumDescriptions": null
+            }
+          },
+          "response": {
+            "$ref": "ListAllowlistedDomainsResponse",
+            "type": ""
+          },
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains",
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly"
+          ],
+          "supportsMediaUpload": false,
+          "supportsMediaDownload": false,
+          "flatPath": "v1/allowlistedDomains",
+          "etag": ""
+        }
+      },
+      "resources": null
+    },
     "customers": {
       "methods": null,
       "resources": {
@@ -1794,7 +1960,7 @@
               "id": "",
               "type": "string",
               "$ref": "",
-              "description": "Required. The search query. * Must be specified in [Common Expression Language](https://opensource.google/projects/cel). * Must contain equality operators on the parent, e.g. `parent == 'customers/{customer_id}'`. The `customer_id` must begin with \"C\" (for example, 'C046psxkn'). [Find your customer ID.] (https://support.google.com/cloudidentity/answer/10070793) * Can contain optional inclusion operators on `labels` such as `'cloudidentity.googleapis.com/groups.discussion_forum' in labels`). * Can contain an optional equality operator on `domain_name`. e.g. `domain_name == 'examplepetstore.com'` * Can contain optional `startsWith/contains/equality` operators on `group_key`, e.g. `group_key.startsWith('dev')`, `group_key.contains('dev'), group_key == 'dev@examplepetstore.com'` * Can contain optional `startsWith/contains/equality` operators on `display_name`, such as `display_name.startsWith('dev')` , `display_name.contains('dev')`, `display_name == 'dev'`",
+              "description": "Required. The search query. * Must be specified in [Common Expression Language](https://opensource.google/projects/cel). See [CEL Introduction](https://github.com/google/cel-spec/blob/master/doc/intro.md) for CEL syntax usage and examples. * Must contain equality operators on the parent, e.g. `parent == 'customers/{customer_id}'`. The `customer_id` must begin with \"C\" (for example, 'C046psxkn'). [Find your customer ID.] (https://support.google.com/cloudidentity/answer/10070793) * Can contain optional inclusion operators on `labels` such as `'cloudidentity.googleapis.com/groups.discussion_forum' in labels`). * Can contain an optional equality operator on `domain_name`. e.g. `domain_name == 'examplepetstore.com'` * Can contain optional `startsWith/contains/equality` operators on `group_key`, e.g. `group_key.startsWith('dev')`, `group_key.contains('dev'), group_key == 'dev@examplepetstore.com'` * Can contain optional `startsWith/contains/equality` operators on `display_name`, such as `display_name.startsWith('dev')` , `display_name.contains('dev')`, `display_name == 'dev'` Examples: * Search for all discussion forums under a customer: `parent == 'customers/C046psxkn' \u0026\u0026 'cloudidentity.googleapis.com/groups.discussion_forum' in labels` * Search for groups with key starting with 'sales': `parent == 'customers/C046psxkn' \u0026\u0026 group_key.startsWith('sales')` * Search for groups with display name containing 'test': `parent == 'customers/C046psxkn' \u0026\u0026 display_name.contains('test')`",
               "default": null,
               "required": false,
               "pattern": "",
@@ -3698,6 +3864,49 @@
           "id": "",
           "type": "string",
           "description": "PEM encoded x509 certificate containing the public key for verifying IdP signatures.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        }
+      },
+      "$ref": "",
+      "required": null,
+      "format": "",
+      "pattern": "",
+      "enum": null,
+      "enumDescriptions": null,
+      "additionalProperties": null
+    },
+    "AllowlistedDomain": {
+      "id": "AllowlistedDomain",
+      "type": "object",
+      "description": "This resource object defines a domain that has been designated as allowlisted.",
+      "default": null,
+      "properties": {
+        "domain": {
+          "id": "",
+          "type": "string",
+          "description": "Required. Immutable. Name of the domain that is in the allowlist. e.g. \"google.com\"",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "name": {
+          "id": "",
+          "type": "string",
+          "description": "Output only. Identifier. Resource name of the domain in the allowlist e.g. \"allowlistedDomains/0184mhaj1smlusv\"",
           "default": null,
           "properties": null,
           "$ref": "",
@@ -7557,6 +7766,63 @@
       "enumDescriptions": null,
       "additionalProperties": null
     },
+    "ListAllowlistedDomainsResponse": {
+      "id": "ListAllowlistedDomainsResponse",
+      "type": "object",
+      "description": "Response message for AllowlistedDomainsService.ListAllowlistedDomains.",
+      "default": null,
+      "properties": {
+        "allowlistedDomains": {
+          "id": "",
+          "type": "array",
+          "description": "Contains the list of domains in the allowlist. There is no defined ordering of domains within a result.",
+          "default": null,
+          "properties": null,
+          "items": {
+            "id": "",
+            "type": "",
+            "description": "",
+            "default": null,
+            "properties": null,
+            "$ref": "AllowlistedDomain",
+            "required": null,
+            "format": "",
+            "pattern": "",
+            "enum": null,
+            "enumDescriptions": null,
+            "additionalProperties": null
+          },
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "nextPageToken": {
+          "id": "",
+          "type": "string",
+          "description": "Contains the next page token if the result is not exhaustive. If there are no more results, this token is empty.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": null,
+          "enumDescriptions": null,
+          "additionalProperties": null
+        }
+      },
+      "$ref": "",
+      "required": null,
+      "format": "",
+      "pattern": "",
+      "enum": null,
+      "enumDescriptions": null,
+      "additionalProperties": null
+    },
     "ListGroupsResponse": {
       "id": "ListGroupsResponse",
       "type": "object",
@@ -9728,7 +9994,7 @@
         "type": {
           "id": "",
           "type": "string",
-          "description": "Required. Immutable. The type of the Setting. .",
+          "description": "Required. Immutable. The type of the Setting.",
           "default": null,
           "properties": null,
           "$ref": "",
@@ -10326,6 +10592,12 @@
   "auth": {
     "oauth2": {
       "scopes": {
+        "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains": {
+          "description": "See and edit allowlisted domains in your Cloud Identity Organization"
+        },
+        "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly": {
+          "description": "See allowlisted domains in your Cloud Identity Organization"
+        },
         "https://www.googleapis.com/auth/cloud-identity.devices": {
           "description": "Private Service: https://www.googleapis.com/auth/cloud-identity.devices"
         },

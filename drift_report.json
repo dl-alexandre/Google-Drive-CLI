@@ -1,51 +1,56 @@
 {
-  "additive": 11,
+  "additive": 57,
   "apis": [
     {
       "api": "drive",
       "version": "v3",
-      "total_changes": 0,
-      "additive_changes": 0,
-      "risky_changes": 0,
-      "breaking_changes": 0,
-      "changes": [],
-      "has_breaking_change": false
-    },
-    {
-      "api": "gmail",
-      "version": "v1",
-      "total_changes": 4,
-      "additive_changes": 4,
+      "total_changes": 3,
+      "additive_changes": 3,
       "risky_changes": 0,
       "breaking_changes": 0,
       "changes": [
         {
           "severity": "additive",
           "category": "field",
-          "description": "New field added to BatchModifyMessagesRequest: removeClassificationLabelIds",
+          "description": "New field added to Approval: fileContentChangeBehavior",
           "api": "",
-          "field": "removeClassificationLabelIds"
+          "field": "fileContentChangeBehavior"
         },
         {
           "severity": "additive",
           "category": "field",
-          "description": "New field added to BatchModifyMessagesRequest: addClassificationLabels",
+          "description": "New field added to StartApprovalRequest: fileContentChangeBehavior",
           "api": "",
-          "field": "addClassificationLabels"
+          "field": "fileContentChangeBehavior"
         },
         {
           "severity": "additive",
-          "category": "field",
-          "description": "New field added to ModifyMessageRequest: addClassificationLabels",
-          "api": "",
-          "field": "addClassificationLabels"
-        },
+          "category": "parameter",
+          "description": "New parameter added to files.copy: copyComments",
+          "api": "drive",
+          "resource": "files",
+          "method": "copy",
+          "field": "copyComments"
+        }
+      ],
+      "has_breaking_change": false
+    },
+    {
+      "api": "gmail",
+      "version": "v1",
+      "total_changes": 1,
+      "additive_changes": 1,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [
         {
           "severity": "additive",
-          "category": "field",
-          "description": "New field added to ModifyMessageRequest: removeClassificationLabelIds",
-          "api": "",
-          "field": "removeClassificationLabelIds"
+          "category": "parameter",
+          "description": "New parameter added to users/settings/cse/keypairs.create: chainValidation",
+          "api": "gmail",
+          "resource": "users/settings/cse/keypairs",
+          "method": "create",
+          "field": "chainValidation"
         }
       ],
       "has_breaking_change": false
@@ -53,33 +58,114 @@
     {
       "api": "calendar",
       "version": "v3",
-      "total_changes": 3,
-      "additive_changes": 1,
-      "risky_changes": 2,
+      "total_changes": 13,
+      "additive_changes": 13,
+      "risky_changes": 0,
       "breaking_changes": 0,
       "changes": [
         {
           "severity": "additive",
           "category": "field",
-          "description": "New field added to EventAttendee: asyncOperation",
+          "description": "New field added to EventLabel: name",
           "api": "",
-          "field": "asyncOperation"
+          "field": "name"
         },
         {
-          "severity": "risky",
-          "category": "enum",
-          "description": "New enum value in calendarList/list.minAccessRole: writerWithoutPrivateAccess",
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to EventLabel: id",
           "api": "",
-          "field": "minAccessRole",
-          "new_value": "writerWithoutPrivateAccess"
+          "field": "id"
         },
         {
-          "severity": "risky",
-          "category": "enum",
-          "description": "New enum value in calendarList/watch.minAccessRole: writerWithoutPrivateAccess",
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to EventLabel: backgroundColor",
           "api": "",
-          "field": "minAccessRole",
-          "new_value": "writerWithoutPrivateAccess"
+          "field": "backgroundColor"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Calendar: labelProperties",
+          "api": "",
+          "field": "labelProperties"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to LabelProperties: eventLabels",
+          "api": "",
+          "field": "eventLabels"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Event: eventLabelId",
+          "api": "",
+          "field": "eventLabelId"
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: calendars.transferOwnership",
+          "api": "calendar",
+          "resource": "calendars",
+          "method": "transferOwnership"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to calendarList.list: showOwnOrganizationOnly",
+          "api": "calendar",
+          "resource": "calendarList",
+          "method": "list",
+          "field": "showOwnOrganizationOnly"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to calendarList.watch: showOwnOrganizationOnly",
+          "api": "calendar",
+          "resource": "calendarList",
+          "method": "watch",
+          "field": "showOwnOrganizationOnly"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to events.import: eventLabelVersion",
+          "api": "calendar",
+          "resource": "events",
+          "method": "import",
+          "field": "eventLabelVersion"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to events.patch: eventLabelVersion",
+          "api": "calendar",
+          "resource": "events",
+          "method": "patch",
+          "field": "eventLabelVersion"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to events.insert: eventLabelVersion",
+          "api": "calendar",
+          "resource": "events",
+          "method": "insert",
+          "field": "eventLabelVersion"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to events.update: eventLabelVersion",
+          "api": "calendar",
+          "resource": "events",
+          "method": "update",
+          "field": "eventLabelVersion"
         }
       ],
       "has_breaking_change": false
@@ -127,25 +213,306 @@
     {
       "api": "chat",
       "version": "v1",
-      "total_changes": 2,
-      "additive_changes": 1,
-      "risky_changes": 1,
+      "total_changes": 34,
+      "additive_changes": 31,
+      "risky_changes": 3,
       "breaking_changes": 0,
       "changes": [
         {
           "severity": "additive",
-          "category": "field",
-          "description": "New field added to Membership: affiliation",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.memberships.readonly",
           "api": "",
-          "field": "affiliation"
+          "new_value": "https://www.googleapis.com/auth/chat.app.all.memberships.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.spaces.pins.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.spaces.pins.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.spaces.pins",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.spaces.pins"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.spaces.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.app.all.spaces.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.users.availability",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.users.availability"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.users.availability.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.users.availability.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.messages.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.app.all.messages.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SearchMessageResult",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DoNotDisturbMetadata",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ListMessagePinsResponse",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: Principal",
+          "api": "chat"
         },
         {
           "severity": "risky",
           "category": "enum",
-          "description": "New enum value in QuotedMessageMetadata.quoteType: FORWARD",
+          "description": "New enum value in AppCommandMetadata.appCommandType: MESSAGE_ACTION",
           "api": "",
-          "field": "quoteType",
-          "new_value": "FORWARD"
+          "field": "appCommandType",
+          "new_value": "MESSAGE_ACTION"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AccessPermissionSetting",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: Audience",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: Availability",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SearchSpaceResult",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: MarkAsActiveRequest",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: MessagePin",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SearchMessagesRequest",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to SearchSpacesResponse: results",
+          "api": "",
+          "field": "results"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CustomStatus",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AccessPermissionSettings",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Message: markupSyntax",
+          "api": "",
+          "field": "markupSyntax"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: MarkAsDoNotDisturbRequest",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SearchMessagesResponse",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to AccessSettings: accessPermissionSettings",
+          "api": "",
+          "field": "accessPermissionSettings"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: MarkAsAwayRequest",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "resource",
+          "description": "New nested resource added: users.availability",
+          "api": "chat",
+          "resource": "users/availability"
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: spaces/messages.search",
+          "api": "chat",
+          "resource": "spaces/messages",
+          "method": "search"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to spaces/messages.list: markupSyntax",
+          "api": "chat",
+          "resource": "spaces/messages",
+          "method": "list",
+          "field": "markupSyntax"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to spaces/messages.get: markupSyntax",
+          "api": "chat",
+          "resource": "spaces/messages",
+          "method": "get",
+          "field": "markupSyntax"
+        },
+        {
+          "severity": "additive",
+          "category": "resource",
+          "description": "New nested resource added: spaces.messagePins",
+          "api": "chat",
+          "resource": "spaces/messagePins"
+        },
+        {
+          "severity": "risky",
+          "category": "scope",
+          "description": "OAuth scopes changed for spaces/spaceEvents.get",
+          "api": "chat",
+          "resource": "spaces/spaceEvents",
+          "method": "get",
+          "old_value": [
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ],
+          "new_value": [
+            "https://www.googleapis.com/auth/chat.app.all.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.all.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.all.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ]
+        },
+        {
+          "severity": "risky",
+          "category": "scope",
+          "description": "OAuth scopes changed for spaces/spaceEvents.list",
+          "api": "chat",
+          "resource": "spaces/spaceEvents",
+          "method": "list",
+          "old_value": [
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ],
+          "new_value": [
+            "https://www.googleapis.com/auth/chat.app.all.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.all.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.all.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ]
         }
       ],
       "has_breaking_change": false
@@ -153,24 +520,36 @@
     {
       "api": "admin",
       "version": "directory_v1",
-      "total_changes": 2,
-      "additive_changes": 2,
+      "total_changes": 4,
+      "additive_changes": 4,
       "risky_changes": 0,
       "breaking_changes": 0,
       "changes": [
         {
           "severity": "additive",
           "category": "field",
-          "description": "New field added to User: suspensionTime",
+          "description": "New field added to Group: externalIds",
           "api": "",
-          "field": "suspensionTime"
+          "field": "externalIds"
         },
         {
           "severity": "additive",
           "category": "field",
-          "description": "New field added to User: archivalTime",
+          "description": "New field added to RoleAssignment: expirationDetails",
           "api": "",
-          "field": "archivalTime"
+          "field": "expirationDetails"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ExternalId",
+          "api": "admin"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ExpirationDetails",
+          "api": "admin"
         }
       ],
       "has_breaking_change": false
@@ -178,42 +557,42 @@
     {
       "api": "cloudidentity",
       "version": "v1",
-      "total_changes": 4,
-      "additive_changes": 3,
-      "risky_changes": 1,
+      "total_changes": 5,
+      "additive_changes": 5,
+      "risky_changes": 0,
       "breaking_changes": 0,
       "changes": [
         {
-          "severity": "risky",
-          "category": "enum",
-          "description": "New enum value in Membership.type: CHROME_OS_DEVICE",
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/cloud-identity.allowlisteddomains",
           "api": "",
-          "field": "type",
-          "new_value": "CHROME_OS_DEVICE"
+          "new_value": "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains"
         },
         {
           "severity": "additive",
-          "category": "method",
-          "description": "New method added: policies.delete",
-          "api": "cloudidentity",
-          "resource": "policies",
-          "method": "delete"
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly"
         },
         {
           "severity": "additive",
-          "category": "method",
-          "description": "New method added: policies.patch",
-          "api": "cloudidentity",
-          "resource": "policies",
-          "method": "patch"
+          "category": "type",
+          "description": "New type added: ListAllowlistedDomainsResponse",
+          "api": "cloudidentity"
         },
         {
           "severity": "additive",
-          "category": "method",
-          "description": "New method added: policies.create",
-          "api": "cloudidentity",
-          "resource": "policies",
-          "method": "create"
+          "category": "type",
+          "description": "New type added: AllowlistedDomain",
+          "api": "cloudidentity"
+        },
+        {
+          "severity": "additive",
+          "category": "resource",
+          "description": "New resource added: allowlistedDomains",
+          "api": "cloudidentity"
         }
       ],
       "has_breaking_change": false
@@ -260,8 +639,8 @@
     }
   ],
   "breaking": 0,
-  "risky": 4,
-  "timestamp": "2026-06-21T06:59:16Z",
+  "risky": 3,
+  "timestamp": "2026-09-06T07:04:27Z",
   "total_apis": 14,
-  "total_changes": 15
+  "total_changes": 60
 }

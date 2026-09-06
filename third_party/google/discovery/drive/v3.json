@@ -523,7 +523,7 @@
           "id": "drive.approvals.list",
           "path": "files/{fileId}/approvals",
           "httpMethod": "GET",
-          "description": "Lists the approvals on a file. For more information, see [Manage approvals](https://developers.google.com/workspace/drive/api/guides/approvals).",
+          "description": "Lists the approvals on a file. For more information, see [Manage approvals](https://developers.google.com/workspace/drive/api/guides/approvals). By default, this method returns a minimal response that may not include the items array. To retrieve approval details, you must explicitly specify the fields you want using the `fields` query parameter. To return the exact fields you need, see [Return specific fields](https://developers.google.com/workspace/drive/api/guides/fields-parameter).",
           "parameters": {
             "fileId": {
               "id": "",
@@ -1019,7 +1019,7 @@
               "id": "",
               "type": "integer",
               "$ref": "",
-              "description": "The maximum number of changes to return per page.",
+              "description": "The maximum number of changes to return. The service may return fewer than this value. If unspecified, at most 100 changes will be returned. The maximum value is 1000; values above 1000 will be coerced to 1000.",
               "default": "100",
               "required": false,
               "pattern": "",
@@ -1269,7 +1269,7 @@
               "id": "",
               "type": "integer",
               "$ref": "",
-              "description": "The maximum number of changes to return per page.",
+              "description": "The maximum number of changes to return. The service may return fewer than this value. If unspecified, at most 100 changes will be returned. The maximum value is 1000; values above 1000 will be coerced to 1000.",
               "default": "100",
               "required": false,
               "pattern": "",
@@ -1636,7 +1636,7 @@
               "id": "",
               "type": "integer",
               "$ref": "",
-              "description": "The maximum number of comments to return per page.",
+              "description": "The maximum number of comments to return. The service may return fewer than this value. If unspecified, at most 20 comments will be returned. The maximum value is 100; values above 100 will be coerced to 100.",
               "default": "20",
               "required": false,
               "pattern": "",
@@ -1956,7 +1956,7 @@
               "id": "",
               "type": "integer",
               "$ref": "",
-              "description": "Maximum number of shared drives to return per page.",
+              "description": "The maximum number of shared drives to return. The service may return fewer than this value. If unspecified, at most 10 shared drives will be returned. The maximum value is 100; values above 100 will be coerced to 100.",
               "default": "10",
               "required": false,
               "pattern": "",
@@ -2131,6 +2131,22 @@
           "httpMethod": "POST",
           "description": "Creates a copy of a file and applies any requested updates with patch semantics. For more information, see [Create and manage files](https://developers.google.com/workspace/drive/api/guides/create-file).",
           "parameters": {
+            "copyComments": {
+              "id": "",
+              "type": "boolean",
+              "$ref": "",
+              "description": "Whether to copy the comments associated with the file.",
+              "default": "false",
+              "required": false,
+              "pattern": "",
+              "format": "",
+              "minimum": "",
+              "maximum": "",
+              "repeated": false,
+              "location": "query",
+              "enum": null,
+              "enumDescriptions": null
+            },
             "enforceSingleParent": {
               "id": "",
               "type": "boolean",
@@ -3112,7 +3128,7 @@
               "id": "",
               "type": "integer",
               "$ref": "",
-              "description": "The maximum number of files to return per page. Pages may be partial or empty even before reaching the end of the file list. If unspecified, at most 100 files are returned for shared drives, and the entire list of files for non-shared drives. The maximum value is 100; values above 100 are changed to 100.",
+              "description": "The maximum number of files to return. The service may return fewer than this value. If unspecified, at most 100 files will be returned for shared drives, and the entire list of files for non-shared drives. The maximum value is 1000; values above 1000 will be coerced to 1000.",
               "default": "100",
               "required": false,
               "pattern": "",
@@ -4188,7 +4204,7 @@
               "id": "",
               "type": "integer",
               "$ref": "",
-              "description": "The maximum number of permissions to return per page. When not set for files in a shared drive, at most 100 results will be returned. When not set for files that are not in a shared drive, the entire list will be returned.",
+              "description": "The maximum number of permissions to return. The service may return fewer than this value. If unspecified, at most 100 permissions will be returned for shared drives, and the entire list of permissions for non-shared drives. The maximum value is 100; values above 100 will be coerced to 100.",
               "default": null,
               "required": false,
               "pattern": "",
@@ -4704,7 +4720,7 @@
               "id": "",
               "type": "integer",
               "$ref": "",
-              "description": "The maximum number of replies to return per page.",
+              "description": "The maximum number of replies to return. The service may return fewer than this value. If unspecified, at most 20 replies will be returned. The maximum value is 100; values above 100 will be coerced to 100.",
               "default": "20",
               "required": false,
               "pattern": "",
@@ -4974,7 +4990,7 @@
               "id": "",
               "type": "integer",
               "$ref": "",
-              "description": "The maximum number of revisions to return per page.",
+              "description": "The maximum number of revisions to return. The service may return fewer than this value. If unspecified, at most 200 revisions will be returned. The maximum value is 1000; values above 1000 will be coerced to 1000.",
               "default": "200",
               "required": false,
               "pattern": "",
@@ -6581,6 +6597,28 @@
           "pattern": "",
           "enum": null,
           "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "fileContentChangeBehavior": {
+          "id": "",
+          "type": "string",
+          "description": "Output only. The behavior of the approval when the file content changes.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": [
+            "FILE_CONTENT_CHANGE_BEHAVIOR_UNSPECIFIED",
+            "RESET_APPROVAL",
+            "NO_APPROVAL_ACTION"
+          ],
+          "enumDescriptions": [
+            "The behavior is unspecified.",
+            "Any ReviewerResponse with a Response of APPROVED will be reset to NO_DECISION when the file content changes while the approval has a Status of IN_PROGRESS. When the approval has a Status of APPROVED and RESET_APPROVAL is selected, the file is locked.",
+            "No action is taken when the file content changes."
+          ],
           "additionalProperties": null
         },
         "initiator": {
@@ -8717,6 +8755,20 @@
               "id": "",
               "type": "boolean",
               "description": "Output only. Whether the current user is the pending owner of the file. Not populated for shared drive files.",
+              "default": null,
+              "properties": null,
+              "$ref": "",
+              "required": null,
+              "format": "",
+              "pattern": "",
+              "enum": null,
+              "enumDescriptions": null,
+              "additionalProperties": null
+            },
+            "canAccessViaGenAi": {
+              "id": "",
+              "type": "boolean",
+              "description": "Whether the current user can access this file via Gen AI features. For more information, see [Drive MCP file eligibility](https://developers.google.com/workspace/drive/api/guides/drive-mcp-server-file-eligibility).",
               "default": null,
               "properties": null,
               "$ref": "",
@@ -13293,6 +13345,28 @@
           "pattern": "",
           "enum": null,
           "enumDescriptions": null,
+          "additionalProperties": null
+        },
+        "fileContentChangeBehavior": {
+          "id": "",
+          "type": "string",
+          "description": "Optional. The behavior of the approval when the file content changes.",
+          "default": null,
+          "properties": null,
+          "$ref": "",
+          "required": null,
+          "format": "",
+          "pattern": "",
+          "enum": [
+            "FILE_CONTENT_CHANGE_BEHAVIOR_UNSPECIFIED",
+            "RESET_APPROVAL",
+            "NO_APPROVAL_ACTION"
+          ],
+          "enumDescriptions": [
+            "The behavior is unspecified.",
+            "Any ReviewerResponse with a Response of APPROVED will be reset to NO_DECISION when the file content changes while the approval has a Status of IN_PROGRESS. When the approval has a Status of APPROVED and RESET_APPROVAL is selected, the file is locked.",
+            "No action is taken when the file content changes."
+          ],
           "additionalProperties": null
         },
         "lockFile": {
