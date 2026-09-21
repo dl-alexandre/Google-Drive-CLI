@@ -14,7 +14,7 @@ require (
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/dl-alexandre/cli-tools v0.0.1
 	github.com/google/uuid v1.6.0
-	github.com/olekukonko/tablewriter v1.1.4
+	github.com/olekukonko/tablewriter v1.1.5
 	github.com/sahilm/fuzzy v0.1.3
 	github.com/schollz/progressbar/v3 v3.19.1
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
