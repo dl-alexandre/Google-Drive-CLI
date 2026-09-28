@@ -1,7 +1,7 @@
 cloud.google.com/go v0.123.0 h1:2NAUJwPR47q+E35uaJeYoNhuNEM9kM8SjgRgdeOJUSE=
 cloud.google.com/go v0.123.0/go.mod h1:xBoMV08QcqUGuPW65Qfm1o9Y4zKZBpGS+7bImXLTAZU=
-cloud.google.com/go/ai v1.1.0 h1:ATOPROam+qKn3FRoYBBERBkjLB5X8Uk11w1lIwiGeR8=
-cloud.google.com/go/ai v1.1.0/go.mod h1:ZLrUA7R41zv06KusVdKThmlkziII3itwhBJA/TBgFeE=
+cloud.google.com/go/ai v1.2.0 h1:nJ5KE2BI6bTjJOhQCqaJHYAITTUwpip4xy/DqxdBi68=
+cloud.google.com/go/ai v1.2.0/go.mod h1:Clu8eqi1+kDvspq0/6OCPQ5CAYA4RiylGaIP/GITrrI=
 cloud.google.com/go/apps v1.1.0 h1:cgjqvkNljLmywgU9lNq/FX4X9e43o7bai2Su0dVdQSc=
 cloud.google.com/go/apps v1.1.0/go.mod h1:DZZ/2L6f6hy0Hkm6F+2kbWVLgcbR0CacSf5ZCndQqD0=
 cloud.google.com/go/auth v0.23.2 h1:pxSCpfiji41hpzpPdMCftEUCezpgpqmmDdYiAjCKXxo=
