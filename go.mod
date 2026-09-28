@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	cloud.google.com/go/ai v1.1.0
-	cloud.google.com/go/apps v1.1.0
+	cloud.google.com/go/apps v1.3.0
 	cloud.google.com/go/iam v1.13.0
 	cloud.google.com/go/logging v1.19.1
 	cloud.google.com/go/longrunning v1.2.0
