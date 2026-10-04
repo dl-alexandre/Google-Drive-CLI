@@ -1,51 +1,56 @@
 {
-  "additive": 11,
+  "additive": 181,
   "apis": [
     {
       "api": "drive",
       "version": "v3",
-      "total_changes": 0,
-      "additive_changes": 0,
-      "risky_changes": 0,
-      "breaking_changes": 0,
-      "changes": [],
-      "has_breaking_change": false
-    },
-    {
-      "api": "gmail",
-      "version": "v1",
-      "total_changes": 4,
-      "additive_changes": 4,
+      "total_changes": 3,
+      "additive_changes": 3,
       "risky_changes": 0,
       "breaking_changes": 0,
       "changes": [
         {
           "severity": "additive",
           "category": "field",
-          "description": "New field added to BatchModifyMessagesRequest: removeClassificationLabelIds",
+          "description": "New field added to StartApprovalRequest: fileContentChangeBehavior",
           "api": "",
-          "field": "removeClassificationLabelIds"
+          "field": "fileContentChangeBehavior"
         },
         {
           "severity": "additive",
           "category": "field",
-          "description": "New field added to BatchModifyMessagesRequest: addClassificationLabels",
+          "description": "New field added to Approval: fileContentChangeBehavior",
           "api": "",
-          "field": "addClassificationLabels"
+          "field": "fileContentChangeBehavior"
         },
         {
           "severity": "additive",
-          "category": "field",
-          "description": "New field added to ModifyMessageRequest: addClassificationLabels",
-          "api": "",
-          "field": "addClassificationLabels"
-        },
+          "category": "parameter",
+          "description": "New parameter added to files.copy: copyComments",
+          "api": "drive",
+          "resource": "files",
+          "method": "copy",
+          "field": "copyComments"
+        }
+      ],
+      "has_breaking_change": false
+    },
+    {
+      "api": "gmail",
+      "version": "v1",
+      "total_changes": 1,
+      "additive_changes": 1,
+      "risky_changes": 0,
+      "breaking_changes": 0,
+      "changes": [
         {
           "severity": "additive",
-          "category": "field",
-          "description": "New field added to ModifyMessageRequest: removeClassificationLabelIds",
-          "api": "",
-          "field": "removeClassificationLabelIds"
+          "category": "parameter",
+          "description": "New parameter added to users/settings/cse/keypairs.create: chainValidation",
+          "api": "gmail",
+          "resource": "users/settings/cse/keypairs",
+          "method": "create",
+          "field": "chainValidation"
         }
       ],
       "has_breaking_change": false
@@ -53,33 +58,219 @@
     {
       "api": "calendar",
       "version": "v3",
-      "total_changes": 3,
-      "additive_changes": 1,
-      "risky_changes": 2,
+      "total_changes": 18,
+      "additive_changes": 14,
+      "risky_changes": 4,
       "breaking_changes": 0,
       "changes": [
         {
           "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/calendar.settings",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/calendar.settings"
+        },
+        {
+          "severity": "additive",
           "category": "field",
-          "description": "New field added to EventAttendee: asyncOperation",
+          "description": "New field added to Calendar: labelProperties",
           "api": "",
-          "field": "asyncOperation"
+          "field": "labelProperties"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to EventLabel: backgroundColor",
+          "api": "",
+          "field": "backgroundColor"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to EventLabel: id",
+          "api": "",
+          "field": "id"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to EventLabel: name",
+          "api": "",
+          "field": "name"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Event: eventLabelId",
+          "api": "",
+          "field": "eventLabelId"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to LabelProperties: eventLabels",
+          "api": "",
+          "field": "eventLabels"
         },
         {
           "severity": "risky",
-          "category": "enum",
-          "description": "New enum value in calendarList/list.minAccessRole: writerWithoutPrivateAccess",
-          "api": "",
-          "field": "minAccessRole",
-          "new_value": "writerWithoutPrivateAccess"
+          "category": "scope",
+          "description": "OAuth scopes changed for settings.list",
+          "api": "calendar",
+          "resource": "settings",
+          "method": "list",
+          "old_value": [
+            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.settings.readonly"
+          ],
+          "new_value": [
+            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.settings",
+            "https://www.googleapis.com/auth/calendar.settings.readonly"
+          ]
         },
         {
           "severity": "risky",
-          "category": "enum",
-          "description": "New enum value in calendarList/watch.minAccessRole: writerWithoutPrivateAccess",
-          "api": "",
-          "field": "minAccessRole",
-          "new_value": "writerWithoutPrivateAccess"
+          "category": "scope",
+          "description": "OAuth scopes changed for settings.watch",
+          "api": "calendar",
+          "resource": "settings",
+          "method": "watch",
+          "old_value": [
+            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.settings.readonly"
+          ],
+          "new_value": [
+            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.settings",
+            "https://www.googleapis.com/auth/calendar.settings.readonly"
+          ]
+        },
+        {
+          "severity": "risky",
+          "category": "scope",
+          "description": "OAuth scopes changed for settings.get",
+          "api": "calendar",
+          "resource": "settings",
+          "method": "get",
+          "old_value": [
+            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.settings.readonly"
+          ],
+          "new_value": [
+            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.settings",
+            "https://www.googleapis.com/auth/calendar.settings.readonly"
+          ]
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to events.import: eventLabelVersion",
+          "api": "calendar",
+          "resource": "events",
+          "method": "import",
+          "field": "eventLabelVersion"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to events.patch: eventLabelVersion",
+          "api": "calendar",
+          "resource": "events",
+          "method": "patch",
+          "field": "eventLabelVersion"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to events.update: eventLabelVersion",
+          "api": "calendar",
+          "resource": "events",
+          "method": "update",
+          "field": "eventLabelVersion"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to events.insert: eventLabelVersion",
+          "api": "calendar",
+          "resource": "events",
+          "method": "insert",
+          "field": "eventLabelVersion"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to calendarList.watch: showOwnOrganizationOnly",
+          "api": "calendar",
+          "resource": "calendarList",
+          "method": "watch",
+          "field": "showOwnOrganizationOnly"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to calendarList.list: showOwnOrganizationOnly",
+          "api": "calendar",
+          "resource": "calendarList",
+          "method": "list",
+          "field": "showOwnOrganizationOnly"
+        },
+        {
+          "severity": "risky",
+          "category": "scope",
+          "description": "OAuth scopes changed for channels.stop",
+          "api": "calendar",
+          "resource": "channels",
+          "method": "stop",
+          "old_value": [
+            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/calendar.acls",
+            "https://www.googleapis.com/auth/calendar.acls.readonly",
+            "https://www.googleapis.com/auth/calendar.app.created",
+            "https://www.googleapis.com/auth/calendar.calendarlist",
+            "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+            "https://www.googleapis.com/auth/calendar.events",
+            "https://www.googleapis.com/auth/calendar.events.freebusy",
+            "https://www.googleapis.com/auth/calendar.events.owned",
+            "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+            "https://www.googleapis.com/auth/calendar.events.public.readonly",
+            "https://www.googleapis.com/auth/calendar.events.readonly",
+            "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.settings.readonly"
+          ],
+          "new_value": [
+            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/calendar.acls",
+            "https://www.googleapis.com/auth/calendar.acls.readonly",
+            "https://www.googleapis.com/auth/calendar.app.created",
+            "https://www.googleapis.com/auth/calendar.calendarlist",
+            "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+            "https://www.googleapis.com/auth/calendar.events",
+            "https://www.googleapis.com/auth/calendar.events.freebusy",
+            "https://www.googleapis.com/auth/calendar.events.owned",
+            "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+            "https://www.googleapis.com/auth/calendar.events.public.readonly",
+            "https://www.googleapis.com/auth/calendar.events.readonly",
+            "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.settings",
+            "https://www.googleapis.com/auth/calendar.settings.readonly"
+          ]
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: calendars.transferOwnership",
+          "api": "calendar",
+          "resource": "calendars",
+          "method": "transferOwnership"
         }
       ],
       "has_breaking_change": false
@@ -97,55 +288,1132 @@
     {
       "api": "slides",
       "version": "v1",
-      "total_changes": 0,
-      "additive_changes": 0,
+      "total_changes": 34,
+      "additive_changes": 34,
       "risky_changes": 0,
       "breaking_changes": 0,
-      "changes": [],
+      "changes": [
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: TableCellTextRanges",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Presentation: commentsViewMode",
+          "api": "",
+          "field": "commentsViewMode"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Presentation: comments",
+          "api": "",
+          "field": "comments"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: InsertCommentRequest",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: InsertCommentResponse",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: PostAuthor",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ShapeTextAnchor",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AddCommentReplyRequest",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Response: addCommentReply",
+          "api": "",
+          "field": "addCommentReply"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Response: insertComment",
+          "api": "",
+          "field": "insertComment"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: addCommentReply",
+          "api": "",
+          "field": "addCommentReply"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: deleteCommentReply",
+          "api": "",
+          "field": "deleteCommentReply"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: updateCommentPost",
+          "api": "",
+          "field": "updateCommentPost"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: deleteComment",
+          "api": "",
+          "field": "deleteComment"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: insertComment",
+          "api": "",
+          "field": "insertComment"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CommentAnchor",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: TextRange",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Page: commentsViewMode",
+          "api": "",
+          "field": "commentsViewMode"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Page: commentAnchors",
+          "api": "",
+          "field": "commentAnchors"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Page: comments",
+          "api": "",
+          "field": "comments"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DeleteCommentReplyRequest",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ObjectAnchor",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: Post",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: TableCellAnchors",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: UpdateCommentPostRequest",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: TableCellTextAnchor",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CommentThread",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ShapeTextAnchors",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to BatchUpdatePresentationResponse: commentUpdateState",
+          "api": "",
+          "field": "commentUpdateState"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: TableAnchor",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DeleteCommentRequest",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AddCommentReplyResponse",
+          "api": "slides"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to presentations.get: commentsViewMode",
+          "api": "slides",
+          "resource": "presentations",
+          "method": "get",
+          "field": "commentsViewMode"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to presentations/pages.get: commentsViewMode",
+          "api": "slides",
+          "resource": "presentations/pages",
+          "method": "get",
+          "field": "commentsViewMode"
+        }
+      ],
       "has_breaking_change": false
     },
     {
       "api": "docs",
       "version": "v1",
-      "total_changes": 0,
-      "additive_changes": 0,
+      "total_changes": 59,
+      "additive_changes": 59,
       "risky_changes": 0,
       "breaking_changes": 0,
-      "changes": [],
+      "changes": [
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CreateDropdownDefinitionResponse",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Response: insertComment",
+          "api": "",
+          "field": "insertComment"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Response: insertDropdown",
+          "api": "",
+          "field": "insertDropdown"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Response: createDropdownDefinition",
+          "api": "",
+          "field": "createDropdownDefinition"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Response: addCommentReply",
+          "api": "",
+          "field": "addCommentReply"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: Post",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: InsertDropdownResponse",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DropdownDefinitionPropertiesSuggestionState",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SuggestionThread",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: Dropdown",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Document: commentsViewMode",
+          "api": "",
+          "field": "commentsViewMode"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Document: suggestions",
+          "api": "",
+          "field": "suggestions"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Document: comments",
+          "api": "",
+          "field": "comments"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DropdownDefinition",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AcceptSuggestionRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SuggestionResponse",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AddCommentReplyRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DeleteSuggestionRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: InsertCommentRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DeleteDropdownDefinitionRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CommentThread",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: UpdateDropdownPropertiesRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CreateDropdownDefinitionRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DropdownDefinitionProperties",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CommentAnchor",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: UpdateDropdownDefinitionPropertiesRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: UpdateCommentPostRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: RejectSuggestionRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: PostAuthor",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DeleteCommentReplyRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: addCommentReply",
+          "api": "",
+          "field": "addCommentReply"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: acceptSuggestion",
+          "api": "",
+          "field": "acceptSuggestion"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: insertDropdown",
+          "api": "",
+          "field": "insertDropdown"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: deleteSuggestion",
+          "api": "",
+          "field": "deleteSuggestion"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: rejectSuggestion",
+          "api": "",
+          "field": "rejectSuggestion"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: insertComment",
+          "api": "",
+          "field": "insertComment"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: deleteComment",
+          "api": "",
+          "field": "deleteComment"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: updateDropdownProperties",
+          "api": "",
+          "field": "updateDropdownProperties"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: updateDropdownDefinitionProperties",
+          "api": "",
+          "field": "updateDropdownDefinitionProperties"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: deleteDropdownDefinition",
+          "api": "",
+          "field": "deleteDropdownDefinition"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: updateCommentPost",
+          "api": "",
+          "field": "updateCommentPost"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: deleteCommentReply",
+          "api": "",
+          "field": "deleteCommentReply"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: createDropdownDefinition",
+          "api": "",
+          "field": "createDropdownDefinition"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DropdownPropertiesSuggestionState",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: InsertDropdownRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to ParagraphElement: dropdown",
+          "api": "",
+          "field": "dropdown"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SuggestedDropdownProperties",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DropdownOption",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to WriteControl: writeMode",
+          "api": "",
+          "field": "writeMode"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DeleteCommentRequest",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: InsertCommentResponse",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DropdownProperties",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SuggestedDropdownDefinitionProperties",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to DocumentTab: commentAnchors",
+          "api": "",
+          "field": "commentAnchors"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to DocumentTab: dropdownDefinitions",
+          "api": "",
+          "field": "dropdownDefinitions"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to BatchUpdateDocumentResponse: commentUpdateState",
+          "api": "",
+          "field": "commentUpdateState"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to BatchUpdateDocumentResponse: suggestionResponses",
+          "api": "",
+          "field": "suggestionResponses"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AddCommentReplyResponse",
+          "api": "docs"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to documents.get: commentsViewMode",
+          "api": "docs",
+          "resource": "documents",
+          "method": "get",
+          "field": "commentsViewMode"
+        }
+      ],
       "has_breaking_change": false
     },
     {
       "api": "sheets",
       "version": "v4",
-      "total_changes": 0,
-      "additive_changes": 0,
+      "total_changes": 25,
+      "additive_changes": 25,
       "risky_changes": 0,
       "breaking_changes": 0,
-      "changes": [],
+      "changes": [
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: PostAuthor",
+          "api": "sheets"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DeleteCommentReplyRequest",
+          "api": "sheets"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AddCommentReplyResponse",
+          "api": "sheets"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: InsertCommentRequest",
+          "api": "sheets"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CommentAnchor",
+          "api": "sheets"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AddCommentReplyRequest",
+          "api": "sheets"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Sheet: commentAnchors",
+          "api": "",
+          "field": "commentAnchors"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CommentThread",
+          "api": "sheets"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: addCommentReply",
+          "api": "",
+          "field": "addCommentReply"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: deleteCommentReply",
+          "api": "",
+          "field": "deleteCommentReply"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: updateCommentPost",
+          "api": "",
+          "field": "updateCommentPost"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: deleteComment",
+          "api": "",
+          "field": "deleteComment"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Request: insertComment",
+          "api": "",
+          "field": "insertComment"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Response: addCommentReply",
+          "api": "",
+          "field": "addCommentReply"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Response: insertComment",
+          "api": "",
+          "field": "insertComment"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DeleteCommentRequest",
+          "api": "sheets"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: Post",
+          "api": "sheets"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to BatchUpdateSpreadsheetResponse: commentUpdateState",
+          "api": "",
+          "field": "commentUpdateState"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to GetSpreadsheetByDataFilterRequest: commentsViewMode",
+          "api": "",
+          "field": "commentsViewMode"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: InsertCommentResponse",
+          "api": "sheets"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to BatchUpdateSpreadsheetRequest: commentsViewMode",
+          "api": "",
+          "field": "commentsViewMode"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: UpdateCommentPostRequest",
+          "api": "sheets"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Spreadsheet: comments",
+          "api": "",
+          "field": "comments"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Spreadsheet: commentsViewMode",
+          "api": "",
+          "field": "commentsViewMode"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to spreadsheets.get: commentsViewMode",
+          "api": "sheets",
+          "resource": "spreadsheets",
+          "method": "get",
+          "field": "commentsViewMode"
+        }
+      ],
       "has_breaking_change": false
     },
     {
       "api": "chat",
       "version": "v1",
-      "total_changes": 2,
-      "additive_changes": 1,
-      "risky_changes": 1,
+      "total_changes": 37,
+      "additive_changes": 34,
+      "risky_changes": 3,
       "breaking_changes": 0,
       "changes": [
         {
           "severity": "additive",
-          "category": "field",
-          "description": "New field added to Membership: affiliation",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.users.availability.readonly",
           "api": "",
-          "field": "affiliation"
+          "new_value": "https://www.googleapis.com/auth/chat.users.availability.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.users.availability",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.users.availability"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.memberships.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.app.all.memberships.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.spaces.pins",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.spaces.pins"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.spaces.pins.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.spaces.pins.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.messages.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.app.all.messages.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.spaces.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/chat.app.all.spaces.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to User: avatarUrl",
+          "api": "",
+          "field": "avatarUrl"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to User: email",
+          "api": "",
+          "field": "email"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: MarkAsActiveRequest",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to SearchSpacesResponse: results",
+          "api": "",
+          "field": "results"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Message: markupSyntax",
+          "api": "",
+          "field": "markupSyntax"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ListMessagePinsResponse",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: DoNotDisturbMetadata",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AccessPermissionSetting",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SearchMessagesRequest",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AccessPermissionSettings",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: Availability",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: CustomStatus",
+          "api": "chat"
         },
         {
           "severity": "risky",
           "category": "enum",
-          "description": "New enum value in QuotedMessageMetadata.quoteType: FORWARD",
+          "description": "New enum value in AppCommandMetadata.appCommandType: MESSAGE_ACTION",
           "api": "",
-          "field": "quoteType",
-          "new_value": "FORWARD"
+          "field": "appCommandType",
+          "new_value": "MESSAGE_ACTION"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SearchMessageResult",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: Principal",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SearchMessagesResponse",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: MessagePin",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to PermissionSettings: viewSpaceMembership",
+          "api": "",
+          "field": "viewSpaceMembership"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: MarkAsDoNotDisturbRequest",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: MarkAsAwayRequest",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: Audience",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to AccessSettings: accessPermissionSettings",
+          "api": "",
+          "field": "accessPermissionSettings"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: SearchSpaceResult",
+          "api": "chat"
+        },
+        {
+          "severity": "additive",
+          "category": "resource",
+          "description": "New nested resource added: users.availability",
+          "api": "chat",
+          "resource": "users/availability"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to spaces/messages.list: markupSyntax",
+          "api": "chat",
+          "resource": "spaces/messages",
+          "method": "list",
+          "field": "markupSyntax"
+        },
+        {
+          "severity": "additive",
+          "category": "parameter",
+          "description": "New parameter added to spaces/messages.get: markupSyntax",
+          "api": "chat",
+          "resource": "spaces/messages",
+          "method": "get",
+          "field": "markupSyntax"
+        },
+        {
+          "severity": "additive",
+          "category": "method",
+          "description": "New method added: spaces/messages.search",
+          "api": "chat",
+          "resource": "spaces/messages",
+          "method": "search"
+        },
+        {
+          "severity": "risky",
+          "category": "scope",
+          "description": "OAuth scopes changed for spaces/spaceEvents.list",
+          "api": "chat",
+          "resource": "spaces/spaceEvents",
+          "method": "list",
+          "old_value": [
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ],
+          "new_value": [
+            "https://www.googleapis.com/auth/chat.app.all.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.all.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.all.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ]
+        },
+        {
+          "severity": "risky",
+          "category": "scope",
+          "description": "OAuth scopes changed for spaces/spaceEvents.get",
+          "api": "chat",
+          "resource": "spaces/spaceEvents",
+          "method": "get",
+          "old_value": [
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ],
+          "new_value": [
+            "https://www.googleapis.com/auth/chat.app.all.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.all.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.all.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.app.memberships",
+            "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.app.messages.readonly",
+            "https://www.googleapis.com/auth/chat.app.spaces",
+            "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.memberships",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages",
+            "https://www.googleapis.com/auth/chat.messages.reactions",
+            "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.spaces",
+            "https://www.googleapis.com/auth/chat.spaces.readonly"
+          ]
+        },
+        {
+          "severity": "additive",
+          "category": "resource",
+          "description": "New nested resource added: spaces.messagePins",
+          "api": "chat",
+          "resource": "spaces/messagePins"
         }
       ],
       "has_breaking_change": false
@@ -153,24 +1421,36 @@
     {
       "api": "admin",
       "version": "directory_v1",
-      "total_changes": 2,
-      "additive_changes": 2,
+      "total_changes": 4,
+      "additive_changes": 4,
       "risky_changes": 0,
       "breaking_changes": 0,
       "changes": [
         {
           "severity": "additive",
           "category": "field",
-          "description": "New field added to User: suspensionTime",
+          "description": "New field added to RoleAssignment: expirationDetails",
           "api": "",
-          "field": "suspensionTime"
+          "field": "expirationDetails"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ExpirationDetails",
+          "api": "admin"
         },
         {
           "severity": "additive",
           "category": "field",
-          "description": "New field added to User: archivalTime",
+          "description": "New field added to Group: externalIds",
           "api": "",
-          "field": "archivalTime"
+          "field": "externalIds"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ExternalId",
+          "api": "admin"
         }
       ],
       "has_breaking_change": false
@@ -178,42 +1458,63 @@
     {
       "api": "cloudidentity",
       "version": "v1",
-      "total_changes": 4,
-      "additive_changes": 3,
+      "total_changes": 8,
+      "additive_changes": 7,
       "risky_changes": 1,
       "breaking_changes": 0,
       "changes": [
         {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly"
+        },
+        {
+          "severity": "additive",
+          "category": "scope",
+          "description": "New OAuth scope available: https://www.googleapis.com/auth/cloud-identity.allowlisteddomains",
+          "api": "",
+          "new_value": "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains"
+        },
+        {
+          "severity": "additive",
+          "category": "field",
+          "description": "New field added to Group: externalIds",
+          "api": "",
+          "field": "externalIds"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: AllowlistedDomain",
+          "api": "cloudidentity"
+        },
+        {
+          "severity": "additive",
+          "category": "type",
+          "description": "New type added: ListAllowlistedDomainsResponse",
+          "api": "cloudidentity"
+        },
+        {
           "severity": "risky",
           "category": "enum",
-          "description": "New enum value in Membership.type: CHROME_OS_DEVICE",
+          "description": "New enum value in GoogleAppsCloudidentityDevicesV1Device.deviceType: GOOGLEBOOK",
           "api": "",
-          "field": "type",
-          "new_value": "CHROME_OS_DEVICE"
+          "field": "deviceType",
+          "new_value": "GOOGLEBOOK"
         },
         {
           "severity": "additive",
-          "category": "method",
-          "description": "New method added: policies.delete",
-          "api": "cloudidentity",
-          "resource": "policies",
-          "method": "delete"
+          "category": "type",
+          "description": "New type added: ExternalId",
+          "api": "cloudidentity"
         },
         {
           "severity": "additive",
-          "category": "method",
-          "description": "New method added: policies.patch",
-          "api": "cloudidentity",
-          "resource": "policies",
-          "method": "patch"
-        },
-        {
-          "severity": "additive",
-          "category": "method",
-          "description": "New method added: policies.create",
-          "api": "cloudidentity",
-          "resource": "policies",
-          "method": "create"
+          "category": "resource",
+          "description": "New resource added: allowlistedDomains",
+          "api": "cloudidentity"
         }
       ],
       "has_breaking_change": false
@@ -260,8 +1561,8 @@
     }
   ],
   "breaking": 0,
-  "risky": 4,
-  "timestamp": "2026-06-21T06:59:16Z",
+  "risky": 8,
+  "timestamp": "2026-10-04T08:18:15Z",
   "total_apis": 14,
-  "total_changes": 15
+  "total_changes": 189
 }

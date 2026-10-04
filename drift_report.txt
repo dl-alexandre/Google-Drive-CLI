@@ -1,39 +1,213 @@
 Checking for API drift...
   Checking drive v3...
-    ✓ No changes detected
+    ✗ 3 change(s) detected (3 additive, 0 risky, 0 breaking):
+      - additive (field): New field added to StartApprovalRequest: fileContentChangeBehavior
+      - additive (field): New field added to Approval: fileContentChangeBehavior
+      - additive (parameter): New parameter added to files.copy: copyComments
   Checking gmail v1...
-    ✗ 4 change(s) detected (4 additive, 0 risky, 0 breaking):
-      - additive (field): New field added to BatchModifyMessagesRequest: removeClassificationLabelIds
-      - additive (field): New field added to BatchModifyMessagesRequest: addClassificationLabels
-      - additive (field): New field added to ModifyMessageRequest: addClassificationLabels
-      - additive (field): New field added to ModifyMessageRequest: removeClassificationLabelIds
+    ✗ 1 change(s) detected (1 additive, 0 risky, 0 breaking):
+      - additive (parameter): New parameter added to users/settings/cse/keypairs.create: chainValidation
   Checking calendar v3...
-    ✗ 3 change(s) detected (1 additive, 2 risky, 0 breaking):
-      - additive (field): New field added to EventAttendee: asyncOperation
-      - risky (enum): New enum value in calendarList/list.minAccessRole: writerWithoutPrivateAccess
-      - risky (enum): New enum value in calendarList/watch.minAccessRole: writerWithoutPrivateAccess
+    ✗ 18 change(s) detected (14 additive, 4 risky, 0 breaking):
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/calendar.settings
+      - additive (field): New field added to Calendar: labelProperties
+      - additive (field): New field added to EventLabel: backgroundColor
+      - additive (field): New field added to EventLabel: id
+      - additive (field): New field added to EventLabel: name
+      - additive (field): New field added to Event: eventLabelId
+      - additive (field): New field added to LabelProperties: eventLabels
+      - risky (scope): OAuth scopes changed for settings.list
+      - risky (scope): OAuth scopes changed for settings.watch
+      - risky (scope): OAuth scopes changed for settings.get
+      - additive (parameter): New parameter added to events.import: eventLabelVersion
+      - additive (parameter): New parameter added to events.patch: eventLabelVersion
+      - additive (parameter): New parameter added to events.update: eventLabelVersion
+      - additive (parameter): New parameter added to events.insert: eventLabelVersion
+      - additive (parameter): New parameter added to calendarList.watch: showOwnOrganizationOnly
+      - additive (parameter): New parameter added to calendarList.list: showOwnOrganizationOnly
+      - risky (scope): OAuth scopes changed for channels.stop
+      - additive (method): New method added: calendars.transferOwnership
   Checking people v1...
     ✓ No changes detected
   Checking slides v1...
-    ✓ No changes detected
+    ✗ 34 change(s) detected (34 additive, 0 risky, 0 breaking):
+      - additive (type): New type added: TableCellTextRanges
+      - additive (field): New field added to Presentation: commentsViewMode
+      - additive (field): New field added to Presentation: comments
+      - additive (type): New type added: InsertCommentRequest
+      - additive (type): New type added: InsertCommentResponse
+      - additive (type): New type added: PostAuthor
+      - additive (type): New type added: ShapeTextAnchor
+      - additive (type): New type added: AddCommentReplyRequest
+      - additive (field): New field added to Response: addCommentReply
+      - additive (field): New field added to Response: insertComment
+      - additive (field): New field added to Request: addCommentReply
+      - additive (field): New field added to Request: deleteCommentReply
+      - additive (field): New field added to Request: updateCommentPost
+      - additive (field): New field added to Request: deleteComment
+      - additive (field): New field added to Request: insertComment
+      - additive (type): New type added: CommentAnchor
+      - additive (type): New type added: TextRange
+      - additive (field): New field added to Page: commentsViewMode
+      - additive (field): New field added to Page: commentAnchors
+      - additive (field): New field added to Page: comments
+      - additive (type): New type added: DeleteCommentReplyRequest
+      - additive (type): New type added: ObjectAnchor
+      - additive (type): New type added: Post
+      - additive (type): New type added: TableCellAnchors
+      - additive (type): New type added: UpdateCommentPostRequest
+      - additive (type): New type added: TableCellTextAnchor
+      - additive (type): New type added: CommentThread
+      - additive (type): New type added: ShapeTextAnchors
+      - additive (field): New field added to BatchUpdatePresentationResponse: commentUpdateState
+      - additive (type): New type added: TableAnchor
+      - additive (type): New type added: DeleteCommentRequest
+      - additive (type): New type added: AddCommentReplyResponse
+      - additive (parameter): New parameter added to presentations.get: commentsViewMode
+      - additive (parameter): New parameter added to presentations/pages.get: commentsViewMode
   Checking docs v1...
-    ✓ No changes detected
+    ✗ 59 change(s) detected (59 additive, 0 risky, 0 breaking):
+      - additive (type): New type added: CreateDropdownDefinitionResponse
+      - additive (field): New field added to Response: insertComment
+      - additive (field): New field added to Response: insertDropdown
+      - additive (field): New field added to Response: createDropdownDefinition
+      - additive (field): New field added to Response: addCommentReply
+      - additive (type): New type added: Post
+      - additive (type): New type added: InsertDropdownResponse
+      - additive (type): New type added: DropdownDefinitionPropertiesSuggestionState
+      - additive (type): New type added: SuggestionThread
+      - additive (type): New type added: Dropdown
+      - additive (field): New field added to Document: commentsViewMode
+      - additive (field): New field added to Document: suggestions
+      - additive (field): New field added to Document: comments
+      - additive (type): New type added: DropdownDefinition
+      - additive (type): New type added: AcceptSuggestionRequest
+      - additive (type): New type added: SuggestionResponse
+      - additive (type): New type added: AddCommentReplyRequest
+      - additive (type): New type added: DeleteSuggestionRequest
+      - additive (type): New type added: InsertCommentRequest
+      - additive (type): New type added: DeleteDropdownDefinitionRequest
+      - additive (type): New type added: CommentThread
+      - additive (type): New type added: UpdateDropdownPropertiesRequest
+      - additive (type): New type added: CreateDropdownDefinitionRequest
+      - additive (type): New type added: DropdownDefinitionProperties
+      - additive (type): New type added: CommentAnchor
+      - additive (type): New type added: UpdateDropdownDefinitionPropertiesRequest
+      - additive (type): New type added: UpdateCommentPostRequest
+      - additive (type): New type added: RejectSuggestionRequest
+      - additive (type): New type added: PostAuthor
+      - additive (type): New type added: DeleteCommentReplyRequest
+      - additive (field): New field added to Request: addCommentReply
+      - additive (field): New field added to Request: acceptSuggestion
+      - additive (field): New field added to Request: insertDropdown
+      - additive (field): New field added to Request: deleteSuggestion
+      - additive (field): New field added to Request: rejectSuggestion
+      - additive (field): New field added to Request: insertComment
+      - additive (field): New field added to Request: deleteComment
+      - additive (field): New field added to Request: updateDropdownProperties
+      - additive (field): New field added to Request: updateDropdownDefinitionProperties
+      - additive (field): New field added to Request: deleteDropdownDefinition
+      - additive (field): New field added to Request: updateCommentPost
+      - additive (field): New field added to Request: deleteCommentReply
+      - additive (field): New field added to Request: createDropdownDefinition
+      - additive (type): New type added: DropdownPropertiesSuggestionState
+      - additive (type): New type added: InsertDropdownRequest
+      - additive (field): New field added to ParagraphElement: dropdown
+      - additive (type): New type added: SuggestedDropdownProperties
+      - additive (type): New type added: DropdownOption
+      - additive (field): New field added to WriteControl: writeMode
+      - additive (type): New type added: DeleteCommentRequest
+      - additive (type): New type added: InsertCommentResponse
+      - additive (type): New type added: DropdownProperties
+      - additive (type): New type added: SuggestedDropdownDefinitionProperties
+      - additive (field): New field added to DocumentTab: commentAnchors
+      - additive (field): New field added to DocumentTab: dropdownDefinitions
+      - additive (field): New field added to BatchUpdateDocumentResponse: commentUpdateState
+      - additive (field): New field added to BatchUpdateDocumentResponse: suggestionResponses
+      - additive (type): New type added: AddCommentReplyResponse
+      - additive (parameter): New parameter added to documents.get: commentsViewMode
   Checking sheets v4...
-    ✓ No changes detected
+    ✗ 25 change(s) detected (25 additive, 0 risky, 0 breaking):
+      - additive (type): New type added: PostAuthor
+      - additive (type): New type added: DeleteCommentReplyRequest
+      - additive (type): New type added: AddCommentReplyResponse
+      - additive (type): New type added: InsertCommentRequest
+      - additive (type): New type added: CommentAnchor
+      - additive (type): New type added: AddCommentReplyRequest
+      - additive (field): New field added to Sheet: commentAnchors
+      - additive (type): New type added: CommentThread
+      - additive (field): New field added to Request: addCommentReply
+      - additive (field): New field added to Request: deleteCommentReply
+      - additive (field): New field added to Request: updateCommentPost
+      - additive (field): New field added to Request: deleteComment
+      - additive (field): New field added to Request: insertComment
+      - additive (field): New field added to Response: addCommentReply
+      - additive (field): New field added to Response: insertComment
+      - additive (type): New type added: DeleteCommentRequest
+      - additive (type): New type added: Post
+      - additive (field): New field added to BatchUpdateSpreadsheetResponse: commentUpdateState
+      - additive (field): New field added to GetSpreadsheetByDataFilterRequest: commentsViewMode
+      - additive (type): New type added: InsertCommentResponse
+      - additive (field): New field added to BatchUpdateSpreadsheetRequest: commentsViewMode
+      - additive (type): New type added: UpdateCommentPostRequest
+      - additive (field): New field added to Spreadsheet: comments
+      - additive (field): New field added to Spreadsheet: commentsViewMode
+      - additive (parameter): New parameter added to spreadsheets.get: commentsViewMode
   Checking chat v1...
-    ✗ 2 change(s) detected (1 additive, 1 risky, 0 breaking):
-      - additive (field): New field added to Membership: affiliation
-      - risky (enum): New enum value in QuotedMessageMetadata.quoteType: FORWARD
+    ✗ 37 change(s) detected (34 additive, 3 risky, 0 breaking):
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.users.availability.readonly
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.users.availability
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.memberships.readonly
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.spaces.pins
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.spaces.pins.readonly
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.messages.readonly
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/chat.app.all.spaces.readonly
+      - additive (field): New field added to User: avatarUrl
+      - additive (field): New field added to User: email
+      - additive (type): New type added: MarkAsActiveRequest
+      - additive (field): New field added to SearchSpacesResponse: results
+      - additive (field): New field added to Message: markupSyntax
+      - additive (type): New type added: ListMessagePinsResponse
+      - additive (type): New type added: DoNotDisturbMetadata
+      - additive (type): New type added: AccessPermissionSetting
+      - additive (type): New type added: SearchMessagesRequest
+      - additive (type): New type added: AccessPermissionSettings
+      - additive (type): New type added: Availability
+      - additive (type): New type added: CustomStatus
+      - risky (enum): New enum value in AppCommandMetadata.appCommandType: MESSAGE_ACTION
+      - additive (type): New type added: SearchMessageResult
+      - additive (type): New type added: Principal
+      - additive (type): New type added: SearchMessagesResponse
+      - additive (type): New type added: MessagePin
+      - additive (field): New field added to PermissionSettings: viewSpaceMembership
+      - additive (type): New type added: MarkAsDoNotDisturbRequest
+      - additive (type): New type added: MarkAsAwayRequest
+      - additive (type): New type added: Audience
+      - additive (field): New field added to AccessSettings: accessPermissionSettings
+      - additive (type): New type added: SearchSpaceResult
+      - additive (resource): New nested resource added: users.availability
+      - additive (parameter): New parameter added to spaces/messages.list: markupSyntax
+      - additive (parameter): New parameter added to spaces/messages.get: markupSyntax
+      - additive (method): New method added: spaces/messages.search
+      - risky (scope): OAuth scopes changed for spaces/spaceEvents.list
+      - risky (scope): OAuth scopes changed for spaces/spaceEvents.get
+      - additive (resource): New nested resource added: spaces.messagePins
   Checking admin directory_v1...
-    ✗ 2 change(s) detected (2 additive, 0 risky, 0 breaking):
-      - additive (field): New field added to User: suspensionTime
-      - additive (field): New field added to User: archivalTime
+    ✗ 4 change(s) detected (4 additive, 0 risky, 0 breaking):
+      - additive (field): New field added to RoleAssignment: expirationDetails
+      - additive (type): New type added: ExpirationDetails
+      - additive (field): New field added to Group: externalIds
+      - additive (type): New type added: ExternalId
   Checking cloudidentity v1...
-    ✗ 4 change(s) detected (3 additive, 1 risky, 0 breaking):
-      - risky (enum): New enum value in Membership.type: CHROME_OS_DEVICE
-      - additive (method): New method added: policies.delete
-      - additive (method): New method added: policies.patch
-      - additive (method): New method added: policies.create
+    ✗ 8 change(s) detected (7 additive, 1 risky, 0 breaking):
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly
+      - additive (scope): New OAuth scope available: https://www.googleapis.com/auth/cloud-identity.allowlisteddomains
+      - additive (field): New field added to Group: externalIds
+      - additive (type): New type added: AllowlistedDomain
+      - additive (type): New type added: ListAllowlistedDomainsResponse
+      - risky (enum): New enum value in GoogleAppsCloudidentityDevicesV1Device.deviceType: GOOGLEBOOK
+      - additive (type): New type added: ExternalId
+      - additive (resource): New resource added: allowlistedDomains
   Checking drivelabels v2...
     ✓ No changes detected
   Checking script v1...

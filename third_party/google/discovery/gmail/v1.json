@@ -2530,6 +2530,28 @@
                       "httpMethod": "POST",
                       "description": "Creates and uploads a client-side encryption S/MIME public key certificate chain and private key metadata for the authenticated user. For administrators managing identities and keypairs for users in their organization, requests require authorization with a [service account](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) that has [domain-wide delegation authority](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#delegatingauthority) to impersonate users with the `https://www.googleapis.com/auth/gmail.settings.basic` scope. For users managing their own identities and keypairs, requests require [hardware key encryption](https://support.google.com/a/answer/14153163) turned on and configured.",
                       "parameters": {
+                        "chainValidation": {
+                          "id": "",
+                          "type": "string",
+                          "$ref": "",
+                          "description": "The type of certificate chain validation to perform at creation. The request will be rejected if the uploaded chain fails to satisfy the requested validation checks. When unspecified, this parameter defaults to `all`.",
+                          "default": "all",
+                          "required": false,
+                          "pattern": "",
+                          "format": "",
+                          "minimum": "",
+                          "maximum": "",
+                          "repeated": false,
+                          "location": "query",
+                          "enum": [
+                            "all",
+                            "none"
+                          ],
+                          "enumDescriptions": [
+                            "Enable all certificate chain validation and certificate revocation checks. Recommended for normal use.",
+                            "Disable all certificate chain validation and certificate revocation checks. This may be useful when deliberately creating key pairs with invalid, out-of-use certificate chains to be used only for decryption of historical S/MIME messages. Key pairs created with invalid or revoked certificates cannot be used in a CseIdentity object."
+                          ]
+                        },
                         "userId": {
                           "id": "",
                           "type": "string",
