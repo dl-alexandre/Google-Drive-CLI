@@ -54,16 +54,6 @@ jobs:
         go-version-file: go.mod
         cache: true
     
-    - name: Install protoc and tools
-      run: |
-        # Install protoc
-        PROTOC_VERSION=24.4
-        curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip"
-        sudo unzip -o "protoc-${PROTOC_VERSION}-linux-x86_64.zip" -d /usr/local
-        rm "protoc-${PROTOC_VERSION}-linux-x86_64.zip"
-        
-        echo "✓ Installed protoc ${PROTOC_VERSION}"
-    
     - name: Check for proto drift
       id: check
       run: |
@@ -145,6 +135,20 @@ jobs:
           echo "✓ No gRPC drift detected"
         fi
         
+    - name: Install protoc
+      if: steps.check.outputs.drift_detected == 'true' && !inputs.dry_run
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        PROTOC_VERSION=24.4
+        archive="protoc-${PROTOC_VERSION}-linux-x86_64.zip"
+        gh release download "v${PROTOC_VERSION}" \
+          --repo protocolbuffers/protobuf --pattern "$archive"
+        unzip -t "$archive"
+        sudo unzip -o "$archive" -d /usr/local
+        rm "$archive"
+        protoc --version
+
     - name: Generate Go code from protos (if drift detected)
       if: steps.check.outputs.drift_detected == 'true' && !inputs.dry_run
       run: |
@@ -185,7 +189,7 @@ jobs:
     - name: Run tests
       if: steps.check.outputs.drift_detected == 'true' && !inputs.dry_run
       run: |
-        go test ./internal/google/generated/... -v || true
+        go test ./internal/google/generated/... -v
     
     - name: Create Pull Request
       if: steps.check.outputs.drift_detected == 'true' && !inputs.dry_run
