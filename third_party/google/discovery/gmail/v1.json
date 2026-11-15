@@ -177,6 +177,8 @@
                 "https://mail.google.com/",
                 "https://www.googleapis.com/auth/gmail.addons.current.action.compose",
                 "https://www.googleapis.com/auth/gmail.compose",
+                "https://www.googleapis.com/auth/gmail.drafts",
+                "https://www.googleapis.com/auth/gmail.drafts.create",
                 "https://www.googleapis.com/auth/gmail.modify"
               ],
               "supportsMediaUpload": true,
@@ -242,6 +244,7 @@
                 "https://mail.google.com/",
                 "https://www.googleapis.com/auth/gmail.addons.current.action.compose",
                 "https://www.googleapis.com/auth/gmail.compose",
+                "https://www.googleapis.com/auth/gmail.drafts",
                 "https://www.googleapis.com/auth/gmail.modify"
               ],
               "supportsMediaUpload": false,
@@ -321,6 +324,8 @@
               "scopes": [
                 "https://mail.google.com/",
                 "https://www.googleapis.com/auth/gmail.compose",
+                "https://www.googleapis.com/auth/gmail.drafts",
+                "https://www.googleapis.com/auth/gmail.drafts.readonly",
                 "https://www.googleapis.com/auth/gmail.modify",
                 "https://www.googleapis.com/auth/gmail.readonly"
               ],
@@ -423,6 +428,8 @@
               "scopes": [
                 "https://mail.google.com/",
                 "https://www.googleapis.com/auth/gmail.compose",
+                "https://www.googleapis.com/auth/gmail.drafts",
+                "https://www.googleapis.com/auth/gmail.drafts.readonly",
                 "https://www.googleapis.com/auth/gmail.modify",
                 "https://www.googleapis.com/auth/gmail.readonly"
               ],
@@ -539,6 +546,7 @@
                 "https://mail.google.com/",
                 "https://www.googleapis.com/auth/gmail.addons.current.action.compose",
                 "https://www.googleapis.com/auth/gmail.compose",
+                "https://www.googleapis.com/auth/gmail.drafts",
                 "https://www.googleapis.com/auth/gmail.modify"
               ],
               "supportsMediaUpload": true,
@@ -685,6 +693,8 @@
               },
               "scopes": [
                 "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.readonly",
                 "https://www.googleapis.com/auth/gmail.metadata",
                 "https://www.googleapis.com/auth/gmail.modify",
                 "https://www.googleapis.com/auth/gmail.readonly"
@@ -733,6 +743,7 @@
               "scopes": [
                 "https://mail.google.com/",
                 "https://www.googleapis.com/auth/gmail.labels",
+                "https://www.googleapis.com/auth/gmail.labels.create",
                 "https://www.googleapis.com/auth/gmail.modify"
               ],
               "supportsMediaUpload": false,
@@ -835,6 +846,7 @@
               "scopes": [
                 "https://mail.google.com/",
                 "https://www.googleapis.com/auth/gmail.labels",
+                "https://www.googleapis.com/auth/gmail.labels.readonly",
                 "https://www.googleapis.com/auth/gmail.metadata",
                 "https://www.googleapis.com/auth/gmail.modify",
                 "https://www.googleapis.com/auth/gmail.readonly"
@@ -874,6 +886,7 @@
               "scopes": [
                 "https://mail.google.com/",
                 "https://www.googleapis.com/auth/gmail.labels",
+                "https://www.googleapis.com/auth/gmail.labels.readonly",
                 "https://www.googleapis.com/auth/gmail.metadata",
                 "https://www.googleapis.com/auth/gmail.modify",
                 "https://www.googleapis.com/auth/gmail.readonly"
@@ -1030,7 +1043,9 @@
                 "type": ""
               },
               "scopes": [
-                "https://mail.google.com/"
+                "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.delete"
               ],
               "supportsMediaUpload": false,
               "supportsMediaDownload": false,
@@ -1066,6 +1081,9 @@
               },
               "scopes": [
                 "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.delete",
+                "https://www.googleapis.com/auth/gmail.messages.modify",
                 "https://www.googleapis.com/auth/gmail.modify"
               ],
               "supportsMediaUpload": false,
@@ -1113,7 +1131,9 @@
                 }
               },
               "scopes": [
-                "https://mail.google.com/"
+                "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.delete"
               ],
               "supportsMediaUpload": false,
               "supportsMediaDownload": false,
@@ -1210,6 +1230,8 @@
                 "https://www.googleapis.com/auth/gmail.addons.current.message.action",
                 "https://www.googleapis.com/auth/gmail.addons.current.message.metadata",
                 "https://www.googleapis.com/auth/gmail.addons.current.message.readonly",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.readonly",
                 "https://www.googleapis.com/auth/gmail.metadata",
                 "https://www.googleapis.com/auth/gmail.modify",
                 "https://www.googleapis.com/auth/gmail.readonly"
@@ -1548,6 +1570,8 @@
               },
               "scopes": [
                 "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.readonly",
                 "https://www.googleapis.com/auth/gmail.metadata",
                 "https://www.googleapis.com/auth/gmail.modify",
                 "https://www.googleapis.com/auth/gmail.readonly"
@@ -1606,6 +1630,9 @@
               },
               "scopes": [
                 "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.delete",
+                "https://www.googleapis.com/auth/gmail.messages.modify",
                 "https://www.googleapis.com/auth/gmail.modify"
               ],
               "supportsMediaUpload": false,
@@ -1649,7 +1676,8 @@
                 "https://www.googleapis.com/auth/gmail.addons.current.action.compose",
                 "https://www.googleapis.com/auth/gmail.compose",
                 "https://www.googleapis.com/auth/gmail.modify",
-                "https://www.googleapis.com/auth/gmail.send"
+                "https://www.googleapis.com/auth/gmail.send",
+                "https://www.googleapis.com/auth/gmail.send.self"
               ],
               "supportsMediaUpload": true,
               "supportsMediaDownload": false,
@@ -1716,6 +1744,8 @@
               },
               "scopes": [
                 "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.delete",
                 "https://www.googleapis.com/auth/gmail.modify"
               ],
               "supportsMediaUpload": false,
@@ -1768,6 +1798,8 @@
               },
               "scopes": [
                 "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.delete",
                 "https://www.googleapis.com/auth/gmail.modify"
               ],
               "supportsMediaUpload": false,
@@ -1842,6 +1874,8 @@
                     "https://mail.google.com/",
                     "https://www.googleapis.com/auth/gmail.addons.current.message.action",
                     "https://www.googleapis.com/auth/gmail.addons.current.message.readonly",
+                    "https://www.googleapis.com/auth/gmail.messages",
+                    "https://www.googleapis.com/auth/gmail.messages.readonly",
                     "https://www.googleapis.com/auth/gmail.modify",
                     "https://www.googleapis.com/auth/gmail.readonly"
                   ],
@@ -2530,6 +2564,28 @@
                       "httpMethod": "POST",
                       "description": "Creates and uploads a client-side encryption S/MIME public key certificate chain and private key metadata for the authenticated user. For administrators managing identities and keypairs for users in their organization, requests require authorization with a [service account](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) that has [domain-wide delegation authority](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#delegatingauthority) to impersonate users with the `https://www.googleapis.com/auth/gmail.settings.basic` scope. For users managing their own identities and keypairs, requests require [hardware key encryption](https://support.google.com/a/answer/14153163) turned on and configured.",
                       "parameters": {
+                        "chainValidation": {
+                          "id": "",
+                          "type": "string",
+                          "$ref": "",
+                          "description": "The type of certificate chain validation to perform at creation. The request will be rejected if the uploaded chain fails to satisfy the requested validation checks. When unspecified, this parameter defaults to `all`.",
+                          "default": "all",
+                          "required": false,
+                          "pattern": "",
+                          "format": "",
+                          "minimum": "",
+                          "maximum": "",
+                          "repeated": false,
+                          "location": "query",
+                          "enum": [
+                            "all",
+                            "none"
+                          ],
+                          "enumDescriptions": [
+                            "Enable all certificate chain validation and certificate revocation checks. Recommended for normal use.",
+                            "Disable all certificate chain validation and certificate revocation checks. This may be useful when deliberately creating key pairs with invalid, out-of-use certificate chains to be used only for decryption of historical S/MIME messages. Key pairs created with invalid or revoked certificates cannot be used in a CseIdentity object."
+                          ]
+                        },
                         "userId": {
                           "id": "",
                           "type": "string",
@@ -3076,7 +3132,8 @@
                     "type": ""
                   },
                   "scopes": [
-                    "https://www.googleapis.com/auth/gmail.settings.basic"
+                    "https://www.googleapis.com/auth/gmail.settings.basic",
+                    "https://www.googleapis.com/auth/gmail.settings.filters"
                   ],
                   "supportsMediaUpload": false,
                   "supportsMediaDownload": false,
@@ -3123,7 +3180,8 @@
                     }
                   },
                   "scopes": [
-                    "https://www.googleapis.com/auth/gmail.settings.basic"
+                    "https://www.googleapis.com/auth/gmail.settings.basic",
+                    "https://www.googleapis.com/auth/gmail.settings.filters"
                   ],
                   "supportsMediaUpload": false,
                   "supportsMediaDownload": false,
@@ -3177,7 +3235,9 @@
                     "https://mail.google.com/",
                     "https://www.googleapis.com/auth/gmail.modify",
                     "https://www.googleapis.com/auth/gmail.readonly",
-                    "https://www.googleapis.com/auth/gmail.settings.basic"
+                    "https://www.googleapis.com/auth/gmail.settings.basic",
+                    "https://www.googleapis.com/auth/gmail.settings.filters",
+                    "https://www.googleapis.com/auth/gmail.settings.filters.readonly"
                   ],
                   "supportsMediaUpload": false,
                   "supportsMediaDownload": false,
@@ -3215,7 +3275,9 @@
                     "https://mail.google.com/",
                     "https://www.googleapis.com/auth/gmail.modify",
                     "https://www.googleapis.com/auth/gmail.readonly",
-                    "https://www.googleapis.com/auth/gmail.settings.basic"
+                    "https://www.googleapis.com/auth/gmail.settings.basic",
+                    "https://www.googleapis.com/auth/gmail.settings.filters",
+                    "https://www.googleapis.com/auth/gmail.settings.filters.readonly"
                   ],
                   "supportsMediaUpload": false,
                   "supportsMediaDownload": false,
@@ -4110,7 +4172,9 @@
                 }
               },
               "scopes": [
-                "https://mail.google.com/"
+                "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.delete"
               ],
               "supportsMediaUpload": false,
               "supportsMediaDownload": false,
@@ -4205,6 +4269,8 @@
                 "https://www.googleapis.com/auth/gmail.addons.current.message.action",
                 "https://www.googleapis.com/auth/gmail.addons.current.message.metadata",
                 "https://www.googleapis.com/auth/gmail.addons.current.message.readonly",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.readonly",
                 "https://www.googleapis.com/auth/gmail.metadata",
                 "https://www.googleapis.com/auth/gmail.modify",
                 "https://www.googleapis.com/auth/gmail.readonly"
@@ -4323,6 +4389,8 @@
               },
               "scopes": [
                 "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.readonly",
                 "https://www.googleapis.com/auth/gmail.metadata",
                 "https://www.googleapis.com/auth/gmail.modify",
                 "https://www.googleapis.com/auth/gmail.readonly"
@@ -4381,6 +4449,9 @@
               },
               "scopes": [
                 "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.delete",
+                "https://www.googleapis.com/auth/gmail.messages.modify",
                 "https://www.googleapis.com/auth/gmail.modify"
               ],
               "supportsMediaUpload": false,
@@ -4433,6 +4504,8 @@
               },
               "scopes": [
                 "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.delete",
                 "https://www.googleapis.com/auth/gmail.modify"
               ],
               "supportsMediaUpload": false,
@@ -4485,6 +4558,8 @@
               },
               "scopes": [
                 "https://mail.google.com/",
+                "https://www.googleapis.com/auth/gmail.messages",
+                "https://www.googleapis.com/auth/gmail.messages.delete",
                 "https://www.googleapis.com/auth/gmail.modify"
               ],
               "supportsMediaUpload": false,
@@ -5095,7 +5170,7 @@
         "kaclsKeyMetadata": {
           "id": "",
           "type": "",
-          "description": "Metadata for a private key instance managed by an external key access control list service.",
+          "description": "Metadata for a private key instance managed by an external key access control list service. The maximum size of the KACLS data field is 8 KiB.",
           "default": null,
           "properties": null,
           "$ref": "KaclsKeyMetadata",
@@ -6051,13 +6126,13 @@
     "KaclsKeyMetadata": {
       "id": "KaclsKeyMetadata",
       "type": "object",
-      "description": "Metadata for private keys managed by an external key access control list service. For details about managing key access, see [Google Workspace CSE API Reference](https://developers.google.com/workspace/cse/reference).",
+      "description": "Metadata for a cryptographic key managed by an external key access control list service. For details about managing key access, see [Google Workspace CSE API Reference](https://developers.google.com/workspace/cse/reference).",
       "default": null,
       "properties": {
         "kaclsData": {
           "id": "",
           "type": "string",
-          "description": "Opaque data generated and used by the key access control list service. Maximum size: 8 KiB.",
+          "description": "Opaque data generated and used by the key access control list service.",
           "default": null,
           "properties": null,
           "$ref": "",
@@ -6071,7 +6146,7 @@
         "kaclsUri": {
           "id": "",
           "type": "string",
-          "description": "The URI of the key access control list service that manages the private key.",
+          "description": "The URI of the key access control list service that manages the key.",
           "default": null,
           "properties": null,
           "$ref": "",
@@ -8719,11 +8794,38 @@
         "https://www.googleapis.com/auth/gmail.compose": {
           "description": "Manage drafts and send emails"
         },
+        "https://www.googleapis.com/auth/gmail.drafts": {
+          "description": "Read, compose, send, update, and permanently delete your draft emails"
+        },
+        "https://www.googleapis.com/auth/gmail.drafts.create": {
+          "description": "Compose new draft emails"
+        },
+        "https://www.googleapis.com/auth/gmail.drafts.readonly": {
+          "description": "Read your draft emails"
+        },
         "https://www.googleapis.com/auth/gmail.insert": {
           "description": "Add emails into your Gmail mailbox"
         },
         "https://www.googleapis.com/auth/gmail.labels": {
           "description": "See and edit your email labels"
+        },
+        "https://www.googleapis.com/auth/gmail.labels.create": {
+          "description": "Create new email labels"
+        },
+        "https://www.googleapis.com/auth/gmail.labels.readonly": {
+          "description": "Read your email labels"
+        },
+        "https://www.googleapis.com/auth/gmail.messages": {
+          "description": "Read, update, and permanently delete all your emails"
+        },
+        "https://www.googleapis.com/auth/gmail.messages.delete": {
+          "description": "Permanently delete all your emails"
+        },
+        "https://www.googleapis.com/auth/gmail.messages.modify": {
+          "description": "Update but not delete your emails"
+        },
+        "https://www.googleapis.com/auth/gmail.messages.readonly": {
+          "description": "Read your emails"
         },
         "https://www.googleapis.com/auth/gmail.metadata": {
           "description": "View your email message metadata such as labels and headers, but not the email body"
@@ -8737,8 +8839,17 @@
         "https://www.googleapis.com/auth/gmail.send": {
           "description": "Send email on your behalf"
         },
+        "https://www.googleapis.com/auth/gmail.send.self": {
+          "description": "Send email to yourself"
+        },
         "https://www.googleapis.com/auth/gmail.settings.basic": {
           "description": "See, edit, create, or change your email settings and filters in Gmail"
+        },
+        "https://www.googleapis.com/auth/gmail.settings.filters": {
+          "description": "Read, create, and delete your filters"
+        },
+        "https://www.googleapis.com/auth/gmail.settings.filters.readonly": {
+          "description": "Read your filters"
         },
         "https://www.googleapis.com/auth/gmail.settings.sharing": {
           "description": "Manage your sensitive mail settings, including who can manage your mail"
