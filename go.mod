@@ -20,7 +20,7 @@ require (
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/zalando/go-keyring v0.2.8
 	golang.org/x/oauth2 v0.38.0
-	google.golang.org/api v0.312.0
+	google.golang.org/api v0.316.0
 	google.golang.org/genproto v0.0.0-20261110000943-09e21b237f2c
 	google.golang.org/genproto/googleapis/api v0.0.0-20261110000943-09e21b237f2c
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20261110000943-09e21b237f2c
